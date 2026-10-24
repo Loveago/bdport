@@ -35,14 +35,26 @@ function RegisterForm() {
   const [registrationClosed, setRegistrationClosed] = useState(false);
   const [redirectingPayment, setRedirectingPayment] = useState<{ url: string; amount: number } | null>(null);
 
+  const refParam = searchParams.get("ref") || "";
+
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+      ref: refParam,
+    },
   });
+
+  useEffect(() => {
+    if (refParam) {
+      setValue("ref", refParam);
+    }
+  }, [refParam, setValue]);
 
   const enteredCode = watch("signupCode");
 
@@ -189,6 +201,17 @@ function RegisterForm() {
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <input type="hidden" {...register("ref")} />
+
+          {refParam && (
+            <div className="flex items-center justify-between rounded-xl border border-blue-500/30 bg-blue-500/10 px-3.5 py-2.5 text-xs text-blue-200">
+              <span className="font-semibold text-slate-300">Referred by Partner Agent</span>
+              <span className="font-mono font-bold uppercase tracking-wider text-blue-300 bg-blue-500/20 border border-blue-400/30 px-2 py-0.5 rounded-md">
+                {refParam}
+              </span>
+            </div>
+          )}
+
           {serverError && (
             <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs sm:text-sm text-rose-300 font-medium">
               {serverError}

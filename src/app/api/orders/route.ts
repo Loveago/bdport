@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 import { sendOrdersSchema } from "@/lib/validation";
-import { createOrder, isOrderProcessingHalted } from "@/lib/orders";
+import { createOrder, isOrderProcessingHalted, resolveUserWholesalePrice } from "@/lib/orders";
+import { distributeAffiliateCommissions } from "@/lib/affiliate";
 import {
   validateMtnOrderRecipient,
   isMtnVerificationEnabled,
@@ -170,7 +171,10 @@ export async function POST(request: NextRequest) {
       const pkg = pkgMap.get(`${netUpper}:${o.gbAmount}`);
 
       let price: number | null = null;
-      if (profileNetworkRates && Array.isArray(profileNetworkRates[netUpper])) {
+      if (pkg) {
+        price = await resolveUserWholesalePrice(user, pkg);
+      }
+      if (price == null && profileNetworkRates && Array.isArray(profileNetworkRates[netUpper])) {
         const match = profileNetworkRates[netUpper].find((t) => t.gbAmount === o.gbAmount);
         if (match && typeof match.priceGHS === "number" && match.priceGHS > 0) {
           price = match.priceGHS;
@@ -376,6 +380,18 @@ export async function POST(request: NextRequest) {
                 reference: `order:${o.id}`,
                 note: `Data: ${o.network} ${o.gbAmount}GB to ${o.phoneNumber} (Order #${o.id})`,
               })),
+            });
+          }
+
+          // Distribute cascading affiliate commissions
+          for (const ord of txOrders) {
+            await distributeAffiliateCommissions(tx, {
+              originOrderId: ord.id,
+              userId: user.id,
+              packageId: ord.packageId,
+              gbAmount: ord.gbAmount,
+              network: ord.network,
+              amount: ord.amount,
             });
           }
 

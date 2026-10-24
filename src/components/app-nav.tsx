@@ -32,6 +32,7 @@ import {
   Banknote,
   Wallet,
   Layers,
+  Share2,
   X,
   Menu,
   ShoppingBag,
@@ -91,6 +92,7 @@ export const userNav: NavItem[] = [
   { href: "/dashboard/send", label: "Bulk Order", icon: Send },
   { href: "/dashboard/orders", label: "Orders", icon: ClipboardList, badge: true },
   { href: "/dashboard/not-received", label: "Order Reports", icon: FileWarning },
+  { href: "/dashboard/affiliate", label: "Affiliate Network", icon: Share2 },
   { href: "/dashboard/billing", label: "Billing", icon: Receipt },
   { href: "/dashboard/transactions", label: "Transactions", icon: Wallet },
   { href: "/dashboard/mtn-verification", label: "MTN Verification", icon: CheckCircle2 },
@@ -124,12 +126,14 @@ export const adminNav: NavItem[] = [
 
 export function groupUserNav(items: NavItem[]): NavSection[] {
   const opsHrefs = ["/dashboard/buy-now", "/dashboard/send", "/dashboard/orders", "/dashboard/not-received"];
+  const affHrefs = ["/dashboard/affiliate"];
   const finHrefs = ["/dashboard/billing", "/dashboard/transactions"];
   const storeHrefs = ["/dashboard/storefront", "/dashboard/storefront/apply"];
   const telHrefs = ["/dashboard/mtn-verification", "/dashboard/api", "/dashboard/packages", "/dashboard/reports"];
   const accHrefs = ["/dashboard/profile"];
 
   const ops = items.filter((i) => opsHrefs.includes(i.href));
+  const aff = items.filter((i) => affHrefs.includes(i.href));
   const fin = items.filter((i) => finHrefs.includes(i.href));
   const store = items.filter((i) => storeHrefs.includes(i.href));
   const tel = items.filter((i) => telHrefs.includes(i.href));
@@ -137,6 +141,7 @@ export function groupUserNav(items: NavItem[]): NavSection[] {
   const others = items.filter(
     (i) =>
       !opsHrefs.includes(i.href) &&
+      !affHrefs.includes(i.href) &&
       !finHrefs.includes(i.href) &&
       !storeHrefs.includes(i.href) &&
       !telHrefs.includes(i.href) &&
@@ -145,6 +150,7 @@ export function groupUserNav(items: NavItem[]): NavSection[] {
 
   const sections: NavSection[] = [];
   if (ops.length > 0) sections.push({ title: "Operations", items: ops });
+  if (aff.length > 0) sections.push({ title: "Growth & Network", items: aff });
   if (fin.length > 0) sections.push({ title: "Wallet & Billing", items: fin });
   if (store.length > 0) sections.push({ title: "My Storefront", items: store });
   if (tel.length > 0) sections.push({ title: "Telecom & Tools", items: tel });

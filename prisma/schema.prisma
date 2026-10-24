@@ -42,9 +42,18 @@ model User {
   mtnVerificationRequests MtnVerificationRequest[]
   supportChatMessages     SupportChatMessage[]
   notifications           Notification[]
+  affiliateCode           String?                 @unique
+  referredById            String?
+  parentAgent             User?                   @relation("AgentAffiliates", fields: [referredById], references: [id])
+  subAgents               User[]                  @relation("AgentAffiliates")
+  affiliatePrices         AffiliatePackagePrice[]
+  affiliateCommissions    AffiliateCommission[]   @relation("BeneficiaryCommissions")
+  sourceCommissions       AffiliateCommission[]   @relation("SourceUserCommissions")
 
   @@index([role])
   @@index([status])
+  @@index([affiliateCode])
+  @@index([referredById])
 }
 
 model PricingProfile {
@@ -85,6 +94,7 @@ model DataPackage {
 
   orders             Order[]
   storefrontProducts StorefrontProduct[]
+  affiliatePrices    AffiliatePackagePrice[]
 
   @@unique([network, gbAmount])
 }
@@ -125,6 +135,7 @@ model Order {
   deliveryReports DeliveryReport[]
   storefrontOrder StorefrontOrder?
   apiLogs        OrderApiLog[]
+  affiliateCommissions AffiliateCommission[]
 
   @@index([userId])
   @@index([status])
@@ -900,3 +911,40 @@ model Notification {
   @@index([userId, read])
   @@index([createdAt])
 }
+
+model AffiliatePackagePrice {
+  id         String      @id @default(cuid())
+  agentId    String
+  agent      User        @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  packageId  String
+  package    DataPackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  priceGHS   Float
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@unique([agentId, packageId])
+  @@index([agentId])
+  @@index([packageId])
+}
+
+model AffiliateCommission {
+  id            String      @id @default(cuid())
+  beneficiaryId String
+  beneficiary   User        @relation("BeneficiaryCommissions", fields: [beneficiaryId], references: [id], onDelete: Cascade)
+  sourceUserId  String
+  sourceUser    User        @relation("SourceUserCommissions", fields: [sourceUserId], references: [id], onDelete: Cascade)
+  originOrderId Int
+  originOrder   Order       @relation(fields: [originOrderId], references: [id], onDelete: Cascade)
+  packageId     String?
+  amount        Float
+  subAgentCost  Float
+  agentCost     Float
+  tierLevel     Int         @default(1)
+  status        String      @default("PAID") // PAID | REVERSED
+  createdAt     DateTime    @default(now())
+
+  @@index([beneficiaryId])
+  @@index([sourceUserId])
+  @@index([originOrderId])
+}
+

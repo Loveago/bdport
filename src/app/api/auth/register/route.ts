@@ -10,6 +10,7 @@ import { handleRouteError, apiError, getRequestOrigin } from "@/lib/api-helpers"
 import { getDefaultProfileId } from "@/lib/orders";
 import { getSignupCodeMode, applySignupCodeInTx, validateSignupCode } from "@/lib/signup-codes";
 import { isPaystackConfigured, initializeTransaction } from "@/lib/paystack";
+import { ensureUserAffiliateCode } from "@/lib/affiliate";
 
 export async function POST(request: NextRequest) {
   try {
@@ -73,6 +74,23 @@ export async function POST(request: NextRequest) {
     const passwordHash = await bcrypt.hash(input.password, 10);
     const defaultProfileId = await getDefaultProfileId();
 
+    // Check if registering via an affiliate referral link
+    let referredById: string | null = null;
+    if (input.ref?.trim()) {
+      const parent = await prisma.user.findFirst({
+        where: {
+          affiliateCode: {
+            equals: input.ref.trim(),
+            mode: "insensitive",
+          },
+        },
+        select: { id: true },
+      });
+      if (parent) {
+        referredById = parent.id;
+      }
+    }
+
     if (isFeeEnabled) {
       const { user, usedCode } = await prisma.$transaction(async (tx) => {
         let userRecord;
@@ -84,6 +102,7 @@ export async function POST(request: NextRequest) {
               passwordHash,
               pricingProfileId: defaultProfileId,
               role: assignedRole,
+              ...(referredById ? { referredById } : {}),
             },
           });
         } else {
@@ -95,9 +114,12 @@ export async function POST(request: NextRequest) {
               role: assignedRole,
               status: "PENDING_PAYMENT",
               pricingProfileId: defaultProfileId,
+              referredById,
             },
           });
         }
+
+        await ensureUserAffiliateCode(userRecord.id, userRecord.name, tx);
 
         let codeResult: { signupCodeId: string; code: string } | null = null;
         if (codeProvided && mode !== "DISABLED" && !existing?.signupCodeUsage) {
@@ -178,8 +200,11 @@ export async function POST(request: NextRequest) {
           role: assignedRole,
           status: "ACTIVE",
           pricingProfileId: defaultProfileId,
+          referredById,
         },
       });
+
+      await ensureUserAffiliateCode(newUser.id, newUser.name, tx);
 
       let codeResult: { signupCodeId: string; code: string } | null = null;
       if (codeProvided && mode !== "DISABLED") {

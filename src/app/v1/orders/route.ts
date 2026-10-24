@@ -8,6 +8,7 @@ import {
   ApiError,
 } from "@/lib/developer-api";
 import { isOrderProcessingHalted, getDefaultProfileId, getPricingForProfile, resolveUserWholesalePrice } from "@/lib/orders";
+import { distributeAffiliateCommissions } from "@/lib/affiliate";
 import { dispatchWebhookEvent } from "@/lib/webhooks";
 import { phoneSchema } from "@/lib/validation";
 import { validateMtnOrderRecipient } from "@/lib/mtn-verification";
@@ -542,6 +543,15 @@ export async function POST(request: NextRequest) {
               reference: `api_order:${order.id}`,
               note: `API Order API-${order.id} (${pkg!.name})`,
             },
+          });
+
+          await distributeAffiliateCommissions(tx, {
+            originOrderId: order.id,
+            userId: authContext.userId,
+            packageId: order.packageId,
+            gbAmount: order.gbAmount,
+            network: order.network,
+            amount: order.amount,
           });
         }
 

@@ -419,7 +419,13 @@ export function StorefrontPortal({
                 return (
                   <div
                     key={pkg.packageId}
-                    className="flex flex-col justify-between rounded-2xl bg-white border border-slate-200/90 shadow-sm overflow-hidden transition-all duration-150 hover:shadow-md"
+                    className={`flex flex-col justify-between rounded-2xl bg-white shadow-sm overflow-hidden transition-all duration-150 hover:shadow-md ${
+                      isMtn
+                        ? "border border-amber-300 hover:border-amber-400"
+                        : isTelecel
+                        ? "border border-rose-300 hover:border-rose-500"
+                        : "border border-blue-300 hover:border-blue-500"
+                    }`}
                   >
                     {/* Top Carrier Colored Banner */}
                     <div

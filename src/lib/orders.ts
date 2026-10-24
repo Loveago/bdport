@@ -127,9 +127,58 @@ export async function getEffectivePricingProfileForUser(
 }
 
 export async function resolveUserWholesalePrice(
-  userIdOrUser: string | { id?: string; role?: string; pricingProfileId?: string | null },
-  pkg: { gbAmount: number; network: string; retailPriceGHS?: number | null }
+  userIdOrUser: string | { id?: string; role?: string; pricingProfileId?: string | null; referredById?: string | null },
+  pkg: { id?: string; gbAmount: number; network: string; retailPriceGHS?: number | null },
+  depth = 0
 ): Promise<number> {
+  if (depth > 10) return pkg.retailPriceGHS ?? 0;
+
+  const userId = typeof userIdOrUser === "string" ? userIdOrUser : userIdOrUser.id;
+  let referredById = typeof userIdOrUser === "object" ? userIdOrUser.referredById : undefined;
+
+  if (userId && referredById === undefined) {
+    const u = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { referredById: true },
+    });
+    referredById = u?.referredById ?? null;
+  }
+
+  // If user is registered under an affiliate parent agent:
+  if (referredById) {
+    let packageId = pkg.id;
+    if (!packageId) {
+      const pRecord = await prisma.dataPackage.findUnique({
+        where: {
+          network_gbAmount: {
+            network: pkg.network.toUpperCase(),
+            gbAmount: pkg.gbAmount,
+          },
+        },
+        select: { id: true },
+      });
+      packageId = pRecord?.id;
+    }
+
+    if (packageId) {
+      const affPrice = await prisma.affiliatePackagePrice.findUnique({
+        where: {
+          agentId_packageId: {
+            agentId: referredById,
+            packageId,
+          },
+        },
+      });
+      if (affPrice && affPrice.priceGHS > 0) {
+        return affPrice.priceGHS;
+      }
+    }
+
+    // If parent agent hasn't set a custom wholesale price, fallback to what parent agent pays
+    return resolveUserWholesalePrice(referredById, pkg, depth + 1);
+  }
+
+  // Direct / Root User: Standard pricing profile resolution
   const profile = await getEffectivePricingProfileForUser(userIdOrUser);
   if (profile) {
     const price = await getPricingForProfile(profile.id, pkg.gbAmount, pkg.network);
@@ -521,6 +570,14 @@ export async function changeOrderStatus(
           actorLabel: actor.label,
         },
       });
+    }
+
+    // Reverse any affiliate commissions credited for this order
+    try {
+      const { reverseAffiliateCommissions } = await import("./affiliate");
+      await reverseAffiliateCommissions(prisma, orderId);
+    } catch (affErr) {
+      console.error(`Failed to reverse affiliate commissions for order #${orderId}:`, affErr);
     }
   }
 

@@ -10,6 +10,7 @@ export const registerSchema = z.object({
     .min(8, "Password must be at least 8 characters")
     .max(72, "Password is too long"),
   signupCode: z.string().trim().max(60).optional().or(z.literal("")),
+  ref: z.string().trim().max(60).optional().or(z.literal("")),
 });
 
 export const loginSchema = z.object({

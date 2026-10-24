@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { phoneSchema } from "@/lib/validation";
 import { detectNetworkNameByPrefix } from "@/lib/phone-utils";
 import { resolveUserWholesalePrice } from "@/lib/orders";
+import { distributeAffiliateCommissions } from "@/lib/affiliate";
 import { nextBatchCode } from "@/lib/batches";
 import { sanitizeCustomerRefundNote } from "@/lib/types";
 import { ApiError, formatApiSuccess, logApiRequestEntry } from "@/lib/developer-api";
@@ -620,6 +621,17 @@ export async function handleBatchOrderSubmission({
             note: `API Batch Order ${orderBatch.batchCode} (${validEntries.length} recipients, ${totalGb}GB)`,
           },
         });
+
+        for (const ord of createdOrders) {
+          await distributeAffiliateCommissions(tx, {
+            originOrderId: ord.id,
+            userId: authContext.userId,
+            packageId: ord.packageId,
+            gbAmount: ord.gbAmount,
+            network: ord.network,
+            amount: ord.amount,
+          });
+        }
       }
 
       if (idemKey && createdOrders.length > 0) {

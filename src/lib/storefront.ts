@@ -5,6 +5,7 @@ import { Prisma } from "@prisma/client";
 import { validateMtnOrderRecipient } from "./mtn-verification";
 import { verifyTransaction, PAYSTACK_CURRENCY } from "./paystack";
 import { cleanDomain } from "./storefront-utils";
+import { distributeAffiliateCommissions } from "./affiliate";
 
 // ---------------------------------------------------------------------------
 // Money — all storefront money is stored as integer pesewas (GHS x 100) so
@@ -485,6 +486,16 @@ export async function settleStorefrontPayment(
       amount: row.commission,
       reference: storefrontOrderCode(row.seq),
       description: `Storefront sale ${storefrontOrderCode(row.seq)}`,
+    });
+
+    // 4. Distribute cascading affiliate commissions to parent agents
+    await distributeAffiliateCommissions(tx, {
+      originOrderId: order.id,
+      userId: storefront.userId,
+      packageId: row.product.packageId,
+      gbAmount: row.product.dataPackage.gbAmount,
+      network: row.product.dataPackage.network,
+      amount: fromPesewas(row.productCost),
     });
   });
 
