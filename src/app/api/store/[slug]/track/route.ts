@@ -11,41 +11,62 @@ import {
 } from "@/lib/storefront";
 import { sanitizeCustomerRefundNote } from "@/lib/types";
 
-/**
- * Public order tracking for the storefront (§37 buyer-facing view). A query
- * matches either the exact order code (CF-ST-XXXXX / raw seq), the Paystack
- * payment reference, or the beneficiary phone number — and only ever returns
- * orders belonging to this storefront.
- */
-export async function POST(
+interface TrackParams {
+  query: string;
+  date?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+async function handleTracking(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  params: Promise<{ slug: string }>,
+  input: TrackParams
 ) {
   try {
     const { slug } = await params;
-    const { query, date } = storefrontTrackSchema.parse(await request.json());
-
     const storefront = await getEnabledStorefrontBySlug(slug);
     if (!storefront || storefront.status !== "ENABLED") {
       return apiError(404, "Store not found");
     }
 
-    const q = query.trim();
+    const q = (input.query || "").trim();
+    if (!q) {
+      return apiError(400, "Please enter a phone number or order reference to track.");
+    }
+
     const digits = q.replace(/\D/g, "");
     const isPhone = !/[a-zA-Z]/.test(q) && digits.length >= 9;
     let where: Prisma.StorefrontOrderWhereInput;
 
+    // Date range filter resolution
+    let dateFilter: { gte?: Date; lte?: Date } | undefined;
+    if (input.startDate && input.endDate) {
+      dateFilter = {
+        gte: new Date(`${input.startDate}T00:00:00.000Z`),
+        lte: new Date(`${input.endDate}T23:59:59.999Z`),
+      };
+    } else if (input.date) {
+      dateFilter = {
+        gte: new Date(`${input.date}T00:00:00.000Z`),
+        lte: new Date(`${input.date}T23:59:59.999Z`),
+      };
+    } else if (input.startDate) {
+      dateFilter = {
+        gte: new Date(`${input.startDate}T00:00:00.000Z`),
+      };
+    } else if (input.endDate) {
+      dateFilter = {
+        lte: new Date(`${input.endDate}T23:59:59.999Z`),
+      };
+    }
+
     if (isPhone) {
-      if (!date) {
-        return apiError(400, "Please select the date the order was placed when tracking by phone number.");
-      }
-      const start = new Date(`${date}T00:00:00.000Z`);
-      const end = new Date(`${date}T23:59:59.999Z`);
       const last9 = digits.slice(-9);
       const localPhone = "0" + last9;
       where = {
         storefrontId: storefront.id,
-        createdAt: { gte: start, lte: end },
+        ...(dateFilter ? { createdAt: dateFilter } : {}),
         OR: [
           { customerPhone: { contains: last9 } },
           { customerPhone: localPhone },
@@ -58,6 +79,7 @@ export async function POST(
       const seq = Number(q.replace(/^(?:CDI|CF|TSK)-ST-/i, "").replace(/^0+(?=\d)/, ""));
       where = {
         storefrontId: storefront.id,
+        ...(dateFilter ? { createdAt: dateFilter } : {}),
         OR: [
           { seq },
           { paymentReference: { contains: q.toUpperCase() } },
@@ -67,10 +89,12 @@ export async function POST(
       where = {
         storefrontId: storefront.id,
         customerEmail: { equals: q.trim().toLowerCase() },
+        ...(dateFilter ? { createdAt: dateFilter } : {}),
       };
     } else {
       where = {
         storefrontId: storefront.id,
+        ...(dateFilter ? { createdAt: dateFilter } : {}),
         OR: [
           { paymentReference: { contains: q.toUpperCase() } },
           { paymentReference: q },
@@ -89,7 +113,7 @@ export async function POST(
     const orders = await prisma.storefrontOrder.findMany({
       where,
       orderBy: { createdAt: "desc" },
-      take: 6,
+      take: 20,
       include: {
         product: { include: { dataPackage: true } },
         underlyingOrder: {
@@ -197,4 +221,30 @@ export async function POST(
   } catch (err) {
     return handleRouteError(err);
   }
+}
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  try {
+    const body = await request.json().catch(() => ({}));
+    const input = storefrontTrackSchema.parse(body);
+    return await handleTracking(request, params, input);
+  } catch (err) {
+    return handleRouteError(err);
+  }
+}
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const { searchParams } = new URL(request.url);
+  const query = searchParams.get("q") || searchParams.get("query") || "";
+  const date = searchParams.get("date") || undefined;
+  const startDate = searchParams.get("startDate") || undefined;
+  const endDate = searchParams.get("endDate") || undefined;
+
+  return await handleTracking(request, params, { query, date, startDate, endDate });
 }

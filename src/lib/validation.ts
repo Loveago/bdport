@@ -446,6 +446,18 @@ export const storefrontTrackSchema = z.object({
     .min(4, "Enter an order ID, phone number, or payment reference")
     .max(60),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format (YYYY-MM-DD)").optional().or(z.literal("")),
+  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format (YYYY-MM-DD)").optional().or(z.literal("")),
+  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format (YYYY-MM-DD)").optional().or(z.literal("")),
+});
+
+export const storefrontReviewSubmitSchema = z.object({
+  customerName: z.string().trim().min(2, "Name must be at least 2 characters").max(60),
+  rating: z.coerce.number().int().min(1).max(5),
+  comment: z.string().trim().min(3, "Review must be at least 3 characters").max(600),
+});
+
+export const storefrontReviewActionSchema = z.object({
+  action: z.enum(["APPROVE", "REJECT"]),
 });
 
 export const storefrontWithdrawalSchema = z.object({

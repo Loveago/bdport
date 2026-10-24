@@ -10,6 +10,7 @@ import {
   Image as ImageIcon,
   ExternalLink,
   RefreshCw,
+  Calendar,
 } from "lucide-react";
 import { Dialog } from "@/components/ui/dialog";
 import { sanitizeCustomerRefundNote, sanitizeCustomerFacingText } from "@/lib/types";
@@ -101,11 +102,46 @@ function getTomorrowDateString() {
   return getLocalDateString(d);
 }
 
+type DatePreset = "today" | "yesterday" | "past7" | "custom" | "all";
+
 export function TrackForm({ slug }: { slug: string }) {
   const [query, setQuery] = React.useState("");
+  const [datePreset, setDatePreset] = React.useState<DatePreset>("today");
   const [date, setDate] = React.useState(getLocalDateString);
+  const [startDate, setStartDate] = React.useState("");
+  const [endDate, setEndDate] = React.useState("");
   const maxDate = React.useMemo(() => getTomorrowDateString(), []);
-  const handleTodayClick = () => setDate(getLocalDateString());
+
+  const handlePresetChange = (preset: DatePreset) => {
+    setDatePreset(preset);
+    const now = new Date();
+    if (preset === "all") {
+      setDate("");
+      setStartDate("");
+      setEndDate("");
+    } else if (preset === "today") {
+      setDate(getLocalDateString(now));
+      setStartDate("");
+      setEndDate("");
+    } else if (preset === "yesterday") {
+      const y = new Date(now);
+      y.setDate(y.getDate() - 1);
+      setDate(getLocalDateString(y));
+      setStartDate("");
+      setEndDate("");
+    } else if (preset === "past7") {
+      const past = new Date(now);
+      past.setDate(past.getDate() - 7);
+      setDate("");
+      setStartDate(getLocalDateString(past));
+      setEndDate(getLocalDateString(now));
+    } else if (preset === "custom") {
+      if (!date) setDate(getLocalDateString(now));
+      setStartDate("");
+      setEndDate("");
+    }
+  };
+
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState("");
   const [results, setResults] = React.useState<TrackedOrder[] | null>(null);
@@ -131,7 +167,7 @@ export function TrackForm({ slug }: { slug: string }) {
     }
     const digits = q.replace(/\D/g, "");
     const isPhone = !/[a-zA-Z]/.test(q) && digits.length >= 9;
-    if (isPhone && !date) {
+    if (isPhone && datePreset === "custom" && !date) {
       setError("Please select the date the order was placed when tracking by phone number.");
       return;
     }
@@ -140,11 +176,22 @@ export function TrackForm({ slug }: { slug: string }) {
     setResults(null);
     setReportSuccessMessage("");
     setReportErrorMessage("");
+
+    const payload: { query: string; date?: string; startDate?: string; endDate?: string } = {
+      query: q,
+    };
+    if (datePreset === "past7") {
+      payload.startDate = startDate;
+      payload.endDate = endDate;
+    } else if (datePreset === "today" || datePreset === "yesterday" || datePreset === "custom") {
+      if (date) payload.date = date;
+    }
+
     try {
       const res = await fetch(`/api/store/${slug}/track`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: q, date }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Could not look up that order");
@@ -367,36 +414,69 @@ export function TrackForm({ slug }: { slug: string }) {
         </div>
 
         <div>
-          <div className="flex items-center justify-between">
-            <label htmlFor="track-date" className="block text-xs font-bold text-slate-300">
-              Order Date{" "}
-              <span className="text-[11px] font-normal text-slate-500 font-mono">
-                {query.includes("@") || /^(?:CDI|CF|TSK)-ST-|^STF-|^PSK-|^REG-/i.test(query.trim())
-                  ? "(Optional for email / ref lookup)"
-                  : "(Required for phone lookup)"}
-              </span>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="block text-xs font-bold text-slate-300">
+              Filter by Order Date
             </label>
-            <button
-              type="button"
-              onClick={handleTodayClick}
-              className="text-xs font-bold text-[#00df82] hover:underline cursor-pointer"
-            >
-              Today
-            </button>
+            <span className="text-[11px] font-normal text-slate-500 font-mono">
+              Avoids retrieving full history
+            </span>
           </div>
-          <input
-            id="track-date"
-            type="date"
-            value={date}
-            max={maxDate}
-            onChange={(e) => setDate(e.target.value)}
-            className="mt-1.5 h-11 w-full rounded-2xl border border-[#162740] bg-[#070d18] px-3.5 text-xs font-mono text-white outline-none transition-all focus:border-[#00df82]"
-          />
-          <p className="mt-1 text-[11px] text-slate-500 font-mono">
-            {query.includes("@") || /^(?:CDI|CF|TSK)-ST-|^STF-|^PSK-|^REG-/i.test(query.trim())
-              ? "Matches all recent orders matching your email or reference."
-              : "Filters orders to the specific date placed to protect customer privacy."}
-          </p>
+
+          <div className="flex flex-wrap items-center gap-1.5 mb-2.5">
+            {[
+              { id: "today", label: "Today" },
+              { id: "yesterday", label: "Yesterday" },
+              { id: "past7", label: "Past 7 Days" },
+              { id: "custom", label: "Custom Date" },
+              { id: "all", label: "All Dates" },
+            ].map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => handlePresetChange(p.id as DatePreset)}
+                className={`rounded-lg px-2.5 py-1 text-xs font-bold transition cursor-pointer ${
+                  datePreset === p.id
+                    ? "bg-[#00df82] text-[#041d14] shadow-sm"
+                    : "bg-[#162740] text-slate-300 hover:bg-[#1f3554] hover:text-white"
+                }`}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+
+          {datePreset === "custom" && (
+            <input
+              id="track-date"
+              type="date"
+              value={date}
+              max={maxDate}
+              onChange={(e) => setDate(e.target.value)}
+              className="h-11 w-full rounded-2xl border border-[#162740] bg-[#070d18] px-3.5 text-xs font-mono text-white outline-none transition-all focus:border-[#00df82]"
+            />
+          )}
+
+          {datePreset === "today" && (
+            <p className="text-[11px] text-slate-400 font-mono">
+              Filtering for orders placed today ({date}).
+            </p>
+          )}
+          {datePreset === "yesterday" && (
+            <p className="text-[11px] text-slate-400 font-mono">
+              Filtering for orders placed yesterday ({date}).
+            </p>
+          )}
+          {datePreset === "past7" && (
+            <p className="text-[11px] text-slate-400 font-mono">
+              Filtering orders placed between {startDate} and {endDate}.
+            </p>
+          )}
+          {datePreset === "all" && (
+            <p className="text-[11px] text-amber-400/80 font-mono">
+              Showing all historical orders for this lookup.
+            </p>
+          )}
         </div>
 
         <button

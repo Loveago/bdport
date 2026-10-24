@@ -20,6 +20,7 @@ import {
   ShieldCheck,
   Zap,
   Sparkles,
+  Calendar,
 } from "lucide-react";
 import { fromPesewas } from "@/lib/storefront";
 import { buildWhatsAppLink } from "@/lib/storefront-utils";
@@ -101,18 +102,30 @@ export function StorefrontPortal({
   const [checkingOut, setCheckingOut] = React.useState(false);
   const [checkoutError, setCheckoutError] = React.useState("");
 
-  // Tracking query state
+  // Tracking query & date filter state
   const [trackQuery, setTrackQuery] = React.useState("");
+  const [trackDate, setTrackDate] = React.useState<string>("");
+  const [trackDateMode, setTrackDateMode] = React.useState<"all" | "today" | "yesterday" | "past7" | "custom">("all");
+  const [trackStartDate, setTrackStartDate] = React.useState<string>("");
+  const [trackEndDate, setTrackEndDate] = React.useState<string>("");
   const [trackLoading, setTrackLoading] = React.useState(false);
   const [trackResult, setTrackResult] = React.useState<any[] | null>(null);
   const [trackError, setTrackError] = React.useState("");
 
-  // Review submission state
+  // Review states (real approved reviews)
+  const [reviewsList, setReviewsList] = React.useState<any[]>([]);
+  const [reviewsStats, setReviewsStats] = React.useState<{ averageRating: number; totalCount: number }>({
+    averageRating: 5.0,
+    totalCount: 0,
+  });
+  const [reviewsLoading, setReviewsLoading] = React.useState(false);
   const [reviewModalOpen, setReviewModalOpen] = React.useState(false);
   const [reviewRating, setReviewRating] = React.useState(5);
   const [reviewName, setReviewName] = React.useState("");
   const [reviewComment, setReviewComment] = React.useState("");
+  const [submittingReview, setSubmittingReview] = React.useState(false);
   const [reviewSubmitted, setReviewSubmitted] = React.useState(false);
+  const [reviewSubmitFeedback, setReviewSubmitFeedback] = React.useState<string>("");
 
   // Filter products by selected network
   const filteredProducts = React.useMemo(() => {
@@ -194,7 +207,40 @@ export function StorefrontPortal({
     }
   };
 
-  // Execute tracking search
+  const handleSetTrackPreset = (mode: "all" | "today" | "yesterday" | "past7" | "custom") => {
+    setTrackDateMode(mode);
+    const now = new Date();
+    const toYMD = (d: Date) => {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
+    if (mode === "all") {
+      setTrackDate("");
+      setTrackStartDate("");
+      setTrackEndDate("");
+    } else if (mode === "today") {
+      setTrackDate(toYMD(now));
+      setTrackStartDate("");
+      setTrackEndDate("");
+    } else if (mode === "yesterday") {
+      const y = new Date(now);
+      y.setDate(y.getDate() - 1);
+      setTrackDate(toYMD(y));
+      setTrackStartDate("");
+      setTrackEndDate("");
+    } else if (mode === "past7") {
+      const past = new Date(now);
+      past.setDate(past.getDate() - 7);
+      setTrackDate("");
+      setTrackStartDate(toYMD(past));
+      setTrackEndDate(toYMD(now));
+    }
+  };
+
+  // Execute tracking search with date filter
   const handleExecuteTrack = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const q = trackQuery.trim();
@@ -207,17 +253,80 @@ export function StorefrontPortal({
     setTrackResult(null);
 
     try {
-      const res = await fetch(`/api/store/${storefront.slug}/track?q=${encodeURIComponent(q)}`);
+      const res = await fetch(`/api/store/${storefront.slug}/track`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: q,
+          date: trackDate || undefined,
+          startDate: trackStartDate || undefined,
+          endDate: trackEndDate || undefined,
+        }),
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error looking up order.");
       setTrackResult(data.orders || []);
       if ((data.orders || []).length === 0) {
-        setTrackError("No orders found matching this search. Verify your phone number or reference.");
+        setTrackError("No orders found matching this search criteria and date filter.");
       }
     } catch (err: any) {
       setTrackError(err.message || "Unable to retrieve order status.");
     } finally {
       setTrackLoading(false);
+    }
+  };
+
+  // Load real approved storefront reviews
+  const loadStoreReviews = React.useCallback(async () => {
+    try {
+      setReviewsLoading(true);
+      const res = await fetch(`/api/store/${storefront.slug}/reviews`);
+      const data = await res.json();
+      if (res.ok) {
+        setReviewsList(data.reviews || []);
+        if (data.stats) setReviewsStats(data.stats);
+      }
+    } catch (err) {
+      console.error("Failed to load storefront reviews:", err);
+    } finally {
+      setReviewsLoading(false);
+    }
+  }, [storefront.slug]);
+
+  React.useEffect(() => {
+    if (isReviewsEnabled) {
+      loadStoreReviews();
+    }
+  }, [isReviewsEnabled, loadStoreReviews]);
+
+  // Handle customer review submission
+  const handleReviewSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reviewName.trim() || !reviewComment.trim()) return;
+
+    setSubmittingReview(true);
+    try {
+      const res = await fetch(`/api/store/${storefront.slug}/reviews`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerName: reviewName.trim(),
+          rating: reviewRating,
+          comment: reviewComment.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || "Failed to submit review.");
+        return;
+      }
+      setReviewSubmitFeedback(data.message || "Thank you! Your review has been submitted for approval.");
+      setReviewSubmitted(true);
+      setReviewComment("");
+    } catch {
+      alert("Network error while submitting review.");
+    } finally {
+      setSubmittingReview(false);
     }
   };
 
@@ -534,6 +643,59 @@ export function StorefrontPortal({
                 />
               </div>
 
+              {/* Date Filter Controls */}
+              <div className="space-y-1.5 pt-1">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    <span>Filter By Order Date</span>
+                  </label>
+                  {(trackDate || trackStartDate) && (
+                    <button
+                      type="button"
+                      onClick={() => handleSetTrackPreset("all")}
+                      className="text-[10px] font-semibold text-rose-500 hover:underline"
+                    >
+                      Clear Date
+                    </button>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                  {[
+                    { id: "all", label: "All Dates" },
+                    { id: "today", label: "Today" },
+                    { id: "yesterday", label: "Yesterday" },
+                    { id: "past7", label: "Past 7 Days" },
+                    { id: "custom", label: "Custom Date" },
+                  ].map((preset) => (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      onClick={() => handleSetTrackPreset(preset.id as any)}
+                      className={`px-2.5 py-1 text-[11px] font-bold rounded-lg border transition whitespace-nowrap cursor-pointer ${
+                        trackDateMode === preset.id
+                          ? "bg-[#1a56db] text-white border-[#1a56db] shadow-xs"
+                          : "bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200"
+                      }`}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+
+                {trackDateMode === "custom" && (
+                  <div className="pt-1">
+                    <input
+                      type="date"
+                      value={trackDate}
+                      onChange={(e) => setTrackDate(e.target.value)}
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-900 font-mono outline-none focus:border-[#1a56db]"
+                    />
+                  </div>
+                )}
+              </div>
+
               <button
                 type="submit"
                 disabled={trackLoading}
@@ -643,9 +805,15 @@ export function StorefrontPortal({
               ))}
             </div>
 
-            <div className="text-2xl font-black text-slate-900">4.9 / 5.0</div>
+            <div className="text-2xl font-black text-slate-900">
+              {reviewsStats.totalCount > 0 ? reviewsStats.averageRating.toFixed(1) : "5.0"} / 5.0
+            </div>
             <p className="text-xs text-slate-500 max-w-sm mx-auto">
-              Based on over <strong>450+ verified customer purchases</strong> across MTN, Telecel, and AirtelTigo.
+              {reviewsStats.totalCount > 0 ? (
+                <>Based on <strong>{reviewsStats.totalCount} verified customer review{reviewsStats.totalCount === 1 ? "" : "s"}</strong>.</>
+              ) : (
+                <>Verified customer rating for this storefront.</>
+              )}
             </p>
 
             <div className="pt-2">
@@ -662,76 +830,72 @@ export function StorefrontPortal({
 
           {/* Testimonial Cards */}
           <div className="space-y-3">
-            {[
-              {
-                name: "Kwame Asante",
-                location: "Accra",
-                time: "2 hours ago",
-                bundle: "MTN 10GB",
-                comment:
-                  "Credited in less than 30 seconds after MoMo approval! Always fast and dependable.",
-              },
-              {
-                name: "Abena Mansah",
-                location: "Kumasi",
-                time: "Yesterday",
-                bundle: "Telecel 5GB",
-                comment:
-                  "Best data prices in Ghana right now. I don't buy from any other storefront.",
-              },
-              {
-                name: "Kofi Boateng",
-                location: "Takoradi",
-                time: "2 days ago",
-                bundle: "MTN 20GB",
-                comment:
-                  "No expiry data sent directly to my SIM. WhatsApp support is also very quick to answer.",
-              },
-              {
-                name: "Eunice Darko",
-                location: "Tema",
-                time: "3 days ago",
-                bundle: "AirtelTigo 15GB",
-                comment:
-                  "Smooth checkout with MTN MoMo. Zero hassle, instant allocation.",
-              },
-            ].map((rev, idx) => (
-              <div
-                key={idx}
-                className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm space-y-1.5"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="h-7 w-7 rounded-full bg-blue-100 text-blue-800 font-bold text-xs flex items-center justify-center">
-                      {rev.name[0]}
+            {reviewsLoading ? (
+              <div className="py-12 text-center">
+                <Loader2 className="h-6 w-6 animate-spin text-blue-600 mx-auto" />
+                <p className="text-xs text-slate-400 mt-2">Loading customer reviews...</p>
+              </div>
+            ) : reviewsList.length > 0 ? (
+              reviewsList.map((rev) => (
+                <div
+                  key={rev.id}
+                  className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm space-y-2"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="h-7 w-7 rounded-full bg-blue-100 text-blue-800 font-bold text-xs flex items-center justify-center">
+                        {rev.customerName ? rev.customerName[0].toUpperCase() : "C"}
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
+                          <span>{rev.customerName}</span>
+                        </div>
+                        <div className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
+                          <CheckCircle2 className="h-3 w-3" />
+                          <span>Verified Store Customer</span>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
-                        <span>{rev.name}</span>
-                        <span className="text-[10px] text-slate-400">({rev.location})</span>
-                      </div>
-                      <div className="text-[10px] text-emerald-600 font-semibold">
-                        ✓ Verified Purchase · {rev.bundle}
-                      </div>
+
+                    <div className="flex items-center gap-0.5">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <Star
+                          key={s}
+                          className={`h-3 w-3 ${
+                            s <= rev.rating ? "fill-amber-400 text-amber-400" : "text-slate-200"
+                          }`}
+                        />
+                      ))}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-0.5">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} className="h-3 w-3 fill-amber-400 text-amber-400" />
-                    ))}
+                  <p className="text-xs text-slate-600 leading-relaxed pt-0.5">
+                    &ldquo;{rev.comment}&rdquo;
+                  </p>
+
+                  <div className="text-[10px] text-slate-400 font-mono text-right">
+                    {new Date(rev.createdAt).toLocaleDateString()}
                   </div>
                 </div>
-
-                <p className="text-xs text-slate-600 leading-relaxed pt-1">
-                  &ldquo;{rev.comment}&rdquo;
+              ))
+            ) : (
+              <div className="py-10 text-center rounded-2xl bg-white border border-slate-200/90 p-6 space-y-2">
+                <Star className="h-8 w-8 text-amber-300 mx-auto fill-amber-100" />
+                <h4 className="text-sm font-bold text-slate-800">No reviews yet</h4>
+                <p className="text-xs text-slate-500 max-w-xs mx-auto">
+                  Be the first customer to share your experience with this storefront!
                 </p>
-
-                <div className="text-[10px] text-slate-400 font-mono text-right">
-                  {rev.time}
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setReviewModalOpen(true)}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3.5 py-1.5 text-xs font-bold text-blue-700 transition cursor-pointer"
+                  >
+                    <span>Write First Review</span>
+                  </button>
                 </div>
               </div>
-            ))}
+            )}
           </div>
         </section>
       )}
@@ -901,7 +1065,9 @@ export function StorefrontPortal({
               <div className="py-6 text-center space-y-2">
                 <CheckCircle2 className="h-10 w-10 text-emerald-600 mx-auto" />
                 <h4 className="text-sm font-bold text-slate-900">Thank you for your feedback!</h4>
-                <p className="text-xs text-slate-500">Your review will be posted shortly.</p>
+                <p className="text-xs text-slate-500">
+                  {reviewSubmitFeedback || "Your review has been submitted and will appear once approved by the store owner."}
+                </p>
                 <button
                   type="button"
                   onClick={() => {
@@ -915,10 +1081,7 @@ export function StorefrontPortal({
               </div>
             ) : (
               <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setReviewSubmitted(true);
-                }}
+                onSubmit={handleReviewSubmit}
                 className="space-y-3"
               >
                 <div>
@@ -971,9 +1134,17 @@ export function StorefrontPortal({
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 bg-[#1a56db] hover:bg-[#1546b3] text-white rounded-xl text-xs font-bold shadow-sm"
+                  disabled={submittingReview}
+                  className="w-full py-2.5 bg-[#1a56db] hover:bg-[#1546b3] disabled:opacity-60 text-white rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-2"
                 >
-                  Submit Review
+                  {submittingReview ? (
+                    <>
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      <span>Submitting Review...</span>
+                    </>
+                  ) : (
+                    "Submit Review"
+                  )}
                 </button>
               </form>
             )}

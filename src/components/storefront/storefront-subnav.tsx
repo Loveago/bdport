@@ -3,13 +3,14 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Store, Package, Settings, Wallet, Loader2 } from "lucide-react";
+import { Store, Package, Settings, Wallet, MessageSquare, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const SUBNAV_ITEMS = [
   { href: "/dashboard/storefront", label: "Overview", icon: Store, exact: true },
   { href: "/dashboard/storefront/products", label: "Pricing Engine", icon: Package },
   { href: "/dashboard/storefront/settings", label: "Store Identity", icon: Settings },
+  { href: "/dashboard/storefront/reviews", label: "Customer Reviews", icon: MessageSquare },
   { href: "/dashboard/storefront/wallet", label: "Settlement & Payouts", icon: Wallet },
 ];
 
