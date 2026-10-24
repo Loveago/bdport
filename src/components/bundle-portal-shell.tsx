@@ -117,18 +117,18 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
   return (
     <div className="min-h-screen bg-[#f3f6fa] dark:bg-[#060b13] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 antialiased selection:bg-[#00df82] selection:text-slate-950">
       {/* ── TOP BAR (MATCHING SCREENSHOT) ─────────────────────────────────── */}
-      <header className="h-16 border-b border-slate-200 dark:border-[#14233a] bg-white/90 dark:bg-[#070d18]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-3.5 sm:px-4 lg:px-6">
+      <header className="h-16 border-b border-slate-200 dark:border-[#14233a] bg-white/90 dark:bg-[#070d18]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-3 sm:px-4 lg:px-6">
         {/* Left: Mobile trigger & Brand */}
-        <div className="flex items-center gap-2.5 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 shrink-0">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#0e192c]"
+            className="lg:hidden p-2 -ml-1 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#0e192c] shrink-0"
             aria-label="Toggle navigation menu"
           >
             <Menu className="h-5 w-5" />
           </button>
-          <BrandLogo size="md" href="/dashboard" />
+          <BrandLogo size="sm" showTagline={false} href="/dashboard" />
         </div>
 
         {/* Center: Search Bar */}
@@ -149,26 +149,26 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
         </div>
 
         {/* Right: Actions, Theme, Mobile Balance, User Pill */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           {/* Quick Mobile Balance Pill */}
           <Link
             href="/dashboard/billing"
-            className="flex sm:hidden items-center gap-1.5 rounded-xl border border-[#00df82]/30 bg-[#00df82]/10 px-2.5 py-1 text-xs font-mono font-black text-[#00df82]"
+            className="flex sm:hidden items-center gap-1 rounded-lg border border-[#00df82]/30 bg-[#00df82]/10 px-2 py-1 text-[11px] font-mono font-black text-[#00df82] whitespace-nowrap"
             title="Wallet Balance"
           >
-            <Wallet className="h-3 w-3" />
+            <Wallet className="h-3 w-3 shrink-0" />
             <span>{formatGHS(user.balance || 0)}</span>
           </Link>
 
           {/* Notification Center */}
           <NotificationCenter user={user} admin={isAdmin} />
 
-          {/* Theme Toggle (Sun / Moon) */}
+          {/* Theme Toggle (Sun / Moon) - visible on tablet & desktop */}
           {mounted && (
             <button
               type="button"
               onClick={() => setTheme(isDarkMode ? "light" : "dark")}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 dark:border-[#14233a] bg-white dark:bg-[#09121f] text-slate-600 dark:text-cyan-300 hover:border-[#00df82] transition-colors"
+              className="hidden sm:flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 dark:border-[#14233a] bg-white dark:bg-[#09121f] text-slate-600 dark:text-cyan-300 hover:border-[#00df82] transition-colors"
               title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
               {isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4 text-amber-500" />}
@@ -176,10 +176,17 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
           )}
 
           {/* User Profile Pill */}
-          <div className="flex items-center gap-2 sm:gap-2.5 pl-1.5 sm:pl-2 border-l border-slate-200 dark:border-[#14233a]">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-[#00df82] to-[#22d3ee] text-slate-950 font-black text-xs shadow-md shadow-[#00df82]/20">
-              {getUserInitials(user.name, user.email)}
-            </div>
+          <div className="flex items-center gap-1.5 sm:gap-2.5 pl-1 sm:pl-2 border-l border-slate-200 dark:border-[#14233a]">
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              className="lg:pointer-events-none"
+              title="View account"
+            >
+              <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-[#00df82] to-[#22d3ee] text-slate-950 font-black text-xs shadow-md shadow-[#00df82]/20">
+                {getUserInitials(user.name, user.email)}
+              </div>
+            </button>
 
             <div className="hidden sm:flex flex-col">
               <div className="flex items-center gap-1.5">
@@ -195,7 +202,7 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
             <button
               type="button"
               onClick={handleSignOut}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors ml-0.5 sm:ml-1"
+              className="hidden sm:flex p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors ml-0.5 sm:ml-1"
               title="Sign Out"
             >
               <LogOut className="h-4 w-4" />
@@ -332,11 +339,24 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
                 })}
               </nav>
 
-              <div className="pt-2 border-t border-slate-200 dark:border-[#14233a] mt-auto">
+              <div className="pt-2 border-t border-slate-200 dark:border-[#14233a] mt-auto space-y-1">
+                {mounted && (
+                  <button
+                    type="button"
+                    onClick={() => setTheme(isDarkMode ? "light" : "dark")}
+                    className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#0a1220] transition-colors"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      {isDarkMode ? <Moon className="h-4 w-4 text-cyan-400" /> : <Sun className="h-4 w-4 text-amber-500" />}
+                      <span>{isDarkMode ? "Dark Mode" : "Light Mode"}</span>
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-normal">Switch</span>
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={handleSignOut}
-                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-rose-500 hover:bg-rose-500/10 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-rose-500 hover:bg-rose-500/10 transition-colors"
                 >
                   <LogOut className="h-4 w-4" />
                   <span>Sign Out</span>
@@ -355,7 +375,7 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
       </div>
 
       {/* ── MOBILE BOTTOM NAVIGATION BAR (FIXED FOR ONE-THUMB OPERABILITY) ── */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#070d18]/95 backdrop-blur-xl border-t border-slate-200 dark:border-[#14233a] px-2 py-1.5 flex items-center justify-around shadow-[0_-5px_20px_rgba(0,0,0,0.15)] dark:shadow-[0_-5px_25px_rgba(0,0,0,0.5)]">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#070d18]/95 backdrop-blur-xl border-t border-slate-200 dark:border-[#14233a] px-1 pt-1.5 pb-[max(0.65rem,env(safe-area-inset-bottom))] flex items-center justify-around shadow-[0_-5px_20px_rgba(0,0,0,0.15)] dark:shadow-[0_-5px_25px_rgba(0,0,0,0.5)]">
         {BOTTOM_NAV_ITEMS.map((item) => {
           const isActive =
             item.href === "/dashboard"
@@ -368,7 +388,7 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all min-w-[56px] text-center",
+                "flex flex-col items-center justify-center py-0.5 px-1 rounded-xl transition-all min-w-[52px] text-center",
                 isActive
                   ? "text-[#00df82]"
                   : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
@@ -380,11 +400,11 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
                   isActive && "bg-[#00df82]/15 text-[#00df82]"
                 )}
               >
-                <Icon className="h-4.5 w-4.5" />
+                <Icon className="h-5 w-5" />
               </div>
               <span
                 className={cn(
-                  "text-[10px] font-bold mt-0.5 tracking-tight",
+                  "text-[10px] font-bold mt-0.5 tracking-tight leading-none truncate max-w-[62px]",
                   isActive ? "font-black text-[#00df82]" : "font-medium"
                 )}
               >

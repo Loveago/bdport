@@ -117,7 +117,7 @@ export function BrandLogo({
         {showTagline && (
           <span
             className={cn(
-              "mt-1 font-bold tracking-[0.24em] text-slate-500 dark:text-slate-400 uppercase",
+              "mt-1 font-bold tracking-[0.24em] text-slate-500 dark:text-slate-400 uppercase hidden sm:block",
               taglineSize
             )}
           >

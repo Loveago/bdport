@@ -330,7 +330,7 @@ export function AppShell({
             {!admin && (
               <Link
                 href="/dashboard/billing"
-                className="flex sm:hidden items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-xs font-black text-slate-900 dark:text-white"
+                className="flex sm:hidden items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-xs font-black text-slate-900 dark:text-white shrink-0 whitespace-nowrap"
                 title="View wallet & billing"
               >
                 <div className="flex h-4 w-4 items-center justify-center rounded-md bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">
