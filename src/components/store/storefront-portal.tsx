@@ -500,13 +500,6 @@ export function StorefrontPortal({
               })}
             </div>
           )}
-
-          {/* Bottom Floating Pill Badge matching screenshot */}
-          <div className="fixed bottom-3 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
-            <span className="inline-block rounded-full bg-[#fde047]/95 text-black font-medium px-4 py-0.5 text-[11px] border border-[#eab308]/70 shadow-md backdrop-blur-xs">
-              {storefront.slug}.top
-            </span>
-          </div>
         </main>
       )}
 
