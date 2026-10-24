@@ -110,6 +110,7 @@ export const adminNav: NavItem[] = [
   { href: "/admin/exports", label: "Exports", icon: FileSpreadsheet },
   { href: "/admin/delivery-reports", label: "Not Received", icon: FileWarning, badge: true },
   { href: "/admin/users", label: "Users", icon: Users },
+  { href: "/admin/affiliates", label: "Affiliate Network", icon: Share2 },
   { href: "/admin/wallets", label: "User Wallets", icon: Wallet },
   { href: "/admin/chat", label: "Support Chat", icon: MessageSquare },
   { href: "/admin/users/signup-codes", label: "Signup Codes", icon: Ticket },
@@ -162,7 +163,7 @@ export function groupUserNav(items: NavItem[]): NavSection[] {
 export function groupAdminNav(items: NavItem[]): NavSection[] {
   const overviewHrefs = ["/admin", "/admin/reports"];
   const ordersHrefs = ["/admin/orders", "/admin/order-api-logs", "/admin/delivery-reports", "/admin/exports"];
-  const usersHrefs = ["/admin/users", "/admin/wallets", "/admin/chat", "/admin/users/signup-codes", "/admin/storefronts", "/admin/storefronts/withdrawals"];
+  const usersHrefs = ["/admin/users", "/admin/affiliates", "/admin/wallets", "/admin/chat", "/admin/users/signup-codes", "/admin/storefronts", "/admin/storefronts/withdrawals"];
   const systemHrefs = ["/admin/packages", "/admin/pricing", "/admin/billing", "/admin/mtn-verification", "/admin/api", "/admin/settings", "/admin/audit-logs"];
 
   const overview = items.filter((i) => overviewHrefs.includes(i.href));

@@ -41,6 +41,9 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const user = await requireUser();
+    if (user.referredById) {
+      return apiError(403, "Sub-agents do not have access to developer API provisioning.");
+    }
     const body = await request.json();
     const input = createCredentialSchema.parse(body);
 

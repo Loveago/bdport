@@ -10,7 +10,8 @@ export default async function ApiDashboardLayout({
 }) {
   const user = await getCurrentUser();
 
-  if (!user || !canAccessDeveloperApi(user.role)) {
+  if (!user || !canAccessDeveloperApi(user.role, user.referredById)) {
+    const isSubAgent = Boolean(user?.referredById);
     return (
       <div className="flex min-h-[70vh] items-center justify-center px-4">
         <div className="w-full max-w-md rounded-3xl border border-[#162740] bg-[#0b1322] p-8 text-center shadow-2xl">
@@ -29,9 +30,15 @@ export default async function ApiDashboardLayout({
             Developer API Gateway
           </h2>
           <p className="mt-2 text-xs leading-relaxed text-slate-400">
-            Direct API provisioning and carrier webhook keys are reserved for{" "}
-            <strong className="text-white">Agent</strong> and{" "}
-            <strong className="text-white">Reseller</strong> accounts.
+            {isSubAgent
+              ? "As a sub-agent under a partner wholesale account, direct developer API provisioning is not available."
+              : (
+                <>
+                  Direct API provisioning and carrier webhook keys are reserved for{" "}
+                  <strong className="text-white">Agent</strong> and{" "}
+                  <strong className="text-white">Reseller</strong> accounts.
+                </>
+              )}
           </p>
 
           <div className="mt-6 space-y-3">

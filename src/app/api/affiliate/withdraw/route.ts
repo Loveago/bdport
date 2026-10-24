@@ -6,6 +6,9 @@ import { requestAffiliateWithdrawal } from "@/lib/affiliate";
 export async function POST(request: NextRequest) {
   try {
     const user = await requireUser();
+    if (user.referredById) {
+      return apiError(403, "Sub-agents do not have an affiliate account.");
+    }
     const body = await request.json();
 
     const withdrawal = await requestAffiliateWithdrawal(user.id, body);

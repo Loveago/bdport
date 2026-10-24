@@ -116,70 +116,50 @@ export async function distributeAffiliateCommissions(
     return []; // No upline agent
   }
 
-  const distributed: Array<{ beneficiaryId: string; amount: number; tierLevel: number }> = [];
-  let currentParentId: string | null = originUser.referredById;
-  let childCost = input.amount;
-  let tierLevel = 1;
-  const visited = new Set<string>([input.userId]);
+  // Direct parent referral only (cascading removed per policy)
+  const parent = await tx.user.findUnique({
+    where: { id: originUser.referredById },
+    select: { id: true, name: true, email: true, balance: true, affiliateBalance: true },
+  });
 
-  // Walk up referrer tree (max 10 tiers to prevent any cycle)
-  while (currentParentId && tierLevel <= 10) {
-    if (visited.has(currentParentId)) {
-      console.warn(`[Affiliate] Referral cycle detected for user ${currentParentId}`);
-      break;
-    }
-    visited.add(currentParentId);
+  if (!parent) return [];
 
-    const parent = await tx.user.findUnique({
-      where: { id: currentParentId },
-      select: { id: true, name: true, email: true, balance: true, affiliateBalance: true, referredById: true },
+  // What is parent agent's wholesale cost for this package?
+  const parentCost = await resolveUserWholesalePrice(parent.id, pkg, 0, tx);
+
+  // Parent's profit is the margin between what the sub-agent paid and parent's wholesale cost
+  const profit = Math.round((input.amount - parentCost) * 100) / 100;
+
+  if (profit > 0) {
+    // 1. Credit parent's separate Affiliate Wallet (affiliateBalance)
+    await tx.user.update({
+      where: { id: parent.id },
+      data: { affiliateBalance: { increment: profit } },
     });
 
-    if (!parent) break;
-
-    // What is parent agent's wholesale cost for this package?
-    const parentCost = await resolveUserWholesalePrice(parent.id, pkg, 0, tx);
-
-    // Parent's profit is the margin between what the downline was charged and parent's cost
-    const profit = Math.round((childCost - parentCost) * 100) / 100;
-
-    if (profit > 0) {
-      // 1. Credit parent's separate Affiliate Wallet (affiliateBalance)
-      await tx.user.update({
-        where: { id: parent.id },
-        data: { affiliateBalance: { increment: profit } },
-      });
-
-      // 2. Record AffiliateCommission record
-      await tx.affiliateCommission.create({
-        data: {
-          beneficiaryId: parent.id,
-          sourceUserId: input.userId,
-          originOrderId: input.originOrderId,
-          packageId: pkg.id,
-          amount: profit,
-          subAgentCost: childCost,
-          agentCost: parentCost,
-          tierLevel,
-          status: "PAID",
-        },
-      });
-
-      distributed.push({
+    // 2. Record AffiliateCommission record
+    await tx.affiliateCommission.create({
+      data: {
         beneficiaryId: parent.id,
+        sourceUserId: input.userId,
+        originOrderId: input.originOrderId,
+        packageId: pkg.id,
         amount: profit,
-        tierLevel,
-      });
-    }
+        subAgentCost: input.amount,
+        agentCost: parentCost,
+        tierLevel: 1,
+        status: "PAID",
+      },
+    });
 
-    // Step up to grandparent:
-    // The next ancestor gets profit = (parentCost - grandParentCost)
-    childCost = parentCost;
-    currentParentId = parent.referredById;
-    tierLevel++;
+    return [{
+      beneficiaryId: parent.id,
+      amount: profit,
+      tierLevel: 1,
+    }];
   }
 
-  return distributed;
+  return [];
 }
 
 /**

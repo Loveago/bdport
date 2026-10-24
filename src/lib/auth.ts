@@ -73,6 +73,8 @@ export const getCurrentUser = cache(async (): Promise<AuthUser | null> => {
       balance: true,
       tokenVersion: true,
       pricingProfileId: true,
+      referredById: true,
+      affiliateBalance: true,
     },
   });
 
@@ -88,6 +90,8 @@ export const getCurrentUser = cache(async (): Promise<AuthUser | null> => {
     status: user.status,
     balance: user.balance,
     pricingProfileId: user.pricingProfileId,
+    referredById: user.referredById,
+    affiliateBalance: user.affiliateBalance,
   };
 });
 

@@ -16,7 +16,8 @@ export function canAccessStorefront(role: UserRole | string): boolean {
   return STOREFRONT_API_ROLES.includes(role as UserRole);
 }
 
-export function canAccessDeveloperApi(role: UserRole | string): boolean {
+export function canAccessDeveloperApi(role: UserRole | string, referredById?: string | null): boolean {
+  if (referredById) return false;
   return STOREFRONT_API_ROLES.includes(role as UserRole);
 }
 
@@ -188,6 +189,8 @@ export interface AuthUser {
   status: string;
   balance: number;
   pricingProfileId: string | null;
+  referredById?: string | null;
+  affiliateBalance?: number;
 }
 
 export const STATUS_META: Record<

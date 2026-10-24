@@ -36,6 +36,7 @@ export default async function ProfilePage() {
       balance: true,
       createdAt: true,
       pricingProfileId: true,
+      referredById: true,
       signupCodeUsage: {
         select: {
           signupCode: { select: { code: true } },
@@ -200,7 +201,7 @@ export default async function ProfilePage() {
               <p className="mt-3 text-xs font-black text-slate-900 dark:text-white">Top up wallet</p>
               <p className="text-[11px] text-slate-500 dark:text-slate-400">Instant deposit funds</p>
             </Link>
-            {canAccessDeveloperApi(user.role) ? (
+            {canAccessDeveloperApi(user.role, user.referredById) ? (
               <Link
                 href="/dashboard/api-docs"
                 className="group rounded-2xl border border-slate-200/80 bg-white/90 p-4 shadow-xs backdrop-blur-xl transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-500/40 hover:shadow-md dark:border-white/10 dark:bg-[#0b1322]/90 dark:hover:border-emerald-500/40"

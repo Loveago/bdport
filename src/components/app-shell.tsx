@@ -198,8 +198,9 @@ export function AppShell({
     const notReceived = userNav.find((i) => i.href === "/dashboard/not-received");
     const billing = userNav.find((i) => i.href === "/dashboard/billing");
     const mtn = userNav.find((i) => i.href === "/dashboard/mtn-verification");
-    // API item: only for RESELLER, AGENT, ADMIN, MANAGER — not plain USER
-    const api = canAccessDeveloperApi(user.role)
+    const isSubAgent = Boolean(user.referredById);
+    // API item: only for RESELLER, AGENT, ADMIN, MANAGER — not plain USER or sub-agents
+    const api = (!isSubAgent && canAccessDeveloperApi(user.role, user.referredById))
       ? userNav.find((i) => i.href === "/dashboard/api")
       : undefined;
     const others = userNav.filter(
@@ -212,7 +213,8 @@ export function AppShell({
           "/dashboard/billing",
           "/dashboard/mtn-verification",
           "/dashboard/api",
-        ].includes(i.href)
+        ].includes(i.href) &&
+        !(isSubAgent && i.href === "/dashboard/affiliate")
     );
 
     userItems = [

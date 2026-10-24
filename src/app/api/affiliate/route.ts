@@ -7,6 +7,9 @@ import { getAgentAffiliateOverview, ensureUserAffiliateCode } from "@/lib/affili
 export async function GET() {
   try {
     const user = await requireUser();
+    if (user.referredById) {
+      return apiError(403, "Sub-agents do not have access to the affiliate network.");
+    }
     const overview = await getAgentAffiliateOverview(user.id);
     return NextResponse.json(overview);
   } catch (err) {
@@ -17,6 +20,9 @@ export async function GET() {
 export async function PATCH(request: NextRequest) {
   try {
     const user = await requireUser();
+    if (user.referredById) {
+      return apiError(403, "Sub-agents do not have access to the affiliate network.");
+    }
     const body = await request.json();
     const rawCode = body.affiliateCode?.trim()?.toUpperCase();
 

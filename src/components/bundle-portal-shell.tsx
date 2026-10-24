@@ -89,9 +89,14 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
   }, []);
 
   const isAdmin = user.role === "ADMIN" || user.role === "MANAGER";
+  const isSubAgent = Boolean(user.referredById);
 
   const visibleNavItems = NAV_ITEMS.filter((item) => {
     if (item.adminOnly && !isAdmin) return false;
+    // Sub-agents do not have access to Affiliate Network or Developer API
+    if (isSubAgent && (item.href === "/dashboard/affiliate" || item.href === "/dashboard/api")) {
+      return false;
+    }
     return true;
   });
 

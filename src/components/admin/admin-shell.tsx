@@ -35,6 +35,7 @@ import {
   Search,
   Sun,
   Moon,
+  Share2,
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { useToast } from "@/components/toast";
@@ -104,6 +105,7 @@ const NAV_GROUPS: NavGroup[] = [
     title: "MERCHANTS & USERS",
     items: [
       { href: "/admin/users", label: "User Management", icon: Users },
+      { href: "/admin/affiliates", label: "Affiliate Network", icon: Share2 },
       { href: "/admin/users/signup-codes", label: "Invitation Codes", icon: Ticket },
       { href: "/admin/storefronts", label: "Storefront Directory", icon: Store },
       { href: "/admin/chat", label: "Support Live Desk", icon: MessageSquare },
