@@ -73,7 +73,7 @@ export function NetworkBuyForm({
   const [selected, setSelected] = React.useState<Product | null>(null);
 
   // Network filter for multi-network view
-  const [activeNetwork, setActiveNetwork] = React.useState<string>(network || "ALL");
+  const [activeNetwork, setActiveNetwork] = React.useState<string>(network || "MTN");
 
   // Active capacity filter tab
   const [filterTab, setFilterTab] = React.useState<"all" | "popular" | "light" | "heavy">("all");
@@ -213,7 +213,6 @@ export function NetworkBuyForm({
       {showCarrierFilter && (
         <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           {[
-            { id: "ALL", label: "All Networks" },
             { id: "MTN", label: "MTN Ghana" },
             { id: "TELECEL", label: "Telecel" },
             { id: "AIRTELTIGO", label: "AT iShare" },
