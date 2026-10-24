@@ -7,7 +7,6 @@ import {
   Search,
   Zap,
   ArrowUpDown,
-  Download,
   PhoneCall,
   Repeat,
   ShoppingBag,
@@ -81,44 +80,6 @@ export default function CustomersPage() {
     return () => clearTimeout(timer);
   }, [fetchCustomers]);
 
-  const exportCSV = () => {
-    if (customers.length === 0) {
-      toast("No customer records to export", "info");
-      return;
-    }
-    const headers = [
-      "Phone Number",
-      "Network",
-      "Total Orders",
-      "Successful Orders",
-      "Total Volume (GB)",
-      "Total Spend (GHS)",
-      "Last Order Date",
-      "Last Bundle",
-    ];
-    const rows = customers.map((c) => [
-      c.phoneNumber,
-      c.network,
-      c.totalOrders,
-      c.successfulOrders,
-      c.totalVolumeGb,
-      c.totalSpend.toFixed(2),
-      c.lastOrderDate,
-      `"${c.lastBundle.replace(/"/g, '""')}"`,
-    ]);
-    const csvContent =
-      "data:text/csv;charset=utf-8," +
-      [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `bundle_portal_customers_${new Date().toISOString().split("T")[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    toast("Customer directory exported successfully", "success");
-  };
-
   const getNetworkBadge = (network: string) => {
     const upper = network.toUpperCase();
     if (upper.includes("MTN")) {
@@ -167,13 +128,6 @@ export default function CustomersPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={exportCSV}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-[#162740] dark:bg-[#070d18] dark:text-slate-200 dark:hover:bg-[#111e33]"
-            >
-              <Download className="h-3.5 w-3.5 text-slate-400" />
-              Export CSV
-            </button>
             <Link
               href="/dashboard/buy-now"
               className="inline-flex items-center gap-2 rounded-xl bg-[#00df82] px-4 py-2 text-xs font-black text-[#041d14] shadow-[0_0_20px_rgba(0,223,130,0.3)] transition hover:bg-[#00c572]"
