@@ -49,6 +49,8 @@ model User {
   affiliatePrices         AffiliatePackagePrice[]
   affiliateCommissions    AffiliateCommission[]   @relation("BeneficiaryCommissions")
   sourceCommissions       AffiliateCommission[]   @relation("SourceUserCommissions")
+  affiliateBalance        Float                   @default(0)
+  affiliateWithdrawals    AffiliateWithdrawal[]
 
   @@index([role])
   @@index([status])
@@ -947,4 +949,30 @@ model AffiliateCommission {
   @@index([sourceUserId])
   @@index([originOrderId])
 }
+
+model AffiliateWithdrawal {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount       Float
+  fee          Float     @default(0)
+  netAmount    Float
+  payoutMethod String    @default("MOMO") // MOMO | MAIN_WALLET
+  network      String?   // MTN | TELECEL | AIRTELTIGO
+  momoNumber   String?
+  accountName  String?
+  status       String    @default("PENDING") // PENDING | APPROVED | REJECTED
+  reference    String?
+  note         String?
+  adminNote    String?
+  processedBy  String?
+  processedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
 

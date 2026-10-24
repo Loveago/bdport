@@ -71,16 +71,8 @@ export interface DistributeCommissionInput {
 
 /**
  * Distribute cascading affiliate commissions up the referrer hierarchy.
- *
- * Example:
- * Base Platform Cost = 10 GHS
- * Main Agent sets Sub-Agent A price = 12 GHS
- * Sub-Agent A sets Sub-Agent B price = 13 GHS
- *
- * Sub-Agent B buys at 13 GHS:
- * - Tier 1: Sub-Agent A cost is 12 GHS -> A gets 13 - 12 = 1 GHS profit.
- * - Tier 2: Main Agent cost is 10 GHS -> Main Agent gets 12 - 10 = 2 GHS profit.
- * - Platform retains 10 GHS.
+ * Commissions are credited to the separate Affiliate Wallet (affiliateBalance),
+ * keeping them isolated from the user's primary operating wallet.
  */
 export async function distributeAffiliateCommissions(
   tx: any,
@@ -140,7 +132,7 @@ export async function distributeAffiliateCommissions(
 
     const parent = await tx.user.findUnique({
       where: { id: currentParentId },
-      select: { id: true, name: true, email: true, balance: true, referredById: true },
+      select: { id: true, name: true, email: true, balance: true, affiliateBalance: true, referredById: true },
     });
 
     if (!parent) break;
@@ -152,13 +144,13 @@ export async function distributeAffiliateCommissions(
     const profit = Math.round((childCost - parentCost) * 100) / 100;
 
     if (profit > 0) {
-      // 1. Credit parent balance
+      // 1. Credit parent's separate Affiliate Wallet (affiliateBalance)
       await tx.user.update({
         where: { id: parent.id },
-        data: { balance: { increment: profit } },
+        data: { affiliateBalance: { increment: profit } },
       });
 
-      // 2. Record AffiliateCommission
+      // 2. Record AffiliateCommission record
       await tx.affiliateCommission.create({
         data: {
           beneficiaryId: parent.id,
@@ -170,18 +162,6 @@ export async function distributeAffiliateCommissions(
           agentCost: parentCost,
           tierLevel,
           status: "PAID",
-        },
-      });
-
-      // 3. Record WalletTransaction ledger item
-      await tx.walletTransaction.create({
-        data: {
-          userId: parent.id,
-          type: "COMMISSION",
-          amount: profit,
-          status: "APPROVED",
-          reference: `affiliate:${input.originOrderId}:tier${tierLevel}`,
-          note: `Affiliate Commission (Tier ${tierLevel}) from Order #${input.originOrderId} (${pkg.network} ${pkg.gbAmount}GB)`,
         },
       });
 
@@ -204,6 +184,7 @@ export async function distributeAffiliateCommissions(
 
 /**
  * Reverse affiliate commissions when an order is cancelled or refunded.
+ * Debits from the separate Affiliate Wallet (affiliateBalance).
  */
 export async function reverseAffiliateCommissions(
   tx: any,
@@ -218,28 +199,16 @@ export async function reverseAffiliateCommissions(
   let totalReversed = 0;
 
   for (const c of commissions) {
-    // Deduct the credited commission from beneficiary balance
+    // Deduct the credited commission from beneficiary's affiliate wallet balance
     await tx.user.update({
       where: { id: c.beneficiaryId },
-      data: { balance: { decrement: c.amount } },
+      data: { affiliateBalance: { decrement: c.amount } },
     });
 
     // Mark commission as REVERSED
     await tx.affiliateCommission.update({
       where: { id: c.id },
       data: { status: "REVERSED" },
-    });
-
-    // Record ledger reversal
-    await tx.walletTransaction.create({
-      data: {
-        userId: c.beneficiaryId,
-        type: "ADJUSTMENT",
-        amount: -c.amount,
-        status: "APPROVED",
-        reference: `affiliate_reversal:${originOrderId}:${c.tierLevel}`,
-        note: `Reversal of Affiliate Commission (Tier ${c.tierLevel}) for cancelled/refunded Order #${originOrderId}`,
-      },
     });
 
     totalReversed += c.amount;
@@ -254,7 +223,7 @@ export async function reverseAffiliateCommissions(
 export async function getAgentAffiliateOverview(userId: string) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { id: true, name: true, affiliateCode: true },
+    select: { id: true, name: true, affiliateCode: true, balance: true, affiliateBalance: true },
   });
 
   if (!user) throw new Error("User not found");
@@ -300,14 +269,50 @@ export async function getAgentAffiliateOverview(userId: string) {
       },
     },
     orderBy: { createdAt: "desc" },
+    take: 40,
+  });
+
+  // Withdrawals history
+  const withdrawals = await prisma.affiliateWithdrawal.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
     take: 30,
+  });
+
+  const approvedWithdrawalsAgg = await prisma.affiliateWithdrawal.aggregate({
+    where: { userId, status: "APPROVED" },
+    _sum: { amount: true },
+  });
+
+  const pendingWithdrawal = await prisma.affiliateWithdrawal.findFirst({
+    where: { userId, status: "PENDING" },
   });
 
   return {
     affiliateCode,
+    affiliateBalance: user.affiliateBalance ?? 0,
+    mainBalance: user.balance ?? 0,
     directSubAgentsCount: subAgents.length,
     totalCommissionsEarned: commissionAgg._sum.amount ?? 0,
     totalCommissionsCount: commissionAgg._count.id ?? 0,
+    totalWithdrawn: approvedWithdrawalsAgg._sum.amount ?? 0,
+    hasPendingWithdrawal: Boolean(pendingWithdrawal),
+    pendingWithdrawalAmount: pendingWithdrawal?.amount ?? 0,
+    withdrawals: withdrawals.map((w) => ({
+      id: w.id,
+      amount: w.amount,
+      fee: w.fee,
+      netAmount: w.netAmount,
+      payoutMethod: w.payoutMethod,
+      network: w.network,
+      momoNumber: w.momoNumber,
+      accountName: w.accountName,
+      status: w.status,
+      reference: w.reference,
+      note: w.note,
+      adminNote: w.adminNote,
+      createdAt: w.createdAt,
+    })),
     subAgents: subAgents.map((sa) => ({
       id: sa.id,
       name: sa.name,
@@ -330,6 +335,185 @@ export async function getAgentAffiliateOverview(userId: string) {
       gbAmount: c.originOrder?.gbAmount,
     })),
   };
+}
+
+export interface RequestWithdrawalInput {
+  amount: number;
+  payoutMethod: "MOMO" | "MAIN_WALLET";
+  network?: string;
+  momoNumber?: string;
+  accountName?: string;
+}
+
+/**
+ * Handle agent withdrawal request from their separate Affiliate Wallet.
+ */
+export async function requestAffiliateWithdrawal(
+  userId: string,
+  input: RequestWithdrawalInput
+) {
+  const amount = Math.round(input.amount * 100) / 100;
+  if (isNaN(amount) || amount <= 0) {
+    throw new Error("Invalid withdrawal amount.");
+  }
+
+  const minWithdrawal = 5.0; // Minimum 5 GHS
+  if (amount < minWithdrawal) {
+    throw new Error(`Minimum withdrawal is GHS ${minWithdrawal.toFixed(2)}.`);
+  }
+
+  return await prisma.$transaction(async (tx) => {
+    const user = await tx.user.findUnique({
+      where: { id: userId },
+      select: { id: true, balance: true, affiliateBalance: true, email: true },
+    });
+
+    if (!user) throw new Error("User not found.");
+
+    if (user.affiliateBalance < amount) {
+      throw new Error(
+        `Insufficient affiliate balance. Available: GHS ${user.affiliateBalance.toFixed(2)}, Requested: GHS ${amount.toFixed(2)}.`
+      );
+    }
+
+    if (input.payoutMethod === "MAIN_WALLET") {
+      // 1. Instant transfer to main operating wallet:
+      // Decrement affiliate balance
+      await tx.user.update({
+        where: { id: userId },
+        data: {
+          affiliateBalance: { decrement: amount },
+          balance: { increment: amount },
+        },
+      });
+
+      // 2. Create approved AffiliateWithdrawal record
+      const withdrawal = await tx.affiliateWithdrawal.create({
+        data: {
+          userId,
+          amount,
+          fee: 0,
+          netAmount: amount,
+          payoutMethod: "MAIN_WALLET",
+          status: "APPROVED",
+          reference: `TRF-${Date.now().toString(36).toUpperCase()}`,
+          note: "Instant transfer to main operating balance",
+          processedBy: "system",
+          processedAt: new Date(),
+        },
+      });
+
+      // 3. Ledger record for the primary operating wallet
+      await tx.walletTransaction.create({
+        data: {
+          userId,
+          type: "TOPUP",
+          amount,
+          status: "APPROVED",
+          reference: `affiliate_trf:${withdrawal.id}`,
+          note: `Transfer from Affiliate Wallet (Ref #${withdrawal.reference})`,
+        },
+      });
+
+      return withdrawal;
+    } else {
+      // Mobile Money payout request
+      if (!input.network || !input.momoNumber || !input.accountName) {
+        throw new Error("Network, Mobile Money number, and Account name are required for MoMo payouts.");
+      }
+
+      // Check if user has an active pending withdrawal
+      const existingPending = await tx.affiliateWithdrawal.findFirst({
+        where: { userId, status: "PENDING" },
+      });
+
+      if (existingPending) {
+        throw new Error("You already have a pending withdrawal awaiting review.");
+      }
+
+      // Deduct immediately from affiliate balance into escrow
+      await tx.user.update({
+        where: { id: userId },
+        data: { affiliateBalance: { decrement: amount } },
+      });
+
+      const withdrawal = await tx.affiliateWithdrawal.create({
+        data: {
+          userId,
+          amount,
+          fee: 0,
+          netAmount: amount,
+          payoutMethod: "MOMO",
+          network: input.network.toUpperCase(),
+          momoNumber: input.momoNumber.trim(),
+          accountName: input.accountName.trim(),
+          status: "PENDING",
+          reference: `AFF-WD-${Date.now().toString(36).toUpperCase()}`,
+          note: `MoMo withdrawal request to ${input.network} (${input.momoNumber})`,
+        },
+      });
+
+      return withdrawal;
+    }
+  });
+}
+
+/**
+ * Admin action: Approve MoMo affiliate withdrawal.
+ */
+export async function approveAffiliateWithdrawal(
+  withdrawalId: string,
+  adminLabel: string
+) {
+  const row = await prisma.affiliateWithdrawal.findUnique({
+    where: { id: withdrawalId },
+  });
+
+  if (!row) throw new Error("Withdrawal request not found.");
+  if (row.status !== "PENDING") throw new Error(`Withdrawal is already ${row.status}.`);
+
+  return await prisma.affiliateWithdrawal.update({
+    where: { id: withdrawalId },
+    data: {
+      status: "APPROVED",
+      processedBy: adminLabel,
+      processedAt: new Date(),
+    },
+  });
+}
+
+/**
+ * Admin action: Reject MoMo affiliate withdrawal and refund back to affiliate wallet.
+ */
+export async function rejectAffiliateWithdrawal(
+  withdrawalId: string,
+  reason: string,
+  adminLabel: string
+) {
+  return await prisma.$transaction(async (tx) => {
+    const row = await tx.affiliateWithdrawal.findUnique({
+      where: { id: withdrawalId },
+    });
+
+    if (!row) throw new Error("Withdrawal request not found.");
+    if (row.status !== "PENDING") throw new Error(`Withdrawal is already ${row.status}.`);
+
+    // Refund amount back to affiliate balance
+    await tx.user.update({
+      where: { id: row.userId },
+      data: { affiliateBalance: { increment: row.amount } },
+    });
+
+    return await tx.affiliateWithdrawal.update({
+      where: { id: withdrawalId },
+      data: {
+        status: "REJECTED",
+        adminNote: reason || "Rejected by administrator",
+        processedBy: adminLabel,
+        processedAt: new Date(),
+      },
+    });
+  });
 }
 
 /**

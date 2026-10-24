@@ -20,6 +20,12 @@ import {
   ShieldCheck,
   CheckCircle2,
   Zap,
+  Wallet,
+  ArrowDownToLine,
+  ArrowRightLeft,
+  Smartphone,
+  Clock,
+  AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,13 +56,35 @@ interface Commission {
   gbAmount?: number;
 }
 
+interface Withdrawal {
+  id: string;
+  amount: number;
+  fee: number;
+  netAmount: number;
+  payoutMethod: "MOMO" | "MAIN_WALLET";
+  network: string | null;
+  momoNumber: string | null;
+  accountName: string | null;
+  status: string;
+  reference: string | null;
+  note: string | null;
+  adminNote: string | null;
+  createdAt: string;
+}
+
 interface OverviewData {
   affiliateCode: string;
+  affiliateBalance: number;
+  mainBalance: number;
   directSubAgentsCount: number;
   totalCommissionsEarned: number;
   totalCommissionsCount: number;
+  totalWithdrawn: number;
+  hasPendingWithdrawal: boolean;
+  pendingWithdrawalAmount: number;
   subAgents: SubAgent[];
   recentCommissions: Commission[];
+  withdrawals: Withdrawal[];
 }
 
 interface PricingPackage {
@@ -71,12 +99,12 @@ interface PricingPackage {
   isCustomized: boolean;
 }
 
-type TabType = "pricing" | "subagents" | "commissions" | "guide";
+type TabType = "pricing" | "earnings" | "subagents" | "commissions" | "guide";
 
 export default function AffiliateDashboardPage() {
   const { toast } = useToast();
 
-  const [activeTab, setActiveTab] = useState<TabType>("pricing");
+  const [activeTab, setActiveTab] = useState<TabType>("earnings");
   const [loading, setLoading] = useState(true);
   const [savingPrices, setSavingPrices] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
@@ -95,41 +123,48 @@ export default function AffiliateDashboardPage() {
   const [customCodeInput, setCustomCodeInput] = useState("");
   const [savingCode, setSavingCode] = useState(false);
 
+  // Withdrawal form state
+  const [withdrawalMethod, setWithdrawalMethod] = useState<"MAIN_WALLET" | "MOMO">("MAIN_WALLET");
+  const [withdrawAmount, setWithdrawAmount] = useState<string>("");
+  const [momoNetwork, setMomoNetwork] = useState<string>("MTN");
+  const [momoNumber, setMomoNumber] = useState<string>("");
+  const [accountName, setAccountName] = useState<string>("");
+  const [submittingWithdrawal, setSubmittingWithdrawal] = useState(false);
+
   // Load overview & pricing
-  useEffect(() => {
-    async function loadData() {
-      try {
-        setLoading(true);
-        const [overviewRes, pricingRes] = await Promise.all([
-          fetch("/api/affiliate"),
-          fetch("/api/affiliate/pricing"),
-        ]);
+  const loadData = async () => {
+    try {
+      const [overviewRes, pricingRes] = await Promise.all([
+        fetch("/api/affiliate"),
+        fetch("/api/affiliate/pricing"),
+      ]);
 
-        if (overviewRes.ok) {
-          const overviewJson = await overviewRes.json();
-          setOverview(overviewJson);
-          setCustomCodeInput(overviewJson.affiliateCode || "");
-        }
-
-        if (pricingRes.ok) {
-          const pricingJson = await pricingRes.json();
-          setPricingSheet(pricingJson.sheet || []);
-          const initialMap: Record<string, number> = {};
-          (pricingJson.sheet || []).forEach((p: PricingPackage) => {
-            initialMap[p.packageId] = p.subAgentWholesalePrice;
-          });
-          setEditedPrices(initialMap);
-        }
-      } catch (err) {
-        console.error("Failed to load affiliate details:", err);
-        toast("Failed to load affiliate data.", "error");
-      } finally {
-        setLoading(false);
+      if (overviewRes.ok) {
+        const overviewJson = await overviewRes.json();
+        setOverview(overviewJson);
+        setCustomCodeInput(overviewJson.affiliateCode || "");
       }
-    }
 
+      if (pricingRes.ok) {
+        const pricingJson = await pricingRes.json();
+        setPricingSheet(pricingJson.sheet || []);
+        const initialMap: Record<string, number> = {};
+        (pricingJson.sheet || []).forEach((p: PricingPackage) => {
+          initialMap[p.packageId] = p.subAgentWholesalePrice;
+        });
+        setEditedPrices(initialMap);
+      }
+    } catch (err) {
+      console.error("Failed to load affiliate details:", err);
+      toast("Failed to load affiliate data.", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     loadData();
-  }, [toast]);
+  }, []);
 
   const origin = typeof window !== "undefined" ? window.location.origin : "";
   const affiliateUrl = overview?.affiliateCode
@@ -253,6 +288,69 @@ export default function AffiliateDashboardPage() {
     }
   };
 
+  const handleWithdrawalSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const amountNum = parseFloat(withdrawAmount);
+    if (isNaN(amountNum) || amountNum <= 0) {
+      toast("Please enter a valid withdrawal amount.", "error");
+      return;
+    }
+
+    if (amountNum < 5) {
+      toast("Minimum withdrawal amount is GHS 5.00.", "error");
+      return;
+    }
+
+    if (amountNum > (overview?.affiliateBalance ?? 0)) {
+      toast("Amount exceeds your available affiliate earnings balance.", "error");
+      return;
+    }
+
+    if (withdrawalMethod === "MOMO") {
+      if (!momoNumber.trim() || !accountName.trim()) {
+        toast("Please provide both Mobile Money phone number and account name.", "error");
+        return;
+      }
+    }
+
+    try {
+      setSubmittingWithdrawal(true);
+      const res = await fetch("/api/affiliate/withdraw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: amountNum,
+          payoutMethod: withdrawalMethod,
+          network: momoNetwork,
+          momoNumber: momoNumber.trim(),
+          accountName: accountName.trim(),
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        toast(data.error || "Failed to process withdrawal.", "error");
+        return;
+      }
+
+      toast(
+        withdrawalMethod === "MAIN_WALLET"
+          ? "GHS " + amountNum.toFixed(2) + " successfully transferred to your main wallet balance!"
+          : "Withdrawal request submitted for payout review.",
+        "success"
+      );
+
+      setWithdrawAmount("");
+      setMomoNumber("");
+      setAccountName("");
+      await loadData();
+    } catch {
+      toast("Network error while submitting withdrawal.", "error");
+    } finally {
+      setSubmittingWithdrawal(false);
+    }
+  };
+
   const filteredPackages = useMemo(() => {
     if (selectedNetwork === "ALL") return pricingSheet;
     return pricingSheet.filter(
@@ -268,6 +366,8 @@ export default function AffiliateDashboardPage() {
     );
   }
 
+  const affiliateBal = overview?.affiliateBalance ?? 0;
+
   return (
     <div className="space-y-6 pb-12">
       {/* Header */}
@@ -279,7 +379,7 @@ export default function AffiliateDashboardPage() {
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-2xl">
             Recruit partner agents with your referral link, set wholesale prices for your downline,
-            and earn automatic cascading commission on every sale.
+            and manage your affiliate earnings in your dedicated earnings wallet.
           </p>
         </div>
       </div>
@@ -384,7 +484,33 @@ export default function AffiliateDashboardPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
+        {/* Affiliate Wallet Balance Card */}
+        <Card className="rounded-2xl border-2 border-emerald-500/40 bg-emerald-50/20 dark:bg-emerald-950/20 shadow-sm relative overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+              Affiliate Wallet
+            </CardTitle>
+            <div className="h-9 w-9 rounded-xl bg-emerald-500/15 text-emerald-500 flex items-center justify-center">
+              <Wallet className="h-5 w-5" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">
+              GHS {affiliateBal.toFixed(2)}
+            </div>
+            <div className="flex items-center justify-between mt-2">
+              <span className="text-[11px] text-slate-500 font-medium">Isolated earnings</span>
+              <button
+                onClick={() => setActiveTab("earnings")}
+                className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
+              >
+                Withdraw <ArrowRight className="h-3 w-3" />
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
@@ -398,47 +524,59 @@ export default function AffiliateDashboardPage() {
             <div className="text-2xl font-black text-slate-900 dark:text-white">
               {overview?.directSubAgentsCount ?? 0}
             </div>
-            <p className="text-xs text-slate-500 mt-1">Agents registered via your link</p>
+            <p className="text-xs text-slate-500 mt-1">Recruited via your link</p>
           </CardContent>
         </Card>
 
         <Card className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Total Affiliate Profit
+              Lifetime Earnings
             </CardTitle>
-            <div className="h-9 w-9 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+            <div className="h-9 w-9 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center">
               <DollarSign className="h-5 w-5" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">
+            <div className="text-2xl font-black text-purple-600 dark:text-purple-400 font-mono">
               GHS {(overview?.totalCommissionsEarned ?? 0).toFixed(2)}
             </div>
-            <p className="text-xs text-slate-500 mt-1">Auto-credited directly to your wallet</p>
+            <p className="text-xs text-slate-500 mt-1">Across all order sales</p>
           </CardContent>
         </Card>
 
         <Card className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Commissions Earned
+              Total Withdrawn
             </CardTitle>
             <div className="h-9 w-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
-              <TrendingUp className="h-5 w-5" />
+              <ArrowDownToLine className="h-5 w-5" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black text-slate-900 dark:text-white">
-              {overview?.totalCommissionsCount ?? 0}
+            <div className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+              GHS {(overview?.totalWithdrawn ?? 0).toFixed(2)}
             </div>
-            <p className="text-xs text-slate-500 mt-1">Orders processed across downline</p>
+            <p className="text-xs text-slate-500 mt-1">Paid out to MoMo / Wallet</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs Bar */}
       <div className="flex border-b border-slate-200 dark:border-slate-800 gap-2 sm:gap-4 overflow-x-auto">
+        <button
+          onClick={() => setActiveTab("earnings")}
+          className={`pb-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 whitespace-nowrap px-1 ${
+            activeTab === "earnings"
+              ? "border-emerald-500 text-emerald-600 dark:text-emerald-400"
+              : "border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+          }`}
+        >
+          <Wallet className="h-4 w-4" />
+          Earnings & Withdrawals
+        </button>
+
         <button
           onClick={() => setActiveTab("pricing")}
           className={`pb-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 whitespace-nowrap px-1 ${
@@ -472,7 +610,7 @@ export default function AffiliateDashboardPage() {
           }`}
         >
           <TrendingUp className="h-4 w-4" />
-          Earnings Ledger
+          Commissions Log
         </button>
 
         <button
@@ -488,7 +626,323 @@ export default function AffiliateDashboardPage() {
         </button>
       </div>
 
-      {/* Tab 1: Sub-Agent Wholesale Pricing */}
+      {/* Tab: Earnings & Withdrawals */}
+      {activeTab === "earnings" && (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            {/* Left: Wallet Info & Balances */}
+            <div className="space-y-6 lg:col-span-1">
+              <Card className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm space-y-5">
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                    Separate Affiliate Wallet
+                  </span>
+                  <div className="text-3xl font-black text-emerald-600 dark:text-emerald-400 font-mono mt-1">
+                    GHS {affiliateBal.toFixed(2)}
+                  </div>
+                  <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                    Commissions earned from sub-agents are held in this separate wallet. They are never spent on regular data orders unless you transfer them.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/60 p-4 space-y-2.5 text-xs">
+                  <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
+                    <span>Main Operating Balance:</span>
+                    <span className="font-mono font-bold text-slate-900 dark:text-white">
+                      GHS {(overview?.mainBalance ?? 0).toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
+                    <span>Total Withdrawn:</span>
+                    <span className="font-mono font-bold text-slate-900 dark:text-white">
+                      GHS {(overview?.totalWithdrawn ?? 0).toFixed(2)}
+                    </span>
+                  </div>
+                  {overview?.hasPendingWithdrawal && (
+                    <div className="flex justify-between items-center text-amber-600 dark:text-amber-400 font-medium">
+                      <span>Pending MoMo Review:</span>
+                      <span className="font-mono font-bold">
+                        GHS {(overview?.pendingWithdrawalAmount ?? 0).toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="rounded-2xl border border-blue-500/20 bg-blue-50/50 dark:bg-blue-950/20 p-4 text-xs text-blue-900 dark:text-blue-200 space-y-1">
+                  <span className="font-bold flex items-center gap-1.5 text-blue-700 dark:text-blue-300">
+                    <ShieldCheck className="h-4 w-4" /> Two Payout Channels
+                  </span>
+                  <p className="text-[11px] leading-relaxed text-blue-800 dark:text-blue-300">
+                    1. <strong>Transfer to Main Wallet</strong>: Instant with zero delay. Adds credit to purchase data bundles.
+                    <br />
+                    2. <strong>Mobile Money (MoMo)</strong>: Direct payout to your MTN, Telecel, or AirtelTigo account.
+                  </p>
+                </div>
+              </Card>
+            </div>
+
+            {/* Right: Withdrawal Form */}
+            <div className="lg:col-span-2">
+              <Card className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 shadow-sm space-y-6">
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                    <ArrowDownToLine className="h-5 w-5 text-emerald-500" />
+                    Withdraw Affiliate Earnings
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Select where you would like your earnings sent.
+                  </p>
+                </div>
+
+                {/* Method Selector */}
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setWithdrawalMethod("MAIN_WALLET")}
+                    className={`rounded-2xl border p-4 text-left transition-all ${
+                      withdrawalMethod === "MAIN_WALLET"
+                        ? "border-emerald-500 bg-emerald-50/40 dark:bg-emerald-950/20 ring-2 ring-emerald-500/20"
+                        : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
+                    }`}
+                  >
+                    <ArrowRightLeft className="h-5 w-5 text-emerald-500 mb-2" />
+                    <div className="font-bold text-sm text-slate-900 dark:text-white">
+                      Transfer to Main Wallet
+                    </div>
+                    <div className="text-[11px] text-slate-500 mt-0.5">
+                      Instant top-up to buy data bundles
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setWithdrawalMethod("MOMO")}
+                    className={`rounded-2xl border p-4 text-left transition-all ${
+                      withdrawalMethod === "MOMO"
+                        ? "border-emerald-500 bg-emerald-50/40 dark:bg-emerald-950/20 ring-2 ring-emerald-500/20"
+                        : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
+                    }`}
+                  >
+                    <Smartphone className="h-5 w-5 text-emerald-500 mb-2" />
+                    <div className="font-bold text-sm text-slate-900 dark:text-white">
+                      Mobile Money (MoMo)
+                    </div>
+                    <div className="text-[11px] text-slate-500 mt-0.5">
+                      Payout to MTN / Telecel / AirtelTigo
+                    </div>
+                  </button>
+                </div>
+
+                <form onSubmit={handleWithdrawalSubmit} className="space-y-4">
+                  {/* Amount Input */}
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        Amount to Withdraw (GHS)
+                      </label>
+                      <span className="text-xs text-slate-400">
+                        Available: <strong className="font-mono text-emerald-600 dark:text-emerald-400">GHS {affiliateBal.toFixed(2)}</strong>
+                      </span>
+                    </div>
+                    <div className="relative">
+                      <span className="absolute left-3.5 top-3 text-sm font-bold text-slate-400">
+                        GHS
+                      </span>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        min="5"
+                        max={affiliateBal}
+                        placeholder="0.00"
+                        value={withdrawAmount}
+                        onChange={(e) => setWithdrawAmount(e.target.value)}
+                        className="pl-14 h-12 text-base font-mono font-bold rounded-xl focus:border-emerald-500"
+                      />
+                    </div>
+                    {/* Quick Pill Shortcuts */}
+                    <div className="flex gap-2 pt-1">
+                      {[10, 20, 50, 100].map((quick) => (
+                        <button
+                          key={quick}
+                          type="button"
+                          disabled={quick > affiliateBal}
+                          onClick={() => setWithdrawAmount(quick.toString())}
+                          className="px-2.5 py-1 text-xs rounded-lg font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 transition"
+                        >
+                          GHS {quick}
+                        </button>
+                      ))}
+                      <button
+                        type="button"
+                        disabled={affiliateBal <= 0}
+                        onClick={() => setWithdrawAmount(affiliateBal.toFixed(2))}
+                        className="px-2.5 py-1 text-xs rounded-lg font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/25 disabled:opacity-40 transition"
+                      >
+                        All (Max)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* MoMo Specific Fields */}
+                  {withdrawalMethod === "MOMO" && (
+                    <div className="space-y-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 p-4 border border-slate-200 dark:border-slate-800 animate-in fade-in">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                          Mobile Money Carrier
+                        </label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {[
+                            { id: "MTN", label: "MTN MoMo", color: "border-amber-400 bg-amber-400/10 text-amber-900 dark:text-amber-200" },
+                            { id: "TELECEL", label: "Telecel Cash", color: "border-rose-400 bg-rose-400/10 text-rose-900 dark:text-rose-200" },
+                            { id: "AIRTELTIGO", label: "ATMoney", color: "border-blue-400 bg-blue-400/10 text-blue-900 dark:text-blue-200" },
+                          ].map((net) => (
+                            <button
+                              key={net.id}
+                              type="button"
+                              onClick={() => setMomoNetwork(net.id)}
+                              className={`py-2 px-3 text-xs font-bold rounded-xl border text-center transition-all ${
+                                momoNetwork === net.id
+                                  ? `${net.color} ring-2 ring-emerald-500/30`
+                                  : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                              }`}
+                            >
+                              {net.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="space-y-1">
+                          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                            MoMo Phone Number
+                          </label>
+                          <Input
+                            placeholder="e.g. 0244123456"
+                            value={momoNumber}
+                            onChange={(e) => setMomoNumber(e.target.value)}
+                            className="h-11 rounded-xl font-mono text-sm"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                            Account Registered Name
+                          </label>
+                          <Input
+                            placeholder="e.g. Kwame Mensah"
+                            value={accountName}
+                            onChange={(e) => setAccountName(e.target.value)}
+                            className="h-11 rounded-xl text-sm"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <Button
+                    type="submit"
+                    disabled={submittingWithdrawal || affiliateBal < 5}
+                    className="w-full h-12 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm tracking-wide shadow-lg shadow-emerald-500/20"
+                  >
+                    {submittingWithdrawal ? (
+                      <Spinner className="h-5 w-5 mr-2" />
+                    ) : withdrawalMethod === "MAIN_WALLET" ? (
+                      "Transfer to Main Wallet Instantly"
+                    ) : (
+                      "Submit MoMo Payout Request"
+                    )}
+                  </Button>
+                </form>
+              </Card>
+            </div>
+          </div>
+
+          {/* Withdrawals History Table */}
+          <Card className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+            <CardHeader>
+              <CardTitle className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <Clock className="h-5 w-5 text-slate-400" />
+                Withdrawal & Transfer History
+              </CardTitle>
+              <CardDescription className="text-xs text-slate-500">
+                Log of all past payouts and transfers originating from your affiliate earnings wallet.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              {overview?.withdrawals && overview.withdrawals.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs sm:text-sm">
+                    <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 border-y border-slate-200 dark:border-slate-800 font-bold uppercase text-[11px] tracking-wider">
+                      <tr>
+                        <th className="py-3 px-4">Reference</th>
+                        <th className="py-3 px-4">Method</th>
+                        <th className="py-3 px-4">Destination</th>
+                        <th className="py-3 px-4 text-right">Amount</th>
+                        <th className="py-3 px-4 text-center">Status</th>
+                        <th className="py-3 px-4 text-right">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                      {overview.withdrawals.map((w) => (
+                        <tr key={w.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+                          <td className="py-3.5 px-4 font-mono font-bold text-slate-900 dark:text-white text-xs">
+                            {w.reference || w.id.slice(0, 10)}
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <span
+                              className={`px-2 py-0.5 rounded-md text-xs font-bold ${
+                                w.payoutMethod === "MAIN_WALLET"
+                                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                                  : "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                              }`}
+                            >
+                              {w.payoutMethod === "MAIN_WALLET" ? "Main Wallet" : "Mobile Money"}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300 text-xs">
+                            {w.payoutMethod === "MAIN_WALLET" ? (
+                              <span>Operating Balance</span>
+                            ) : (
+                              <span>
+                                {w.network} • {w.momoNumber} ({w.accountName})
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-3.5 px-4 text-right font-mono font-black text-slate-900 dark:text-white">
+                            GHS {w.amount.toFixed(2)}
+                          </td>
+                          <td className="py-3.5 px-4 text-center">
+                            <span
+                              className={`px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider ${
+                                w.status === "APPROVED"
+                                  ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
+                                  : w.status === "PENDING"
+                                  ? "bg-amber-500/20 text-amber-600 dark:text-amber-400"
+                                  : "bg-rose-500/20 text-rose-600 dark:text-rose-400"
+                              }`}
+                            >
+                              {w.status}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4 text-right text-slate-500 text-xs">
+                            {new Date(w.createdAt).toLocaleDateString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="py-10 text-center text-slate-500 text-xs">
+                  No withdrawals made yet.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Tab: Sub-Agent Wholesale Pricing */}
       {activeTab === "pricing" && (
         <div className="space-y-6">
           {/* Controls Bar */}
@@ -657,7 +1111,7 @@ export default function AffiliateDashboardPage() {
         </div>
       )}
 
-      {/* Tab 2: Downline Agents */}
+      {/* Tab: Downline Agents */}
       {activeTab === "subagents" && (
         <Card className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
           <CardHeader>
@@ -719,12 +1173,12 @@ export default function AffiliateDashboardPage() {
         </Card>
       )}
 
-      {/* Tab 3: Commissions Ledger */}
+      {/* Tab: Commissions Ledger */}
       {activeTab === "commissions" && (
         <Card className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
           <CardHeader>
             <CardTitle className="text-lg font-black text-slate-900 dark:text-white">
-              Affiliate Earnings & Commissions Ledger
+              Commissions Activity Log
             </CardTitle>
             <CardDescription className="text-xs text-slate-500">
               Live record of all profit margins earned from orders placed by your sub-agent network.
@@ -792,7 +1246,7 @@ export default function AffiliateDashboardPage() {
                   No commissions earned yet.
                 </p>
                 <p className="text-xs text-slate-400 max-w-sm mx-auto">
-                  When your sub-agents make a purchase or sell on their storefronts, your profit is calculated and credited instantly.
+                  When your sub-agents make a purchase or sell on their storefronts, your profit is calculated and credited to your affiliate wallet instantly.
                 </p>
               </div>
             )}
@@ -800,7 +1254,7 @@ export default function AffiliateDashboardPage() {
         </Card>
       )}
 
-      {/* Tab 4: How It Works */}
+      {/* Tab: How It Works */}
       {activeTab === "guide" && (
         <div className="space-y-6">
           <Card className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-8 shadow-sm">
@@ -839,7 +1293,7 @@ export default function AffiliateDashboardPage() {
                 </div>
                 <h4 className="font-bold text-slate-900 dark:text-white">Automated Cascading Profit</h4>
                 <p className="text-xs text-slate-500 leading-relaxed">
-                  Every time your sub-agent places an order, sells via their storefront, or submits via API, the 2 GHS profit is instantly credited to your wallet balance.
+                  Every time your sub-agent places an order, sells via their storefront, or submits via API, the 2 GHS profit is instantly credited to your separate affiliate wallet.
                 </p>
               </div>
             </div>
