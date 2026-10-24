@@ -6,13 +6,23 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { registerSchema, type RegisterInput } from "@/lib/validation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/input";
-import { AuthShell, AuthFooterLink } from "@/components/auth/auth-shell";
+import { BrandMark } from "@/components/brand-logo";
 import { useToast } from "@/components/toast";
 import { Spinner } from "@/components/shared";
-import { CheckCircle2, XCircle, CreditCard, ExternalLink, AlertTriangle } from "lucide-react";
+import {
+  User,
+  Mail,
+  Lock,
+  Ticket,
+  ArrowRight,
+  Eye,
+  EyeOff,
+  CheckCircle2,
+  XCircle,
+  CreditCard,
+  ExternalLink,
+  AlertTriangle,
+} from "lucide-react";
 
 interface SignupFeeInfo {
   enabled: boolean;
@@ -28,6 +38,7 @@ function RegisterForm() {
   const { toast } = useToast();
 
   const [serverError, setServerError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [signupCodeMode, setSignupCodeMode] = useState<"DISABLED" | "OPTIONAL" | "REQUIRED">("OPTIONAL");
   const [codeStatus, setCodeStatus] = useState<{ checked: boolean; valid: boolean; message?: string } | null>(null);
   const [validatingCode, setValidatingCode] = useState(false);
@@ -35,7 +46,15 @@ function RegisterForm() {
   const [registrationClosed, setRegistrationClosed] = useState(false);
   const [redirectingPayment, setRedirectingPayment] = useState<{ url: string; amount: number } | null>(null);
 
-  const refParam = searchParams.get("ref") || "";
+  // Check for affiliate referral link parameters
+  const rawRef =
+    searchParams.get("ref") ||
+    searchParams.get("code") ||
+    searchParams.get("aff") ||
+    searchParams.get("affiliate") ||
+    searchParams.get("invite") ||
+    "";
+  const refParam = rawRef.trim();
 
   const {
     register,
@@ -46,13 +65,19 @@ function RegisterForm() {
   } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      signupCode: refParam,
       ref: refParam,
     },
   });
 
+  // Autofill signupCode and ref when an affiliate / invite code is in URL
   useEffect(() => {
     if (refParam) {
       setValue("ref", refParam);
+      setValue("signupCode", refParam);
     }
   }, [refParam, setValue]);
 
@@ -68,7 +93,6 @@ function RegisterForm() {
         if (data.signupFee) setSignupFee(data.signupFee);
       })
       .catch(() => {
-        // Fallback to legacy endpoint if needed
         fetch("/api/auth/signup-code-mode")
           .then((r) => r.json())
           .then((data) => {
@@ -96,9 +120,10 @@ function RegisterForm() {
     }
   }, [searchParams]);
 
-  // Validate signup code with debounce
+  // Validate signup / affiliate code with debounce
   useEffect(() => {
-    if (signupCodeMode === "DISABLED" || !enteredCode || !enteredCode.trim()) {
+    const codeToValidate = enteredCode?.trim();
+    if (!codeToValidate) {
       setCodeStatus(null);
       return;
     }
@@ -106,12 +131,14 @@ function RegisterForm() {
     const timer = setTimeout(async () => {
       setValidatingCode(true);
       try {
-        const res = await fetch(`/api/auth/validate-code?code=${encodeURIComponent(enteredCode.trim())}`);
+        const res = await fetch(`/api/auth/validate-code?code=${encodeURIComponent(codeToValidate)}`);
         const data = await res.json();
         setCodeStatus({
           checked: true,
           valid: !!data.valid,
-          message: data.valid ? "✓ Valid signup code" : data.message || "Invalid or expired signup code",
+          message: data.valid
+            ? data.message || "✓ Valid signup code"
+            : data.message || "Invalid or expired signup code",
         });
       } catch {
         setCodeStatus(null);
@@ -121,252 +148,323 @@ function RegisterForm() {
     }, 400);
 
     return () => clearTimeout(timer);
-  }, [enteredCode, signupCodeMode]);
+  }, [enteredCode]);
 
   const onSubmit = async (data: RegisterInput) => {
     setServerError(null);
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    const json = await res.json();
-    if (!res.ok) {
-      setServerError(json.error ?? "Registration failed");
-      return;
-    }
-
-    // Check if account monetization fee payment is required
-    if (json.requiresPayment && json.authorizationUrl) {
-      setRedirectingPayment({
-        url: json.authorizationUrl,
-        amount: json.amount || signupFee?.amount || 0,
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
-      toast("Account registered! Redirecting to Paystack for activation...", "info");
-      // Redirect after a brief moment to allow UI prompt to display
-      setTimeout(() => {
-        window.location.href = json.authorizationUrl;
-      }, 1000);
-      return;
-    }
+      const json = await res.json();
+      if (!res.ok) {
+        setServerError(json.error ?? "Registration failed");
+        return;
+      }
 
-    toast("Account created. Welcome to Bundle Portal!", "success");
-    router.push("/dashboard");
-    router.refresh();
+      // Check if account monetization fee payment is required
+      if (json.requiresPayment && json.authorizationUrl) {
+        setRedirectingPayment({
+          url: json.authorizationUrl,
+          amount: json.amount || signupFee?.amount || 0,
+        });
+        toast("Account registered! Redirecting to Paystack for activation...", "info");
+        setTimeout(() => {
+          window.location.href = json.authorizationUrl;
+        }, 1000);
+        return;
+      }
+
+      toast("Account created. Welcome to Bundle Portal!", "success");
+      router.push("/dashboard");
+      router.refresh();
+    } catch {
+      setServerError("An unexpected connection error occurred. Please try again.");
+    }
   };
 
   const hasFee = signupFee?.enabled && signupFee.amount > 0;
 
   return (
-    <AuthShell title="Create your account" subtitle="Start sending data bundles in minutes">
-      {/* Payment Redirecting Modal / Prompt */}
-      {redirectingPayment && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
-          <div className="w-full max-w-sm rounded-3xl bg-slate-900 p-6 sm:p-7 shadow-2xl border border-white/15 text-center space-y-4">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/25">
-              <Spinner className="h-7 w-7 text-emerald-400" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-white">
-                Redirecting to Paystack…
-              </h3>
-              <p className="text-xs text-slate-300 mt-2 leading-relaxed">
-                Your account details have been recorded. Complete the activation fee of{" "}
-                <strong className="text-emerald-400 font-bold font-mono">
-                  GHS {redirectingPayment.amount.toFixed(2)}
-                </strong>{" "}
-                to activate your account and access your dashboard.
-              </p>
-            </div>
-            <Button
-              type="button"
-              className="w-full h-11 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 font-black text-slate-950 shadow-md shadow-emerald-500/20 hover:from-emerald-400 hover:to-teal-500 gap-2"
-              onClick={() => {
-                window.location.href = redirectingPayment.url;
-              }}
-            >
-              Proceed to Paystack <ExternalLink className="h-4 w-4" />
-            </Button>
+    <div className="min-h-screen bg-[#060b13] text-slate-100 flex flex-col justify-center items-center p-4 selection:bg-[#00df82] selection:text-slate-950 font-sans">
+      <div className="w-full max-w-md space-y-6">
+        {/* Header / Brand Logo matching LoginPage */}
+        <div className="flex flex-col items-center text-center space-y-2">
+          <BrandMark size="lg" className="shadow-2xl shadow-[#00df82]/30 mb-2" />
+          <div className="flex items-center gap-2">
+            <span className="text-xl font-black text-white tracking-tight">BUNDLE PORTAL</span>
+            <span className="rounded bg-[#00df82]/15 text-[#00df82] border border-[#00df82]/40 px-1.5 py-0.5 text-[10px] font-black uppercase tracking-wider">
+              PORTAL
+            </span>
           </div>
+          <p className="text-xs text-slate-400">Telecom Wholesale &amp; Reseller Engine</p>
+          <h2 className="text-xl font-bold text-white pt-2">Create your account</h2>
         </div>
-      )}
 
-      {registrationClosed ? (
-        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-5 text-center text-sm text-amber-200">
-          <AlertTriangle className="mx-auto mb-2 h-7 w-7 text-amber-400" />
-          <p className="font-bold text-amber-300">Registrations are currently closed</p>
-          <p className="text-xs mt-1.5 text-slate-300 leading-relaxed">
-            New user sign-ups are temporarily paused by the administrator. Please check back later.
-          </p>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <input type="hidden" {...register("ref")} />
-
-          {refParam && (
-            <div className="flex items-center justify-between rounded-xl border border-blue-500/30 bg-blue-500/10 px-3.5 py-2.5 text-xs text-blue-200">
-              <span className="font-semibold text-slate-300">Referred by Partner Agent</span>
-              <span className="font-mono font-bold uppercase tracking-wider text-blue-300 bg-blue-500/20 border border-blue-400/30 px-2 py-0.5 rounded-md">
-                {refParam}
-              </span>
-            </div>
-          )}
-
-          {serverError && (
-            <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs sm:text-sm text-rose-300 font-medium">
-              {serverError}
-            </div>
-          )}
-
-          {/* Activation Fee Banner */}
-          {hasFee && (
-            <div className="rounded-2xl border border-emerald-500/30 bg-emerald-950/40 p-4 text-xs text-emerald-100 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-xs sm:text-sm flex items-center gap-1.5 text-emerald-300">
-                  <CreditCard className="h-4 w-4 text-emerald-400" />
-                  {signupFee.description || "Account Activation Fee"}
-                </span>
-                <span className="rounded-full bg-emerald-500/20 border border-emerald-500/30 px-3 py-1 text-xs font-black text-emerald-300 font-mono">
-                  GHS {signupFee.amount.toFixed(2)}
-                </span>
-              </div>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                A one-time activation fee is required. After submitting this form, you will be redirected to Paystack to complete payment and activate your account.
-              </p>
-            </div>
-          )}
-
-          <div className="space-y-1.5">
-            <Label htmlFor="name" className="text-xs sm:text-sm font-semibold text-slate-200">
-              Full name
-            </Label>
-            <Input
-              id="name"
-              autoComplete="name"
-              placeholder="e.g. Kwame Mensah"
-              className="h-11 sm:h-12 rounded-xl bg-slate-950/70 border-white/15 px-3.5 text-sm text-white placeholder:text-slate-500 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition-all"
-              {...register("name")}
-            />
-            {errors.name && <p className="text-xs text-rose-400 font-medium">{errors.name.message}</p>}
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-xs sm:text-sm font-semibold text-slate-200">
-              Email address
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              placeholder="you@example.com"
-              className="h-11 sm:h-12 rounded-xl bg-slate-950/70 border-white/15 px-3.5 text-sm text-white placeholder:text-slate-500 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition-all"
-              {...register("email")}
-            />
-            {errors.email && <p className="text-xs text-rose-400 font-medium">{errors.email.message}</p>}
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="password" className="text-xs sm:text-sm font-semibold text-slate-200">
-              Password
-            </Label>
-            <Input
-              id="password"
-              type="password"
-              autoComplete="new-password"
-              placeholder="••••••••••••"
-              className="h-11 sm:h-12 rounded-xl bg-slate-950/70 border-white/15 px-3.5 text-sm text-white placeholder:text-slate-500 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition-all"
-              {...register("password")}
-            />
-            {errors.password && (
-              <p className="text-xs text-rose-400 font-medium">{errors.password.message}</p>
-            )}
-          </div>
-
-          {/* Signup Code input */}
-          {signupCodeMode !== "DISABLED" && (
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="signupCode" className="text-xs sm:text-sm font-semibold text-slate-200">
-                  {signupCodeMode === "REQUIRED" ? (
-                    <span>
-                      Signup Code <span className="text-rose-400">*</span>
-                    </span>
-                  ) : (
-                    <span>
-                      Signup Code <span className="text-slate-400 font-normal text-xs">(Optional)</span>
-                    </span>
-                  )}
-                </Label>
-                {validatingCode && <Spinner className="h-3.5 w-3.5 text-emerald-400" />}
-              </div>
-              <Input
-                id="signupCode"
-                placeholder="e.g. WELCOME2026"
-                className="h-11 sm:h-12 rounded-xl bg-slate-950/70 border-white/15 px-3.5 uppercase tracking-wider font-mono text-sm text-white placeholder:text-slate-500 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition-all"
-                {...register("signupCode")}
-              />
-              {codeStatus?.checked && (
-                <p
-                  className={`flex items-center gap-1.5 text-xs font-semibold ${
-                    codeStatus.valid
-                      ? "text-emerald-400"
-                      : "text-rose-400"
-                  }`}
+        {/* Register Form Card */}
+        <div className="rounded-3xl border border-[#14233a] bg-[#0a1220]/90 backdrop-blur-xl p-6 sm:p-7 shadow-2xl space-y-5">
+          {/* Payment Redirecting Modal / Prompt */}
+          {redirectingPayment && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
+              <div className="w-full max-w-sm rounded-3xl bg-[#0a1220] p-6 sm:p-7 shadow-2xl border border-[#14233a] text-center space-y-4">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#00df82]/15 text-[#00df82] border border-[#00df82]/25">
+                  <Spinner className="h-7 w-7 text-[#00df82]" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">Redirecting to Paystack…</h3>
+                  <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+                    Complete the activation fee of{" "}
+                    <strong className="text-[#00df82] font-bold font-mono">
+                      GHS {redirectingPayment.amount.toFixed(2)}
+                    </strong>{" "}
+                    to activate your account and access your dashboard.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.location.href = redirectingPayment.url;
+                  }}
+                  className="w-full h-11 rounded-xl bg-[#00df82] hover:bg-[#00f59b] text-slate-950 font-black text-xs shadow-lg shadow-[#00df82]/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
                 >
-                  {codeStatus.valid ? (
-                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
-                  ) : (
-                    <XCircle className="h-3.5 w-3.5 shrink-0" />
-                  )}
-                  {codeStatus.message}
-                </p>
-              )}
-              {errors.signupCode && (
-                <p className="text-xs text-rose-400 font-medium">{errors.signupCode.message}</p>
-              )}
+                  <span>Proceed to Paystack</span>
+                  <ExternalLink className="h-4 w-4" />
+                </button>
+              </div>
             </div>
           )}
 
-          <Button
-            type="submit"
-            className="w-full h-11 sm:h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 font-black text-slate-950 shadow-lg shadow-emerald-500/20 hover:from-emerald-400 hover:to-teal-500 active:scale-[0.99] transition-all text-sm sm:text-base tracking-wide"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <Spinner className="h-5 w-5 text-slate-950" />
-            ) : hasFee ? (
-              `Create Account & Pay GHS ${signupFee.amount.toFixed(2)}`
-            ) : (
-              "Create Account"
-            )}
-          </Button>
+          {registrationClosed ? (
+            <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-5 text-center text-xs text-amber-200 space-y-2">
+              <AlertTriangle className="mx-auto h-7 w-7 text-amber-400" />
+              <p className="font-bold text-amber-300 text-sm">Registrations are currently closed</p>
+              <p className="text-slate-400">
+                New user sign-ups are temporarily paused by the administrator. Please check back later.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <input type="hidden" {...register("ref")} />
 
-          <p className="mt-3 text-center text-[11px] text-slate-400 leading-relaxed">
-            By registering, you agree to our{" "}
-            <Link href="/terms" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2">
-              Terms of Service
-            </Link>
-            ,{" "}
-            <Link href="/privacy" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2">
-              Privacy Policy
-            </Link>
-            , and{" "}
-            <Link href="/refund-policy" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2">
-              Refund Policy
-            </Link>
-            .
-          </p>
-        </form>
-      )}
+              {/* Server Error Alert */}
+              {serverError && (
+                <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-300">
+                  {serverError}
+                </div>
+              )}
 
-      <AuthFooterLink href="/login" prompt="Already have an account?" cta="Sign in" />
-    </AuthShell>
+              {/* Affiliate Referral Indicator */}
+              {refParam && (
+                <div className="flex items-center justify-between rounded-xl border border-[#00df82]/30 bg-[#00df82]/10 px-3.5 py-2.5 text-xs text-emerald-300">
+                  <span className="font-semibold text-slate-300">Referred by Partner Agent</span>
+                  <span className="font-mono font-bold uppercase tracking-wider text-[#00df82] bg-[#00df82]/20 border border-[#00df82]/40 px-2 py-0.5 rounded-md">
+                    {refParam}
+                  </span>
+                </div>
+              )}
+
+              {/* Activation Fee Banner */}
+              {hasFee && (
+                <div className="rounded-xl border border-[#00df82]/30 bg-[#00df82]/5 p-3.5 text-xs text-emerald-100 space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold flex items-center gap-1.5 text-emerald-300">
+                      <CreditCard className="h-4 w-4 text-[#00df82]" />
+                      {signupFee.description || "Account Activation Fee"}
+                    </span>
+                    <span className="rounded-full bg-[#00df82]/20 border border-[#00df82]/30 px-2.5 py-0.5 text-xs font-black text-[#00df82] font-mono">
+                      GHS {signupFee.amount.toFixed(2)}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 leading-relaxed">
+                    A one-time activation fee is required. You will be redirected to Paystack after submission.
+                  </p>
+                </div>
+              )}
+
+              {/* Full Name Input */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-black uppercase tracking-wider text-slate-400">
+                  Full Name
+                </label>
+                <div className="relative">
+                  <User className="h-4 w-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    {...register("name")}
+                    type="text"
+                    autoComplete="name"
+                    placeholder="e.g. Kwame Mensah"
+                    className="w-full h-11 rounded-xl bg-[#070d18] border border-[#14233a] pl-10 pr-4 text-xs text-white placeholder:text-slate-600 outline-none focus:border-[#00df82] transition-colors"
+                  />
+                </div>
+                {errors.name && (
+                  <p className="text-[10px] text-rose-400">{errors.name.message}</p>
+                )}
+              </div>
+
+              {/* Email Address Input */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-black uppercase tracking-wider text-slate-400">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="h-4 w-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    {...register("email")}
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    className="w-full h-11 rounded-xl bg-[#070d18] border border-[#14233a] pl-10 pr-4 text-xs text-white placeholder:text-slate-600 outline-none focus:border-[#00df82] transition-colors"
+                  />
+                </div>
+                {errors.email && (
+                  <p className="text-[10px] text-rose-400">{errors.email.message}</p>
+                )}
+              </div>
+
+              {/* Password Input */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-black uppercase tracking-wider text-slate-400">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="h-4 w-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    {...register("password")}
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    placeholder="••••••••••••"
+                    className="w-full h-11 rounded-xl bg-[#070d18] border border-[#14233a] pl-10 pr-10 text-xs text-white placeholder:text-slate-600 outline-none focus:border-[#00df82] transition-colors"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="text-[10px] text-rose-400">{errors.password.message}</p>
+                )}
+              </div>
+
+              {/* Signup / Affiliate Invite Code Input */}
+              {signupCodeMode !== "DISABLED" && (
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-400">
+                      {signupCodeMode === "REQUIRED" ? (
+                        <span>
+                          Signup / Invite Code <span className="text-rose-400">*</span>
+                        </span>
+                      ) : (
+                        <span>
+                          Signup / Invite Code{" "}
+                          <span className="text-slate-500 font-normal text-[10px]">(Optional)</span>
+                        </span>
+                      )}
+                    </label>
+                    {validatingCode && <Spinner className="h-3.5 w-3.5 text-[#00df82]" />}
+                  </div>
+                  <div className="relative">
+                    <Ticket className="h-4 w-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      {...register("signupCode")}
+                      type="text"
+                      placeholder="e.g. AGENT-123 or WELCOME2026"
+                      className="w-full h-11 rounded-xl bg-[#070d18] border border-[#14233a] pl-10 pr-4 uppercase tracking-wider font-mono text-xs text-white placeholder:text-slate-600 outline-none focus:border-[#00df82] transition-colors"
+                    />
+                  </div>
+                  {codeStatus?.checked && (
+                    <p
+                      className={`flex items-center gap-1.5 text-[11px] font-semibold ${
+                        codeStatus.valid ? "text-[#00df82]" : "text-rose-400"
+                      }`}
+                    >
+                      {codeStatus.valid ? (
+                        <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+                      ) : (
+                        <XCircle className="h-3.5 w-3.5 shrink-0" />
+                      )}
+                      <span>{codeStatus.message}</span>
+                    </p>
+                  )}
+                  {errors.signupCode && (
+                    <p className="text-[10px] text-rose-400">{errors.signupCode.message}</p>
+                  )}
+                </div>
+              )}
+
+              {/* Create Account Button */}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full h-11 rounded-xl bg-[#00df82] hover:bg-[#00f59b] text-slate-950 font-black text-xs shadow-lg shadow-[#00df82]/25 flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50 mt-3 cursor-pointer"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Spinner className="h-4 w-4 text-slate-950" />
+                    <span>Creating account...</span>
+                  </>
+                ) : hasFee ? (
+                  <>
+                    <span>Create Account &amp; Pay GHS {signupFee.amount.toFixed(2)}</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                ) : (
+                  <>
+                    <span>Create Account</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </button>
+
+              {/* Terms & Conditions Notice */}
+              <p className="text-center text-[10px] text-slate-500 leading-relaxed pt-1">
+                By registering, you agree to our{" "}
+                <Link href="/terms" target="_blank" className="text-[#00df82] hover:underline">
+                  Terms
+                </Link>
+                ,{" "}
+                <Link href="/privacy" target="_blank" className="text-[#00df82] hover:underline">
+                  Privacy
+                </Link>
+                , and{" "}
+                <Link href="/refund-policy" target="_blank" className="text-[#00df82] hover:underline">
+                  Refunds
+                </Link>
+                .
+              </p>
+            </form>
+          )}
+
+          {/* Footer Link to Login */}
+          <div className="text-center pt-2 border-t border-[#14233a]">
+            <span className="text-xs text-slate-400">Already have an account? </span>
+            <Link
+              href="/login"
+              className="text-xs font-bold text-[#00df82] hover:underline"
+            >
+              Sign in
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div className="flex justify-center p-8"><Spinner className="h-6 w-6 text-brand-600" /></div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#060b13] flex justify-center items-center">
+          <Spinner className="h-8 w-8 text-[#00df82]" />
+        </div>
+      }
+    >
       <RegisterForm />
     </Suspense>
   );

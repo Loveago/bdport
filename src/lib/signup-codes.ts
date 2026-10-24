@@ -40,54 +40,81 @@ export async function validateSignupCode(rawCode: string): Promise<{
   message?: string;
   codeId?: string;
   code?: string;
+  isAffiliate?: boolean;
+  affiliateUserId?: string;
+  referrerName?: string;
 }> {
   const normalized = normalizeSignupCode(rawCode);
   if (!normalized) {
     return { valid: false, message: "Signup code is required" };
   }
 
+  // 1. Check standard signup codes from SignupCode table
   const record = await prisma.signupCode.findUnique({
     where: { code: normalized },
   });
 
-  if (!record) {
-    return { valid: false, message: "Invalid or expired signup code" };
-  }
+  if (record) {
+    const now = new Date();
 
-  const now = new Date();
-
-  // Check expiration
-  if (record.expiresAt && record.expiresAt < now) {
-    if (record.status !== "EXPIRED") {
-      await prisma.signupCode.update({
-        where: { id: record.id },
-        data: { status: "EXPIRED" },
-      });
+    // Check expiration
+    if (record.expiresAt && record.expiresAt < now) {
+      if (record.status !== "EXPIRED") {
+        await prisma.signupCode.update({
+          where: { id: record.id },
+          data: { status: "EXPIRED" },
+        });
+      }
+      return { valid: false, message: "Invalid or expired signup code" };
     }
-    return { valid: false, message: "Invalid or expired signup code" };
-  }
 
-  // Check usage limit
-  if (record.maxUses !== null && record.usageCount >= record.maxUses) {
-    if (record.status !== "EXHAUSTED") {
-      await prisma.signupCode.update({
-        where: { id: record.id },
-        data: { status: "EXHAUSTED" },
-      });
+    // Check usage limit
+    if (record.maxUses !== null && record.usageCount >= record.maxUses) {
+      if (record.status !== "EXHAUSTED") {
+        await prisma.signupCode.update({
+          where: { id: record.id },
+          data: { status: "EXHAUSTED" },
+        });
+      }
+      return { valid: false, message: "Invalid or expired signup code" };
     }
-    return { valid: false, message: "Invalid or expired signup code" };
+
+    if (record.status !== "ACTIVE") {
+      return { valid: false, message: "Invalid or expired signup code" };
+    }
+
+    return { valid: true, codeId: record.id, code: record.code, message: "Valid signup code" };
   }
 
-  if (record.status !== "ACTIVE") {
-    return { valid: false, message: "Invalid or expired signup code" };
+  // 2. Check if the code is an Affiliate Code from an active Agent / Merchant
+  const affiliateAgent = await prisma.user.findFirst({
+    where: {
+      affiliateCode: {
+        equals: normalized,
+        mode: "insensitive",
+      },
+    },
+    select: { id: true, name: true, affiliateCode: true, status: true },
+  });
+
+  if (affiliateAgent && affiliateAgent.status !== "FROZEN" && affiliateAgent.status !== "BANNED") {
+    return {
+      valid: true,
+      code: affiliateAgent.affiliateCode || normalized,
+      isAffiliate: true,
+      affiliateUserId: affiliateAgent.id,
+      referrerName: affiliateAgent.name,
+      message: `Valid affiliate invite from ${affiliateAgent.name}`,
+    };
   }
 
-  return { valid: true, codeId: record.id, code: record.code };
+  return { valid: false, message: "Invalid or expired signup code" };
 }
 
 /**
  * Atomically claim and register usage of a signup code during user registration.
  * Must run inside the registration's Prisma transaction.
+ * Also handles affiliate referral codes transparently by binding referredById.
  */
 export async function applySignupCodeInTx(
   tx: Prisma.TransactionClient,
@@ -97,7 +124,7 @@ export async function applySignupCodeInTx(
     ip?: string | null;
     userAgent?: string | null;
   }
-): Promise<{ signupCodeId: string; code: string }> {
+): Promise<{ signupCodeId?: string; code: string; isAffiliate?: boolean; affiliateUserId?: string }> {
   const normalized = normalizeSignupCode(input.rawCode);
   const now = new Date();
 
@@ -105,7 +132,35 @@ export async function applySignupCodeInTx(
     where: { code: normalized },
   });
 
-  if (!codeRecord || codeRecord.status !== "ACTIVE") {
+  if (!codeRecord) {
+    // Check if it's an affiliate code
+    const affiliateAgent = await tx.user.findFirst({
+      where: {
+        affiliateCode: {
+          equals: normalized,
+          mode: "insensitive",
+        },
+      },
+      select: { id: true, name: true, affiliateCode: true, status: true },
+    });
+
+    if (affiliateAgent && affiliateAgent.status !== "FROZEN" && affiliateAgent.status !== "BANNED") {
+      await tx.user.update({
+        where: { id: input.userId },
+        data: { referredById: affiliateAgent.id },
+      });
+
+      return {
+        code: affiliateAgent.affiliateCode || normalized,
+        isAffiliate: true,
+        affiliateUserId: affiliateAgent.id,
+      };
+    }
+
+    throw new Error("Invalid or expired signup code");
+  }
+
+  if (codeRecord.status !== "ACTIVE") {
     throw new Error("Invalid or expired signup code");
   }
 

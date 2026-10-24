@@ -23,16 +23,25 @@ export async function POST(request: NextRequest) {
     const input = registerSchema.parse(body);
 
     const mode = await getSignupCodeMode();
-    const codeProvided = !!input.signupCode?.trim();
+    const effectiveCode = (input.signupCode?.trim() || input.ref?.trim() || "");
+    const codeProvided = !!effectiveCode;
 
     if (mode === "REQUIRED" && !codeProvided) {
-      return apiError(400, "A valid signup code is required to register");
+      return apiError(400, "A valid signup code or affiliate invite code is required to register");
     }
 
+    let codeValidation: {
+      valid: boolean;
+      message?: string;
+      code?: string;
+      isAffiliate?: boolean;
+      affiliateUserId?: string;
+    } | null = null;
+
     if (codeProvided && mode !== "DISABLED") {
-      const codeCheck = await validateSignupCode(input.signupCode!);
-      if (!codeCheck.valid) {
-        return apiError(400, codeCheck.message || "Invalid or expired signup code");
+      codeValidation = await validateSignupCode(effectiveCode);
+      if (!codeValidation.valid) {
+        return apiError(400, codeValidation.message || "Invalid or expired signup code");
       }
     }
 
@@ -74,20 +83,25 @@ export async function POST(request: NextRequest) {
     const passwordHash = await bcrypt.hash(input.password, 10);
     const defaultProfileId = await getDefaultProfileId();
 
-    // Check if registering via an affiliate referral link
+    // Check if registering via an affiliate referral link or affiliate signup code
     let referredById: string | null = null;
-    if (input.ref?.trim()) {
-      const parent = await prisma.user.findFirst({
-        where: {
-          affiliateCode: {
-            equals: input.ref.trim(),
-            mode: "insensitive",
+    if (codeValidation?.isAffiliate && codeValidation.affiliateUserId) {
+      referredById = codeValidation.affiliateUserId;
+    } else {
+      const candidateAffiliate = (input.ref?.trim() || input.signupCode?.trim() || "");
+      if (candidateAffiliate) {
+        const parent = await prisma.user.findFirst({
+          where: {
+            affiliateCode: {
+              equals: candidateAffiliate,
+              mode: "insensitive",
+            },
           },
-        },
-        select: { id: true },
-      });
-      if (parent) {
-        referredById = parent.id;
+          select: { id: true },
+        });
+        if (parent) {
+          referredById = parent.id;
+        }
       }
     }
 
@@ -121,10 +135,10 @@ export async function POST(request: NextRequest) {
 
         await ensureUserAffiliateCode(userRecord.id, userRecord.name, tx);
 
-        let codeResult: { signupCodeId: string; code: string } | null = null;
+        let codeResult: { signupCodeId?: string; code: string; isAffiliate?: boolean } | null = null;
         if (codeProvided && mode !== "DISABLED" && !existing?.signupCodeUsage) {
           codeResult = await applySignupCodeInTx(tx, {
-            rawCode: input.signupCode!,
+            rawCode: effectiveCode,
             userId: userRecord.id,
             ip,
             userAgent,
@@ -206,10 +220,10 @@ export async function POST(request: NextRequest) {
 
       await ensureUserAffiliateCode(newUser.id, newUser.name, tx);
 
-      let codeResult: { signupCodeId: string; code: string } | null = null;
+      let codeResult: { signupCodeId?: string; code: string; isAffiliate?: boolean } | null = null;
       if (codeProvided && mode !== "DISABLED") {
         codeResult = await applySignupCodeInTx(tx, {
-          rawCode: input.signupCode!,
+          rawCode: effectiveCode,
           userId: newUser.id,
           ip,
           userAgent,

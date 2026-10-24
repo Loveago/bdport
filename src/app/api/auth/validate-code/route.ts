@@ -22,7 +22,9 @@ export async function GET(request: NextRequest) {
     const result = await validateSignupCode(code);
     return NextResponse.json({
       valid: result.valid,
-      message: result.valid ? "Valid signup code" : (result.message || "Invalid or expired signup code"),
+      isAffiliate: result.isAffiliate,
+      referrerName: result.referrerName,
+      message: result.valid ? (result.message || "Valid signup code") : (result.message || "Invalid or expired signup code"),
     });
   } catch (err) {
     return handleRouteError(err);
@@ -49,7 +51,9 @@ export async function POST(request: NextRequest) {
     const result = await validateSignupCode(code);
     return NextResponse.json({
       valid: result.valid,
-      message: result.valid ? "Valid signup code" : (result.message || "Invalid or expired signup code"),
+      isAffiliate: result.isAffiliate,
+      referrerName: result.referrerName,
+      message: result.valid ? (result.message || "Valid signup code") : (result.message || "Invalid or expired signup code"),
     });
   } catch (err) {
     return handleRouteError(err);
