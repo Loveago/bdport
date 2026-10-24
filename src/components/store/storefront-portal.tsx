@@ -19,7 +19,6 @@ import {
   Share2,
   ShieldCheck,
   Zap,
-  Menu as MenuIcon,
   Sparkles,
 } from "lucide-react";
 import { fromPesewas } from "@/lib/storefront";
@@ -225,22 +224,8 @@ export function StorefrontPortal({
     <div className="min-h-screen bg-[#f3f5f9] text-slate-900 font-sans pb-16">
       {/* ── 1. ROYAL BLUE HERO HEADER SECTION ───────────────────────────────── */}
       <header className="relative bg-gradient-to-b from-[#1a56db] via-[#1650d2] to-[#1244be] text-white pt-6 pb-0 shadow-md">
-        {/* Top bar with Store Title and Drawer Menu button */}
+        {/* Top bar with Store Title */}
         <div className="mx-auto max-w-xl px-4 text-center relative">
-          {/* Menu Drawer Toggle */}
-          <button
-            type="button"
-            onClick={() => {
-              if (typeof window !== "undefined") {
-                window.dispatchEvent(new Event("open-store-drawer"));
-              }
-            }}
-            className="absolute right-3 top-0 p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition"
-            title="Open Menu"
-            aria-label="Open Menu"
-          >
-            <MenuIcon className="h-5 w-5" />
-          </button>
 
           {/* Store Logo or Verified Badge */}
           {storefront.logoUrl && (
