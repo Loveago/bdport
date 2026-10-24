@@ -332,7 +332,7 @@ export function SystemChatWidget({ user }: { user: AuthUser }) {
               </div>
               <div className="min-w-0">
                 <p className="text-sm font-bold leading-none truncate">
-                  {isStaff ? "Staff Support Desk" : "MyCediNet Live Support"}
+                  {isStaff ? "Staff Support Desk" : "Bundle Portal Live Support"}
                 </p>
                 <p className="mt-1 flex items-center gap-1.5 text-[11px] text-emerald-100 font-medium">
                   <span className="h-2 w-2 rounded-full bg-emerald-400 shrink-0" />
@@ -629,7 +629,7 @@ export function SystemChatWidget({ user }: { user: AuthUser }) {
                           <div className="rounded-xl border border-brand-500/20 bg-brand-50/40 p-3 text-xs dark:bg-brand-500/10">
                             <div className="flex items-center gap-1.5 font-bold text-brand-700 dark:text-brand-300">
                               <Sparkles className="h-3.5 w-3.5" />
-                              <span>Welcome to MyCediNet Live Help</span>
+                              <span>Welcome to Bundle Portal Live Help</span>
                             </div>
                             <p className="mt-1 text-slate-600 dark:text-slate-300 leading-relaxed">
                               Our support desk is here to assist with your data packages, deliveries, or billing questions.

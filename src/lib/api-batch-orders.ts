@@ -247,7 +247,7 @@ export function calculateBatchStatus(orders: Array<{ status: string }>): string 
 }
 
 /**
- * Formats a batch order response matching Clickyfied and MyCediNet developer specs
+ * Formats a batch order response matching developer specs
  */
 export function formatBatchOrderPayload({
   batchCode,

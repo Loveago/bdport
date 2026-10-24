@@ -324,7 +324,7 @@ export async function syncCommissionForOrder(
   const storeOrder = await prisma.storefrontOrder.findUnique({
     where: { underlyingOrderId: orderId },
   });
-  if (!storeOrder) return; // ordinary MyCediNet order — nothing to do
+  if (!storeOrder) return; // ordinary system order — nothing to do
 
   const releasing = status === "SUCCESS";
   const reversing = ["FAILED", "REFUNDED", "CANCELLED"].includes(status);
@@ -453,7 +453,7 @@ export async function settleStorefrontPayment(
   }
 
   await prisma.$transaction(async (tx) => {
-    // 1. Underlying MyCediNet order so the order lifecycle stays uniform.
+    // 1. Underlying system order so the order lifecycle stays uniform.
     const order = await tx.order.create({
       data: {
         userId: storefront.userId, // fulfilled via the store owner's account

@@ -168,7 +168,7 @@ export function SendClaimCard({ onSuccess }: { onSuccess: () => void }) {
               Account Name
             </span>
             <p className="mt-1 text-sm font-black text-slate-900 dark:text-white">
-              {settings?.accountName ?? "MyCediNet"}
+              {settings?.accountName ?? "Bundle Portal"}
             </p>
           </div>
 
@@ -213,7 +213,7 @@ export function SendClaimCard({ onSuccess }: { onSuccess: () => void }) {
                 Payment Verified &amp; Wallet Credited
               </h4>
               <p className="text-xs text-emerald-800 dark:text-emerald-300">
-                {formatGHS(claimResult.amount)} has been added to your MyCediNet available balance.
+                {formatGHS(claimResult.amount)} has been added to your Bundle Portal available balance.
               </p>
             </div>
           </div>

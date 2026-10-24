@@ -138,7 +138,7 @@ function RegisterForm() {
       return;
     }
 
-    toast("Account created. Welcome to MyCediNet!", "success");
+    toast("Account created. Welcome to Bundle Portal!", "success");
     router.push("/dashboard");
     router.refresh();
   };

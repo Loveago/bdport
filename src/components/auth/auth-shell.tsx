@@ -169,7 +169,7 @@ export function AuthShell({
       <footer className="relative z-10 border-t border-white/[0.06] bg-slate-950/40 px-6 py-4 text-center text-xs text-slate-400 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex flex-wrap items-center justify-center gap-2">
-            <span>MyCediNet © 2026 · All Rights Reserved</span>
+            <span>Bundle Portal © 2026 · All Rights Reserved</span>
             <span>·</span>
             <a
               href="https://wa.me/233507904981"

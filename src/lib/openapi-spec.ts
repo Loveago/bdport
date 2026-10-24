@@ -1,12 +1,12 @@
 export const openApiSpec = {
   openapi: "3.1.0",
   info: {
-    title: "MyCediNet Developer API Platform",
+    title: "Bundle Portal Developer API Platform",
     version: "1.0.0",
     description:
-      "Production-ready developer API for MyCediNet. Automate Ghanaian mobile data bundles (MTN, Telecel, AirtelTigo) directly from your applications, reseller stores, websites, and platforms.",
+      "Production-ready developer API for Bundle Portal. Automate Ghanaian mobile data bundles (MTN, Telecel, AirtelTigo) directly from your applications, reseller stores, websites, and platforms.",
     contact: {
-      name: "MyCediNet Developer Support",
+      name: "Bundle Portal Developer Support",
       url: "/",
     },
   },
@@ -582,7 +582,7 @@ export const openApiSpec = {
             in: "path",
             required: true,
             schema: { type: "string" },
-            description: "The MyCediNet order ID, e.g. API-839201 or 839201",
+            description: "The Bundle Portal order ID, e.g. API-839201 or 839201",
           },
         ],
         responses: {
@@ -635,7 +635,7 @@ export const openApiSpec = {
     "/balance": {
       get: {
         summary: "Check Account Wallet Balance",
-        description: "Returns your current MyCediNet wallet balance in GHS.",
+        description: "Returns your current Bundle Portal wallet balance in GHS.",
         responses: {
           "200": {
             description: "Wallet balance amount",

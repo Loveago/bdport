@@ -39,6 +39,7 @@ export default function StorefrontIndexPage() {
         !host ||
         host.includes("localhost") ||
         host.includes("127.0.0.1") ||
+        host.toLowerCase().includes("bundleportal") ||
         host.toLowerCase().includes("mycedinet")
       ) {
         setDisplayHost("bundleportalstore.com");

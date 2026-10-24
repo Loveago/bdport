@@ -9,7 +9,7 @@ export async function GET() {
     await requireUser();
 
     const wb = new ExcelJS.Workbook();
-    wb.creator = "MyCediNet";
+    wb.creator = "Bundle Portal";
     const ws = wb.addWorksheet("Orders");
 
     ws.columns = [{ width: 18 }, { width: 14 }];
@@ -33,7 +33,7 @@ export async function GET() {
     return new Response(new Uint8Array(bytes), {
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "Content-Disposition": 'attachment; filename="mycedinet-order-template.xlsx"',
+        "Content-Disposition": 'attachment; filename="bundleportal-order-template.xlsx"',
         "Cache-Control": "no-store",
       },
     });

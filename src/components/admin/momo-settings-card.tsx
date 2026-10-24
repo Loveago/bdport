@@ -194,7 +194,7 @@ export function MomoSettingsCard() {
               id="accountName"
               value={settings.accountName}
               onChange={(e) => setSettings({ ...settings, accountName: e.target.value })}
-              placeholder="MyCediNet"
+              placeholder="Bundle Portal"
               required
             />
           </div>

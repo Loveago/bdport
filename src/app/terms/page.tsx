@@ -20,9 +20,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — MyCediNet",
+  title: "Terms of Service — Bundle Portal",
   description:
-    "Terms of Service governing data bundle dispatch, agent and reseller storefronts, system verification, and platform usage on MyCediNet.com.",
+    "Terms of Service governing data bundle dispatch, agent and reseller storefronts, system verification, and platform usage on BundlePortal.com.",
 };
 
 export default function TermsOfServicePage() {
@@ -32,13 +32,13 @@ export default function TermsOfServicePage() {
       title="Terms of Service"
       badge="Legal Agreement"
       lastUpdated="Last Updated: 1st October, 2026"
-      description="These Terms of Service govern your access to and use of MyCediNet.com, our telecommunication distribution platform, APIs, and reseller storefronts under the laws of the Republic of Ghana."
+      description="These Terms of Service govern your access to and use of BundlePortal.com, our telecommunication distribution platform, APIs, and reseller storefronts under the laws of the Republic of Ghana."
     >
       <div className="space-y-10 text-slate-700 dark:text-slate-300">
         {/* Preamble / Introduction */}
         <section className="space-y-3">
           <p className="text-base leading-relaxed">
-            Welcome to <strong className="text-slate-900 dark:text-white">MyCediNet.com</strong> (&quot;MyCediNet,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;). These Terms of Service (&quot;Terms&quot;) govern your access to and use of our website, services, APIs, and storefront platforms (collectively, the &quot;Services&quot;).
+            Welcome to <strong className="text-slate-900 dark:text-white">BundlePortal.com</strong> (&quot;Bundle Portal,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;). These Terms of Service (&quot;Terms&quot;) govern your access to and use of our website, services, APIs, and storefront platforms (collectively, the &quot;Services&quot;).
           </p>
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4 text-sm leading-relaxed dark:border-emerald-500/20 dark:bg-emerald-950/20">
             <span className="font-semibold text-emerald-800 dark:text-emerald-300">Binding Agreement:</span> By creating an account, making a purchase, or using our Services, you agree to be bound by these Terms and the laws of the Republic of Ghana. If you do not agree with any part of these Terms, please discontinue use of the platform immediately.
@@ -56,7 +56,7 @@ export default function TermsOfServicePage() {
             </h2>
           </div>
           <p className="text-sm sm:text-base leading-relaxed pl-12">
-            MyCediNet.com operates a telecommunication digital distribution platform in Ghana, providing data bundle delivery for supported mobile network operators, including <strong className="text-slate-900 dark:text-white">MTN Ghana</strong>, <strong className="text-slate-900 dark:text-white">Telecel Ghana</strong>, and <strong className="text-slate-900 dark:text-white">AT (AirtelTigo)</strong>. We operate as an independent aggregator and technology intermediary.
+            BundlePortal.com operates a telecommunication digital distribution platform in Ghana, providing data bundle delivery for supported mobile network operators, including <strong className="text-slate-900 dark:text-white">MTN Ghana</strong>, <strong className="text-slate-900 dark:text-white">Telecel Ghana</strong>, and <strong className="text-slate-900 dark:text-white">AT (AirtelTigo)</strong>. We operate as an independent aggregator and technology intermediary.
           </p>
         </section>
 
@@ -77,7 +77,7 @@ export default function TermsOfServicePage() {
                 Standard Accounts
               </h3>
               <p className="text-slate-600 dark:text-slate-400 text-sm">
-                Every customer registering on MyCediNet.com is initially assigned the status of a Standard User, usage for direct usage of purchased bundle.
+                Every customer registering on BundlePortal.com is initially assigned the status of a Standard User, usage for direct usage of purchased bundle.
               </p>
             </div>
 
@@ -115,14 +115,14 @@ export default function TermsOfServicePage() {
           </div>
           <div className="pl-12 space-y-3 text-sm sm:text-base leading-relaxed">
             <p>
-              Agents and Resellers may generate customized storefronts through MyCediNet.com to sell data bundles directly to third-party end-users.
+              Agents and Resellers may generate customized storefronts through BundlePortal.com to sell data bundles directly to third-party end-users.
             </p>
             <ul className="list-disc pl-5 space-y-2 text-slate-600 dark:text-slate-400">
               <li>
                 <strong className="text-slate-900 dark:text-white">Independent Seller Capacity:</strong> Resellers act as independent sellers and are solely responsible for setting compliant end-user prices within allowed parameters, managing their direct customer relationships, and addressing preliminary customer inquiries.
               </li>
               <li>
-                <strong className="text-slate-900 dark:text-white">Anti-Misrepresentation Clause:</strong> Resellers may not misrepresent themselves as the official mobile network operators (MTN, Telecel, AT) or as sole owners of MyCediNet.com.
+                <strong className="text-slate-900 dark:text-white">Anti-Misrepresentation Clause:</strong> Resellers may not misrepresent themselves as the official mobile network operators (MTN, Telecel, AT) or as sole owners of BundlePortal.com.
               </li>
             </ul>
           </div>
@@ -144,7 +144,7 @@ export default function TermsOfServicePage() {
                 System Verification Requirement
               </h3>
               <p className="text-sm text-slate-700 dark:text-slate-300">
-                Our platform operates a closed-loop validation safeguard. Data bundles can only be dispatched to phone numbers that are verified and active on the MyCediNet system.
+                Our platform operates a closed-loop validation safeguard. Data bundles can only be dispatched to phone numbers that are verified and active on the Bundle Portal system.
               </p>
             </div>
 
@@ -180,7 +180,7 @@ export default function TermsOfServicePage() {
           </div>
           <div className="pl-12 space-y-3 text-sm sm:text-base leading-relaxed">
             <p>
-              All payments on MyCediNet.com are set to be processed securely in Ghana Cedis (GHS) via licensed third-party payment gateways, including <strong className="text-slate-900 dark:text-white">Paystack</strong>.
+              All payments on BundlePortal.com are set to be processed securely in Ghana Cedis (GHS) via licensed third-party payment gateways, including <strong className="text-slate-900 dark:text-white">Paystack</strong>.
             </p>
             <ul className="list-disc pl-5 space-y-2 text-slate-600 dark:text-slate-400">
               <li>
@@ -208,7 +208,7 @@ export default function TermsOfServicePage() {
               <strong className="text-slate-900 dark:text-white">Express Delivery:</strong> Under normal conditions, data bundle top-ups are automated and processed instantly or within minutes.
             </p>
             <p>
-              <strong className="text-slate-900 dark:text-white">Third-Party Dependency:</strong> Service delivery relies directly on the gateway infrastructure and network APIs of telecommunication operators (MTN, Telecel, AT). MyCediNet is not liable for delayed dispatches caused by telecommunication network outages, API downtime, or maintenance windows.
+              <strong className="text-slate-900 dark:text-white">Third-Party Dependency:</strong> Service delivery relies directly on the gateway infrastructure and network APIs of telecommunication operators (MTN, Telecel, AT). Bundle Portal is not liable for delayed dispatches caused by telecommunication network outages, API downtime, or maintenance windows.
             </p>
             <div className="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-4 dark:border-white/5 dark:bg-slate-950/40">
               <p className="font-semibold text-slate-900 dark:text-white text-sm">
@@ -257,7 +257,7 @@ export default function TermsOfServicePage() {
           </div>
           <div className="pl-12 space-y-3 text-sm sm:text-base leading-relaxed">
             <p>
-              To the maximum extent permitted by Ghanaian law, MyCediNet.com will not be liable for any indirect, incidental, or consequential damages resulting from network delays or operator-level errors.
+              To the maximum extent permitted by Ghanaian law, BundlePortal.com will not be liable for any indirect, incidental, or consequential damages resulting from network delays or operator-level errors.
             </p>
             <p className="font-semibold text-slate-900 dark:text-white">
               These Terms are governed by and construed in accordance with the laws of the Republic of Ghana.

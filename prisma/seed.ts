@@ -49,7 +49,7 @@ async function main() {
     site_announcement: "⚡ Welcome to Bundle Portal! Instant automated telecom data dispatch across MTN, Telecel, and AirtelTigo.",
     support_whatsapp: "+233240000000",
     support_phone: "0240000000",
-    support_email: "support@mycedinet.com",
+    support_email: "dzrahfelix@gmail.com",
     support_telegram: "@bundleportal",
   };
 
