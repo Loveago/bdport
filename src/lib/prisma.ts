@@ -25,13 +25,13 @@ function buildDatabaseUrl() {
   }
 }
 
+const resolvedDbUrl = buildDatabaseUrl();
+
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
     log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
-    datasources: {
-      db: { url: buildDatabaseUrl() },
-    },
+    ...(resolvedDbUrl ? { datasourceUrl: resolvedDbUrl } : {}),
   });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

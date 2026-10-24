@@ -30,12 +30,31 @@ export default async function HomePage() {
     redirect("/dashboard");
   }
 
-  // Fetch sample active packages for live rate preview
-  const packages = await prisma.dataPackage.findMany({
-    where: { active: true },
-    orderBy: [{ network: "asc" }, { gbAmount: "asc" }],
-    take: 12,
-  });
+  // Fetch sample active packages for live rate preview (gracefully falls back if DB is initializing)
+  let packages: any[] = [];
+  try {
+    packages = await prisma.dataPackage.findMany({
+      where: { active: true },
+      orderBy: [{ network: "asc" }, { gbAmount: "asc" }],
+      take: 12,
+    });
+  } catch (err) {
+    console.error("[HomePage] Failed to fetch packages from database:", err);
+  }
+
+  // Fallback active rates if DB is empty or initializing
+  if (!packages || packages.length === 0) {
+    packages = [
+      { id: "pkg-mtn-1", network: "MTN", gbAmount: 1, name: "MTN 1GB Non-Expiry", retailPriceGHS: 5.0 },
+      { id: "pkg-mtn-2", network: "MTN", gbAmount: 2, name: "MTN 2GB Non-Expiry", retailPriceGHS: 9.5 },
+      { id: "pkg-mtn-5", network: "MTN", gbAmount: 5, name: "MTN 5GB Non-Expiry", retailPriceGHS: 23.0 },
+      { id: "pkg-mtn-10", network: "MTN", gbAmount: 10, name: "MTN 10GB Non-Expiry", retailPriceGHS: 44.0 },
+      { id: "pkg-tel-2", network: "TELECEL", gbAmount: 2, name: "Telecel 2GB Express", retailPriceGHS: 8.5 },
+      { id: "pkg-tel-5", network: "TELECEL", gbAmount: 5, name: "Telecel 5GB Express", retailPriceGHS: 21.0 },
+      { id: "pkg-at-2", network: "AT", gbAmount: 2, name: "AT 2GB Big Time", retailPriceGHS: 8.0 },
+      { id: "pkg-at-5", network: "AT", gbAmount: 5, name: "AT 5GB Big Time", retailPriceGHS: 20.0 },
+    ];
+  }
 
   return (
     <div className="min-h-screen bg-[#060b13] text-slate-100 flex flex-col justify-between selection:bg-[#00df82] selection:text-[#041d14] font-sans antialiased">
