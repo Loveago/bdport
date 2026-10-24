@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/components/toast";
 import { Spinner } from "@/components/shared";
+import { UserTrackerModal } from "@/components/admin/user-tracker-modal";
 
 interface SubAgentItem {
   id: string;
@@ -127,6 +128,7 @@ export default function AdminAffiliatesPage() {
 
   // Detail Modal / Drawer state
   const [selectedAffiliateId, setSelectedAffiliateId] = React.useState<string | null>(null);
+  const [trackedUserId, setTrackedUserId] = React.useState<string | null>(null);
   const [detailData, setDetailData] = React.useState<{
     affiliate: MainAffiliateItem & {
       pricingSheet: AffiliatePricingItem[];
@@ -554,8 +556,17 @@ export default function AdminAffiliatesPage() {
                           <div className="flex items-center justify-end gap-1.5">
                             <button
                               type="button"
+                              onClick={() => setTrackedUserId(aff.id)}
+                              className="px-2.5 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500 hover:text-slate-950 font-bold text-xs transition inline-flex items-center gap-1 cursor-pointer"
+                              title="Track user sales, wallet & orders"
+                            >
+                              <TrendingUp className="h-3 w-3" />
+                              <span>Track Activity</span>
+                            </button>
+                            <button
+                              type="button"
                               onClick={() => openAffiliateDetail(aff.id, "downline")}
-                              className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-[#14233a] hover:bg-[#00df82] hover:text-slate-950 font-bold text-xs text-slate-300 transition"
+                              className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-[#14233a] hover:bg-[#00df82] hover:text-slate-950 font-bold text-xs text-slate-300 transition cursor-pointer"
                             >
                               Inspect Downline
                             </button>
@@ -652,13 +663,15 @@ export default function AdminAffiliatesPage() {
                         </td>
 
                         <td className="py-3 px-4 text-right">
-                          <Link
-                            href={`/admin/users/${sub.id}`}
-                            className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-[#14233a] hover:bg-[#00df82] hover:text-slate-950 font-bold text-xs text-slate-300 transition inline-flex items-center gap-1"
+                          <button
+                            type="button"
+                            onClick={() => setTrackedUserId(sub.id)}
+                            className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-[#14233a] hover:bg-[#00df82] hover:text-slate-950 font-bold text-xs text-slate-300 transition inline-flex items-center gap-1.5 cursor-pointer"
+                            title="Track user sales, wallet & orders"
                           >
-                            <span>Manage User</span>
-                            <ExternalLink className="h-3 w-3" />
-                          </Link>
+                            <TrendingUp className="h-3 w-3" />
+                            <span>Track Activity</span>
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -921,13 +934,14 @@ export default function AdminAffiliatesPage() {
                                   <span className="text-[10px] uppercase text-slate-500 block">Orders</span>
                                   <span className="font-bold text-cyan-400">{sub.ordersCount}</span>
                                 </div>
-                                <Link
-                                  href={`/admin/users/${sub.id}`}
-                                  className="p-2 rounded-lg bg-[#14233a] hover:bg-[#00df82] hover:text-slate-950 transition text-slate-300"
-                                  title="View user account"
+                                <button
+                                  type="button"
+                                  onClick={() => setTrackedUserId(sub.id)}
+                                  className="p-2 rounded-lg bg-[#14233a] hover:bg-[#00df82] hover:text-slate-950 transition text-slate-300 cursor-pointer"
+                                  title="Track sales & wallet transactions"
                                 >
-                                  <ExternalLink className="h-3.5 w-3.5" />
-                                </Link>
+                                  <TrendingUp className="h-3.5 w-3.5" />
+                                </button>
                               </div>
                             </div>
                           ))}
@@ -1035,13 +1049,14 @@ export default function AdminAffiliatesPage() {
                 </strong>
               </div>
 
-              <Link
-                href={`/admin/users/${selectedAffiliateId}`}
-                className="px-4 py-2 rounded-xl bg-[#00df82] hover:bg-[#00f59b] text-slate-950 font-black text-xs transition inline-flex items-center gap-1.5"
+              <button
+                type="button"
+                onClick={() => setTrackedUserId(selectedAffiliateId)}
+                className="px-4 py-2 rounded-xl bg-[#00df82] hover:bg-[#00f59b] text-slate-950 font-black text-xs transition inline-flex items-center gap-1.5 cursor-pointer shadow-lg shadow-[#00df82]/20"
               >
-                <span>Full User Profile</span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+                <TrendingUp className="h-3.5 w-3.5" />
+                <span>Track User Activity</span>
+              </button>
             </div>
           </div>
         </div>
@@ -1110,6 +1125,12 @@ export default function AdminAffiliatesPage() {
           </div>
         </div>
       )}
+
+      {/* ── USER ACTIVITY TRACKER MODAL ────────────────────────────────────── */}
+      <UserTrackerModal
+        userId={trackedUserId}
+        onClose={() => setTrackedUserId(null)}
+      />
     </div>
   );
 }
