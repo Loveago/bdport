@@ -1127,10 +1127,12 @@ export default function AdminAffiliatesPage() {
       )}
 
       {/* ── USER ACTIVITY TRACKER MODAL ────────────────────────────────────── */}
-      <UserTrackerModal
-        userId={trackedUserId}
-        onClose={() => setTrackedUserId(null)}
-      />
+      {trackedUserId && (
+        <UserTrackerModal
+          userId={trackedUserId}
+          onClose={() => setTrackedUserId(null)}
+        />
+      )}
     </div>
   );
 }

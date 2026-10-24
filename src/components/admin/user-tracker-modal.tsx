@@ -170,8 +170,6 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
     toast(`Copied ${label} to clipboard`, "success");
   };
 
-  if (!userId) return null;
-
   // Filtered orders
   const filteredOrders = React.useMemo(() => {
     if (!data?.orders) return [];
@@ -196,6 +194,8 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
       return matchType && matchStatus;
     });
   }, [data?.transactions, txType, txStatus]);
+
+  if (!userId) return null;
 
   const getNetworkStyle = (net: string) => {
     const u = net.toUpperCase();
