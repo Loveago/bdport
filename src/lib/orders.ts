@@ -129,7 +129,8 @@ export async function getEffectivePricingProfileForUser(
 export async function resolveUserWholesalePrice(
   userIdOrUser: string | { id?: string; role?: string; pricingProfileId?: string | null; referredById?: string | null },
   pkg: { id?: string; gbAmount: number; network: string; retailPriceGHS?: number | null },
-  depth = 0
+  depth = 0,
+  client: any = prisma
 ): Promise<number> {
   if (depth > 10) return pkg.retailPriceGHS ?? 0;
 
@@ -137,7 +138,7 @@ export async function resolveUserWholesalePrice(
   let referredById = typeof userIdOrUser === "object" ? userIdOrUser.referredById : undefined;
 
   if (userId && referredById === undefined) {
-    const u = await prisma.user.findUnique({
+    const u = await client.user.findUnique({
       where: { id: userId },
       select: { referredById: true },
     });
@@ -148,7 +149,7 @@ export async function resolveUserWholesalePrice(
   if (referredById) {
     let packageId = pkg.id;
     if (!packageId) {
-      const pRecord = await prisma.dataPackage.findUnique({
+      const pRecord = await client.dataPackage.findUnique({
         where: {
           network_gbAmount: {
             network: pkg.network.toUpperCase(),
@@ -161,7 +162,7 @@ export async function resolveUserWholesalePrice(
     }
 
     if (packageId) {
-      const affPrice = await prisma.affiliatePackagePrice.findUnique({
+      const affPrice = await client.affiliatePackagePrice.findUnique({
         where: {
           agentId_packageId: {
             agentId: referredById,
@@ -175,7 +176,7 @@ export async function resolveUserWholesalePrice(
     }
 
     // If parent agent hasn't set a custom wholesale price, fallback to what parent agent pays
-    return resolveUserWholesalePrice(referredById, pkg, depth + 1);
+    return resolveUserWholesalePrice(referredById, pkg, depth + 1, client);
   }
 
   // Direct / Root User: Standard pricing profile resolution

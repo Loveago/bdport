@@ -138,7 +138,7 @@ export async function distributeAffiliateCommissions(
     if (!parent) break;
 
     // What is parent agent's wholesale cost for this package?
-    const parentCost = await resolveUserWholesalePrice(parent.id, pkg);
+    const parentCost = await resolveUserWholesalePrice(parent.id, pkg, 0, tx);
 
     // Parent's profit is the margin between what the downline was charged and parent's cost
     const profit = Math.round((childCost - parentCost) * 100) / 100;
