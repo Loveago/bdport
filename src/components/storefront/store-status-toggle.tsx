@@ -81,7 +81,7 @@ export function StoreStatusToggle({
           ) : (
             <Power className="h-3.5 w-3.5" />
           )}
-          <span>{isActive ? "Pause Boutique" : "Resume Boutique"}</span>
+          <span>{isActive ? "Pause Storefront" : "Resume Storefront"}</span>
         </button>
         {error && <span className="text-[11px] text-red-400 font-mono">{error}</span>}
       </div>
@@ -113,8 +113,8 @@ export function StoreStatusToggle({
             <h2 className="mt-1 text-sm font-black uppercase tracking-wider text-white">Storefront Availability Radar</h2>
             <p className="text-xs text-slate-400">
               {isActive
-                ? "Your public boutique is live. Customers can browse packages and check out via MoMo."
-                : "Your boutique is paused. Visitors see an informative maintenance notice."}
+                ? "Your public storefront is live. Customers can browse packages and check out via MoMo."
+                : "Your storefront is paused. Visitors see an informative maintenance notice."}
             </p>
           </div>
         </div>
@@ -136,7 +136,7 @@ export function StoreStatusToggle({
           ) : (
             <Power className="h-4 w-4" />
           )}
-          <span>{isActive ? "Pause Boutique" : "Go Live Now"}</span>
+          <span>{isActive ? "Pause Storefront" : "Go Live Now"}</span>
         </button>
       </div>
       {error && <p className="mt-3 text-xs text-red-400 font-mono">{error}</p>}

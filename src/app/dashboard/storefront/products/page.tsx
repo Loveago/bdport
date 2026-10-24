@@ -55,7 +55,7 @@ export default async function StorefrontProductsPage() {
               Products &amp; Retail Pricing Matrix
             </h1>
             <p className="text-xs text-slate-400 max-w-2xl leading-relaxed">
-              Set your own retail selling prices for each bundle displayed on your storefront boutique. You can add whatever profit margin you desire on top of wholesale cost — your margin profit is automatically released to your settlement wallet on successful customer checkout.
+              Set your own retail selling prices for each bundle displayed on your storefront. You can add whatever profit margin you desire on top of wholesale cost — your margin profit is automatically released to your settlement wallet on successful customer checkout.
             </p>
           </div>
         </div>

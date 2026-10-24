@@ -33,7 +33,7 @@ export default async function StorefrontLayout({
           </span>
 
           <h2 className="mt-4 text-2xl font-black tracking-tight text-white">
-            Reseller Boutique Studio
+            Reseller Storefront Studio
           </h2>
           <p className="mt-2 text-xs leading-relaxed text-slate-400">
             Public Storefronts and automated retail clearance are reserved for{" "}

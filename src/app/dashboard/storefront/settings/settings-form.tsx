@@ -133,7 +133,7 @@ export function StorefrontSettingsForm({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Failed to save");
-      setMsg({ kind: "ok", text: "Store boutique profile calibrated and saved." });
+      setMsg({ kind: "ok", text: "Storefront profile calibrated and saved." });
       router.refresh();
     } catch (e) {
       setMsg({ kind: "err", text: e instanceof Error ? e.message : "Failed to save" });
@@ -179,7 +179,7 @@ export function StorefrontSettingsForm({
               <Globe className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-sm font-black uppercase tracking-wider text-white">Public Boutique Slug</h2>
+              <h2 className="text-sm font-black uppercase tracking-wider text-white">Public Storefront Slug</h2>
               <p className="text-xs text-slate-400">
                 Your exclusive domain slug for customer checkouts and shareable storefront links.
               </p>
@@ -264,7 +264,7 @@ export function StorefrontSettingsForm({
           <div className="flex items-start gap-2.5 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-300">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
             <p>
-              <strong>Notice:</strong> Changing your web address re-routes your boutique link immediately. Ensure you update any marketing banners or social links.
+              <strong>Notice:</strong> Changing your web address re-routes your storefront link immediately. Ensure you update any marketing banners or social links.
             </p>
           </div>
         </form>
@@ -289,7 +289,7 @@ export function StorefrontSettingsForm({
             <Building2 className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-sm font-black uppercase tracking-wider text-white">Boutique Branding &amp; Customer Support</h2>
+            <h2 className="text-sm font-black uppercase tracking-wider text-white">Storefront Branding &amp; Customer Support</h2>
             <p className="text-xs text-slate-400">Information displayed on your public customer checkout interface.</p>
           </div>
         </div>
@@ -495,7 +495,7 @@ export function StorefrontSettingsForm({
           disabled={busy}
           className="h-10 rounded-xl bg-[#00df82] px-6 text-xs font-black text-[#060b13] shadow-md shadow-[#00df82]/20 hover:bg-[#00df82]/90 disabled:opacity-40 transition"
         >
-          {busy ? "Saving Profile…" : "Save Boutique Profile"}
+          {busy ? "Saving Profile…" : "Save Storefront Profile"}
         </button>
       </form>
 

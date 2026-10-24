@@ -84,7 +84,7 @@ export default async function StorefrontOverviewPage({
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-[#00df82]/30 bg-[#00df82]/10 px-3 py-0.5 text-xs font-black uppercase tracking-wider text-[#00df82]">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#00df82] animate-ping" />
-                  RESELLER BOUTIQUE STUDIO
+                  RESELLER STOREFRONT STUDIO
                 </span>
                 <span
                   className={`rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider border ${
@@ -209,7 +209,7 @@ export default async function StorefrontOverviewPage({
             <p className="font-mono text-2xl sm:text-3xl font-black text-white tabular-nums tracking-tight">
               {activeCount} <span className="text-sm font-normal text-slate-400">/ {productCount}</span>
             </p>
-            <p className="mt-1 text-[11px] font-medium text-slate-400">Listed on customer boutique</p>
+            <p className="mt-1 text-[11px] font-medium text-slate-400">Listed on customer storefront</p>
           </div>
         </div>
 
@@ -262,7 +262,7 @@ export default async function StorefrontOverviewPage({
             },
             {
               href: "/dashboard/storefront/settings",
-              label: "Boutique Settings",
+              label: "Storefront Settings",
               desc: "Brand logo, domain & WhatsApp",
               icon: Settings,
               accent: "text-sky-400 bg-sky-500/10 border-sky-500/30",

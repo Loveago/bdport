@@ -200,7 +200,7 @@ export function PricingEditor({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Bulk calibration failed");
-      setMsg({ kind: "ok", text: `Updated ${data.updated} product packages across boutique` });
+      setMsg({ kind: "ok", text: `Updated ${data.updated} product packages across storefront` });
       setSelected(new Set());
       await refreshData();
       router.refresh();

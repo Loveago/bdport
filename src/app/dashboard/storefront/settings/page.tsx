@@ -23,7 +23,7 @@ export default async function StorefrontSettingsPage() {
               <span className="text-[11px] font-mono text-slate-400">· MoMo Direct Routing</span>
             </div>
             <h1 className="text-2xl font-black text-white tracking-tight">
-              Boutique Settings &amp; Configuration
+              Storefront Settings &amp; Configuration
             </h1>
             <p className="text-xs text-slate-400 max-w-2xl leading-relaxed">
               Configure your public storefront web slug, support channels, marquee announcement text, and default Mobile Money payout settlement coordinates.
