@@ -245,15 +245,24 @@ export function StoreChrome(props: StoreChromeProps) {
               {name} © {new Date().getFullYear()} · All Rights Reserved
             </p>
             <div className="flex items-center gap-3">
-              <Link href="/terms" target="_blank" className="hover:text-slate-700 transition">
+              <Link
+                href={`/terms?from=${encodeURIComponent(slug)}&name=${encodeURIComponent(name)}`}
+                className="hover:text-slate-700 transition"
+              >
                 Terms
               </Link>
               <span>·</span>
-              <Link href="/refund-policy" target="_blank" className="hover:text-slate-700 transition">
+              <Link
+                href={`/refund-policy?from=${encodeURIComponent(slug)}&name=${encodeURIComponent(name)}`}
+                className="hover:text-slate-700 transition"
+              >
                 Refunds
               </Link>
               <span>·</span>
-              <Link href="/privacy" target="_blank" className="hover:text-slate-700 transition">
+              <Link
+                href={`/privacy?from=${encodeURIComponent(slug)}&name=${encodeURIComponent(name)}`}
+                className="hover:text-slate-700 transition"
+              >
                 Privacy
               </Link>
             </div>

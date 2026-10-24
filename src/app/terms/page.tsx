@@ -15,6 +15,8 @@ import {
   Store,
   Clock,
   Layers,
+  Phone,
+  Mail,
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -260,6 +262,52 @@ export default function TermsOfServicePage() {
             <p className="font-semibold text-slate-900 dark:text-white">
               These Terms are governed by and construed in accordance with the laws of the Republic of Ghana.
             </p>
+          </div>
+        </section>
+
+        {/* Section 9 */}
+        <section id="contact" className="space-y-4 border-t border-slate-200/80 pt-8 dark:border-white/10">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+              <Phone className="h-5 w-5" />
+            </div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+              9. Contact &amp; Customer Support
+            </h2>
+          </div>
+          <div className="pl-12 space-y-4 text-sm sm:text-base leading-relaxed">
+            <p>
+              For legal inquiries, terms clarification, or customer support regarding order dispatch, reach out to our team:
+            </p>
+
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div className="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-4 dark:border-white/5 dark:bg-slate-950/40 space-y-1">
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Official Email</span>
+                <p className="font-bold text-slate-900 dark:text-white text-sm break-all">
+                  <a href="mailto:dzrahfelix@gmail.com" className="hover:text-emerald-600 dark:hover:text-emerald-400">
+                    dzrahfelix@gmail.com
+                  </a>
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-4 dark:border-white/5 dark:bg-slate-950/40 space-y-1">
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Phone / WhatsApp</span>
+                <p className="font-bold text-slate-900 dark:text-white text-sm">
+                  <a href="https://wa.me/233242319697" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 dark:hover:text-emerald-400">
+                    0242319697
+                  </a>
+                </p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">+233 24 231 9697</p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-4 dark:border-white/5 dark:bg-slate-950/40 space-y-1">
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Operating Hours</span>
+                <p className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
+                  5:00 AM – 11:59 PM GMT
+                </p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">Monday – Sunday</p>
+              </div>
+            </div>
           </div>
         </section>
       </div>

@@ -208,8 +208,8 @@ export default function PrivacyPolicyPage() {
               <div className="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-4 dark:border-white/5 dark:bg-slate-950/40 space-y-1">
                 <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Privacy &amp; Compliance Email</span>
                 <p className="font-bold text-slate-900 dark:text-white text-sm break-all">
-                  <a href="mailto:mycedinet@gmail.com" className="hover:text-emerald-600 dark:hover:text-emerald-400">
-                    mycedinet@gmail.com
+                  <a href="mailto:dzrahfelix@gmail.com" className="hover:text-emerald-600 dark:hover:text-emerald-400">
+                    dzrahfelix@gmail.com
                   </a>
                 </p>
               </div>
@@ -217,10 +217,11 @@ export default function PrivacyPolicyPage() {
               <div className="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-4 dark:border-white/5 dark:bg-slate-950/40 space-y-1">
                 <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Customer Support Desk</span>
                 <p className="font-bold text-slate-900 dark:text-white text-sm">
-                  <a href="https://wa.me/233243721334" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 dark:hover:text-emerald-400">
-                    +233 24 372 1334
+                  <a href="https://wa.me/233242319697" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 dark:hover:text-emerald-400">
+                    0242319697
                   </a>
                 </p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">+233 24 231 9697</p>
               </div>
             </div>
           </div>

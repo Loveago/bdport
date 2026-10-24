@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { BrandLogo } from "@/components/brand-logo";
 import {
   FileText,
@@ -14,6 +15,8 @@ import {
   Phone,
   Clock,
   ArrowRight,
+  ArrowLeft,
+  Store,
 } from "lucide-react";
 
 interface LegalPageShellProps {
@@ -45,6 +48,133 @@ const LEGAL_TABS = [
     icon: ShieldCheck,
   },
 ];
+
+function OriginStorefrontHeader() {
+  const searchParams = useSearchParams();
+  const fromSlug = searchParams?.get("from");
+  const storeName = searchParams?.get("name");
+
+  if (!fromSlug) {
+    return (
+      <Link
+        href="/store"
+        className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-xs hover:bg-slate-50 hover:text-slate-900 dark:border-white/10 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
+      >
+        Storefront Directory
+      </Link>
+    );
+  }
+
+  const returnUrl = `/${fromSlug}`;
+
+  return (
+    <Link
+      href={returnUrl}
+      className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-bold text-emerald-700 hover:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30 dark:bg-emerald-950/40 transition-colors"
+    >
+      <ArrowLeft className="h-3.5 w-3.5" />
+      <span>Back to {storeName || fromSlug}</span>
+    </Link>
+  );
+}
+
+function OriginStorefrontBanner() {
+  const searchParams = useSearchParams();
+  const fromSlug = searchParams?.get("from");
+  const storeName = searchParams?.get("name");
+
+  if (!fromSlug) return null;
+  const returnUrl = `/${fromSlug}`;
+
+  return (
+    <div className="border-b border-emerald-500/20 bg-emerald-500/10 px-4 py-2.5 text-xs text-emerald-900 dark:text-emerald-200">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <Store className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <span>
+            Viewing customer terms &amp; conditions for <strong>{storeName || fromSlug}</strong> storefront.
+          </span>
+        </div>
+        <Link
+          href={returnUrl}
+          className="inline-flex items-center gap-1 font-bold text-emerald-700 hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-white transition-colors shrink-0 underline underline-offset-2"
+        >
+          <span>Return to Storefront</span>
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function OriginStorefrontTabs({ currentSlug }: { currentSlug: "terms" | "refund-policy" | "privacy" }) {
+  const searchParams = useSearchParams();
+  const fromSlug = searchParams?.get("from");
+  const storeName = searchParams?.get("name");
+
+  const querySuffix = fromSlug
+    ? `?from=${encodeURIComponent(fromSlug)}${storeName ? `&name=${encodeURIComponent(storeName)}` : ""}`
+    : "";
+
+  return (
+    <div className="border-t border-slate-200/60 dark:border-white/[0.04] bg-slate-50/50 dark:bg-slate-950/40">
+      <div className="mx-auto flex max-w-7xl items-center gap-2 overflow-x-auto px-4 py-2 sm:px-6 lg:px-8 no-scrollbar">
+        {LEGAL_TABS.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = currentSlug === tab.slug;
+          return (
+            <Link
+              key={tab.slug}
+              href={`${tab.href}${querySuffix}`}
+              className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${
+                isActive
+                  ? "bg-emerald-500/15 text-emerald-700 ring-1 ring-emerald-500/30 dark:bg-emerald-500/20 dark:text-emerald-300 dark:ring-emerald-400/40"
+                  : "text-slate-600 hover:bg-slate-200/60 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-slate-200"
+              }`}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              <span>{tab.label}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function OriginStorefrontCtaCard() {
+  const searchParams = useSearchParams();
+  const fromSlug = searchParams?.get("from");
+  const storeName = searchParams?.get("name");
+
+  if (!fromSlug) return null;
+  const returnUrl = `/${fromSlug}`;
+
+  return (
+    <div className="mt-8 rounded-3xl border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-emerald-500/10 p-6 sm:p-8 text-center space-y-3">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+        <Store className="h-6 w-6" />
+      </div>
+      <div>
+        <h3 className="text-base font-bold text-slate-900 dark:text-white">
+          Ready to purchase from {storeName || fromSlug}?
+        </h3>
+        <p className="mt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+          Return to the storefront anytime to pick your data package and complete your instant Mobile Money checkout.
+        </p>
+      </div>
+      <div className="pt-2 flex justify-center">
+        <Link
+          href={returnUrl}
+          className="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-6 py-3 text-xs sm:text-sm font-black text-white shadow-lg shadow-emerald-600/25 hover:bg-emerald-500 transition-all hover:scale-[1.02] active:scale-[0.98]"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span>Back to {storeName || fromSlug} Storefront</span>
+        </Link>
+      </div>
+    </div>
+  );
+}
 
 export function LegalPageShell({
   currentSlug,
@@ -97,12 +227,9 @@ export function LegalPageShell({
               <Printer className="h-3.5 w-3.5" />
               <span>Print</span>
             </button>
-            <Link
-              href="/store"
-              className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-xs hover:bg-slate-50 hover:text-slate-900 dark:border-white/10 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
-            >
-              Storefront Directory
-            </Link>
+            <Suspense fallback={null}>
+              <OriginStorefrontHeader />
+            </Suspense>
             <Link
               href="/login"
               className="rounded-xl bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-emerald-600 dark:bg-white/10 dark:hover:bg-emerald-600 transition-colors"
@@ -119,29 +246,15 @@ export function LegalPageShell({
         </div>
 
         {/* Policy Tab Switcher */}
-        <div className="border-t border-slate-200/60 dark:border-white/[0.04] bg-slate-50/50 dark:bg-slate-950/40">
-          <div className="mx-auto flex max-w-7xl items-center gap-2 overflow-x-auto px-4 py-2 sm:px-6 lg:px-8 no-scrollbar">
-            {LEGAL_TABS.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = currentSlug === tab.slug;
-              return (
-                <Link
-                  key={tab.slug}
-                  href={tab.href}
-                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${
-                    isActive
-                      ? "bg-emerald-500/15 text-emerald-700 ring-1 ring-emerald-500/30 dark:bg-emerald-500/20 dark:text-emerald-300 dark:ring-emerald-400/40"
-                      : "text-slate-600 hover:bg-slate-200/60 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-slate-200"
-                  }`}
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                  <span>{tab.label}</span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
+        <Suspense fallback={null}>
+          <OriginStorefrontTabs currentSlug={currentSlug} />
+        </Suspense>
       </header>
+
+      {/* Origin Storefront Banner if navigated from a storefront */}
+      <Suspense fallback={null}>
+        <OriginStorefrontBanner />
+      </Suspense>
 
       {/* Hero Header */}
       <div className="relative z-10 border-b border-slate-200/70 bg-gradient-to-b from-white via-slate-50 to-slate-100/50 px-4 py-10 sm:px-6 lg:px-8 dark:border-white/[0.06] dark:from-slate-950 dark:via-slate-900/80 dark:to-[#070c14]">
@@ -186,24 +299,29 @@ export function LegalPageShell({
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <a
-                href="mailto:admin@mycedinet.com"
+                href="mailto:dzrahfelix@gmail.com"
                 className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-500 transition-colors"
               >
                 <Mail className="h-3.5 w-3.5" />
-                <span>admin@mycedinet.com</span>
+                <span>dzrahfelix@gmail.com</span>
               </a>
               <a
-                href="https://wa.me/233243721334"
+                href="https://wa.me/233242319697"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-800 shadow-xs hover:bg-slate-50 dark:border-white/10 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 transition-colors"
               >
                 <Phone className="h-3.5 w-3.5 text-emerald-500" />
-                <span>+233 24 372 1334</span>
+                <span>0242319697</span>
               </a>
             </div>
           </div>
         </div>
+
+        {/* Return to Origin Storefront CTA Card */}
+        <Suspense fallback={null}>
+          <OriginStorefrontCtaCard />
+        </Suspense>
       </main>
 
       {/* Global Footer */}
@@ -217,7 +335,7 @@ export function LegalPageShell({
             <span>All Rights Reserved</span>
             <span>·</span>
             <a
-              href="https://wa.me/233507904981"
+              href="https://wa.me/233242319697"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-slate-600 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400 transition-colors group"
