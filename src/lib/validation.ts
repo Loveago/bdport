@@ -381,6 +381,7 @@ export const storefrontSettingsSchema = z.object({
   phone: z.string().max(40).optional().or(z.literal("")),
   whatsappGroupLink: z.string().max(255).optional().or(z.literal("")),
   supportPhone: z.string().max(40).optional().or(z.literal("")),
+  location: z.string().max(100).optional().or(z.literal("")),
   contactText: z.string().max(160).optional().or(z.literal("")),
   whatsappLabel: z.string().max(40).optional().or(z.literal("")),
   notice: z.string().max(300).optional().or(z.literal("")),

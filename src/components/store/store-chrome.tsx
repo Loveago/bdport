@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { NetworkLogo } from "./network-logo";
 import { NETWORK_BRANDS, networkHref, storeHref } from "./brands";
+import { buildWhatsAppLink } from "@/lib/storefront-utils";
 import type { NetworkProvider } from "@/lib/types";
 
 export interface StoreChromeProps {
@@ -45,10 +46,7 @@ export interface StoreChromeProps {
 }
 
 function whatsappLink(number: string | null | undefined, text?: string): string | null {
-  if (!number) return null;
-  const digits = number.replace(/\D/g, "");
-  const intl = digits.startsWith("0") ? `233${digits.slice(1)}` : digits;
-  return text ? `https://wa.me/${intl}?text=${encodeURIComponent(text)}` : `https://wa.me/${intl}`;
+  return buildWhatsAppLink(number, text);
 }
 
 export function WhatsAppIcon({ className = "h-5 w-5" }: { className?: string }) {
@@ -121,6 +119,7 @@ export function StoreChrome(props: StoreChromeProps) {
     whatsappGroupLink,
     email,
     location,
+    contactText,
     whatsappLabel,
     notice,
     networks,
@@ -331,14 +330,25 @@ export function StoreChrome(props: StoreChromeProps) {
         )}
 
         {wa && (
-          <button
-            type="button"
-            aria-label="Chat on WhatsApp"
-            onClick={() => setChatBoxOpen((v) => !v)}
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-emerald-500/30 transition hover:scale-105 active:scale-95 cursor-pointer"
-          >
-            {chatBoxOpen ? <X className="h-5 w-5" /> : <WhatsAppIcon className="h-6 w-6" />}
-          </button>
+          <div className="flex items-center gap-2">
+            {!chatBoxOpen && (contactText || whatsappLabel) && (
+              <button
+                type="button"
+                onClick={() => setChatBoxOpen(true)}
+                className="hidden sm:inline-flex items-center rounded-full border border-slate-200/90 bg-white/95 px-3.5 py-1.5 text-xs font-bold text-slate-700 shadow-md backdrop-blur-xs hover:bg-white hover:text-slate-900 transition cursor-pointer"
+              >
+                {whatsappLabel || contactText}
+              </button>
+            )}
+            <button
+              type="button"
+              aria-label="Chat on WhatsApp"
+              onClick={() => setChatBoxOpen((v) => !v)}
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-emerald-500/30 transition hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              {chatBoxOpen ? <X className="h-5 w-5" /> : <WhatsAppIcon className="h-6 w-6" />}
+            </button>
+          </div>
         )}
       </div>
 

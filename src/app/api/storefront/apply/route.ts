@@ -66,6 +66,7 @@ export async function POST(request: NextRequest) {
           data: {
             name: input.storeName,
             phone: input.contactNumber,
+            whatsapp: existing.whatsapp || input.contactNumber,
             whatsappGroupLink: input.whatsappGroupLink,
             description: input.description || null,
             status: "PENDING",
@@ -78,6 +79,7 @@ export async function POST(request: NextRequest) {
             slug,
             name: input.storeName,
             phone: input.contactNumber,
+            whatsapp: input.contactNumber,
             whatsappGroupLink: input.whatsappGroupLink,
             description: input.description || null,
             status: "PENDING",

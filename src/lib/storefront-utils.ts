@@ -97,3 +97,44 @@ export function buildStorefrontUrl(slug?: string | null, domain?: string | null,
   const slugPart = slug ? `${prefix}/${slug.replace(/^\/+/, "")}` : (isLocal ? "/store" : "");
   return `${protocol}://${host}${slugPart}${cleanSub}`;
 }
+
+/**
+ * Normalizes any phone number string into an international WhatsApp-compatible number format (Ghana +233 standard).
+ * Handles formats:
+ * - "0241234567" -> "233241234567"
+ * - "241234567" -> "233241234567"
+ * - "+233 24 123 4567" -> "233241234567"
+ * - "00233241234567" -> "233241234567"
+ * - "+2330241234567" -> "233241234567"
+ */
+export function normalizeWhatsAppNumber(phone?: string | null): string | null {
+  if (!phone || typeof phone !== "string") return null;
+  let digits = phone.replace(/\D/g, "");
+  if (!digits) return null;
+
+  // Strip international dialing prefixes
+  if (digits.startsWith("00233")) {
+    digits = digits.slice(2);
+  } else if (digits.startsWith("2330")) {
+    // Mistyped +233(0)24...
+    digits = `233${digits.slice(4)}`;
+  } else if (digits.startsWith("0")) {
+    // Standard local Ghana 10-digit number e.g. 024...
+    digits = `233${digits.slice(1)}`;
+  } else if (!digits.startsWith("233") && digits.length === 9) {
+    // 9 digits without leading 0 e.g. 241234567
+    digits = `233${digits}`;
+  }
+
+  return digits;
+}
+
+/**
+ * Builds a direct wa.me link with optional pre-filled message text.
+ */
+export function buildWhatsAppLink(phone?: string | null, text?: string): string | null {
+  const normalized = normalizeWhatsAppNumber(phone);
+  if (!normalized) return null;
+  return text ? `https://wa.me/${normalized}?text=${encodeURIComponent(text)}` : `https://wa.me/${normalized}`;
+}
+

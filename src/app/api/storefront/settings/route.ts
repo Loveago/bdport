@@ -44,6 +44,8 @@ export async function PATCH(request: NextRequest) {
       newSlug = candidate;
     }
 
+    const resolvedWhatsApp = input.supportPhone?.trim() || input.phone?.trim() || null;
+
     const updated = await prisma.storefront.update({
       where: { id: storefront.id },
       data: {
@@ -52,7 +54,8 @@ export async function PATCH(request: NextRequest) {
         description: input.description || null,
         phone: input.phone || null,
         whatsappGroupLink: input.whatsappGroupLink || null,
-        whatsapp: input.supportPhone || null,
+        whatsapp: resolvedWhatsApp,
+        location: input.location || null,
         contactText: input.contactText || null,
         whatsappLabel: input.whatsappLabel || null,
         notice: input.notice !== undefined ? (input.notice?.trim() || null) : undefined,

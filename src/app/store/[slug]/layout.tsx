@@ -23,6 +23,7 @@ export default async function StoreLayout({
         name: true,
         description: true,
         logoUrl: true,
+        phone: true,
         whatsapp: true,
         whatsappGroupLink: true,
         email: true,
@@ -56,13 +57,15 @@ export default async function StoreLayout({
     .map((r) => r.network as NetworkProvider)
     .sort((a, b) => NETWORK_ORDER.indexOf(a) - NETWORK_ORDER.indexOf(b));
 
+  const effectiveWhatsApp = storefront.whatsapp || storefront.phone || supportSetting?.value || null;
+
   return (
     <StoreChrome
       name={storefront.name}
       slug={storefront.slug}
       description={storefront.description}
       logoUrl={storefront.logoUrl}
-      whatsapp={storefront.whatsapp || supportSetting?.value || null}
+      whatsapp={effectiveWhatsApp}
       whatsappGroupLink={storefront.whatsappGroupLink}
       email={storefront.email}
       location={storefront.location}

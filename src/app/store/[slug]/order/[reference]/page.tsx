@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { fromPesewas } from "@/lib/storefront";
+import { buildWhatsAppLink } from "@/lib/storefront-utils";
 import { NETWORK_BRANDS, storeHref } from "@/components/store/brands";
 import { NetworkLogo } from "@/components/store/network-logo";
 import type { NetworkProvider } from "@/lib/types";
@@ -354,20 +355,28 @@ export default async function OrderReferencePage({
             </Link>
           </div>
 
-          {/* WhatsApp Support Link if store has WhatsApp */}
-          {order.storefront.whatsapp && (
-            <div className="text-center pt-1">
-              <a
-                href={`https://wa.me/233${order.storefront.whatsapp.replace(/^0/, "").replace(/\D/g, "")}?text=${encodeURIComponent(`Hello, I have a question about order ${reference} for ${order.customerPhone}`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#00df82] hover:underline"
-              >
-                <span>Need help? Chat with {order.storefront.name} on WhatsApp</span>
-                <ExternalLink className="h-3 w-3" />
-              </a>
-            </div>
-          )}
+          {/* WhatsApp Support Link if store has WhatsApp or phone */}
+          {(() => {
+            const waNumber = order.storefront.whatsapp || order.storefront.phone;
+            const waLink = buildWhatsAppLink(
+              waNumber,
+              `Hello, I have a question about order ${reference} for ${order.customerPhone}`
+            );
+            if (!waLink) return null;
+            return (
+              <div className="text-center pt-1">
+                <a
+                  href={waLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#00df82] hover:underline"
+                >
+                  <span>Need help? Chat with {order.storefront.name} on WhatsApp</span>
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+            );
+          })()}
         </div>
       </div>
     </div>

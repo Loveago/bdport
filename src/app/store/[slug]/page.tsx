@@ -4,6 +4,7 @@ import { Clock } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { fromPesewas } from "@/lib/storefront";
 import { NETWORK_ORDER, storeHref } from "@/components/store/brands";
+import { buildWhatsAppLink } from "@/lib/storefront-utils";
 import { StorefrontPortal } from "@/components/store/storefront-portal";
 import type { NetworkProvider } from "@/lib/types";
 
@@ -24,6 +25,8 @@ export default async function PublicStorePage({
     prisma.systemSetting.findUnique({ where: { key: "storefront_feature_enabled" } }),
   ]);
   if (!storefront || storefront.status !== "ENABLED") notFound();
+
+  const effectiveWhatsApp = storefront.whatsapp || storefront.phone || null;
   if (featureSetting?.value === "false") {
     return (
       <div className="mx-auto mt-20 max-w-md p-8 text-center bg-white rounded-3xl border border-slate-200 shadow-xl">
@@ -60,9 +63,9 @@ export default async function PublicStorePage({
               <Clock className="h-4 w-4" />
               Track existing order
             </Link>
-            {storefront.whatsapp && (
+            {effectiveWhatsApp && (
               <a
-                href={`https://wa.me/233${storefront.whatsapp.replace(/^0/, "").replace(/\D/g, "")}`}
+                href={buildWhatsAppLink(effectiveWhatsApp) || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex h-11 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50"
@@ -117,7 +120,8 @@ export default async function PublicStorePage({
           name: storefront.name,
           slug: storefront.slug,
           description: storefront.description,
-          whatsapp: storefront.whatsapp,
+          phone: storefront.phone,
+          whatsapp: effectiveWhatsApp,
           whatsappGroupLink: storefront.whatsappGroupLink,
           logoUrl: storefront.logoUrl,
           reviewsEnabled: storefront.reviewsEnabled ?? true,

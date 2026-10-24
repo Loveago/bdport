@@ -22,6 +22,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { fromPesewas } from "@/lib/storefront";
+import { buildWhatsAppLink } from "@/lib/storefront-utils";
 import type { NetworkProvider } from "@/lib/types";
 
 export interface StorefrontProductItem {
@@ -39,6 +40,7 @@ interface StorefrontPortalProps {
     name: string;
     slug: string;
     description?: string | null;
+    phone?: string | null;
     whatsapp?: string | null;
     whatsappGroupLink?: string | null;
     logoUrl?: string | null;
@@ -67,10 +69,8 @@ function detectCarrier(phone: string): { network: string; label: string; color: 
 }
 
 function whatsappDirectLink(phone: string | null | undefined): string {
-  if (!phone) return "https://wa.me/233531374119";
-  const digits = phone.replace(/\D/g, "");
-  const intl = digits.startsWith("0") ? `233${digits.slice(1)}` : digits;
-  return `https://wa.me/${intl}`;
+  const link = buildWhatsAppLink(phone);
+  return link || "#";
 }
 
 export function StorefrontPortal({
@@ -128,8 +128,9 @@ export function StorefrontPortal({
   }, [products, activeNetwork]);
 
   // Customer contact details
-  const displayPhone = storefront.whatsapp || "0531374119";
-  const waChatUrl = whatsappDirectLink(storefront.whatsapp);
+  const rawContact = storefront.whatsapp || storefront.phone || "";
+  const displayPhone = rawContact || "0240000000";
+  const waChatUrl = whatsappDirectLink(rawContact);
   const waGroupUrl = storefront.whatsappGroupLink || waChatUrl;
 
   // Real-time phone carrier check
