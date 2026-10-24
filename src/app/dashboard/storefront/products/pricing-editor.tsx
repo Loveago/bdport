@@ -49,7 +49,7 @@ export function PricingEditor({
   const [togglingId, setTogglingId] = React.useState<string | null>(null);
   const [selected, setSelected] = React.useState<Set<string>>(new Set());
   const [bulkMarkup, setBulkMarkup] = React.useState("");
-  const [filter, setFilter] = React.useState<string>("ALL");
+  const [filter, setFilter] = React.useState<string>("MTN");
   const [msg, setMsg] = React.useState<{ kind: "ok" | "err"; text: string } | null>(null);
   const [bulkBusy, setBulkBusy] = React.useState(false);
 
@@ -272,7 +272,7 @@ export function PricingEditor({
 
       {/* Network Filter Strip */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none -mx-1 px-1 sm:mx-0 sm:px-0">
-        {["ALL", "MTN", "TELECEL", "AIRTELTIGO"].map((n) => {
+        {["MTN", "TELECEL", "AIRTELTIGO"].map((n) => {
           const isActive = filter === n;
           return (
             <button
@@ -284,7 +284,7 @@ export function PricingEditor({
                   : "border border-[#162740] bg-[#0b1322] text-slate-300 hover:text-white hover:border-slate-700"
               }`}
             >
-              {n === "ALL" ? "All Networks" : n}
+              {n}
             </button>
           );
         })}
