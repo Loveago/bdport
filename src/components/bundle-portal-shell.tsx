@@ -28,6 +28,7 @@ import {
   X,
   LogOut,
   ExternalLink,
+  Share2,
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { useTheme } from "next-themes";
@@ -61,6 +62,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard/mtn-verification", label: "MTN Verification", icon: ShieldCheck },
   { href: "/dashboard/api", label: "API", icon: Code2 },
   { href: "/dashboard/storefront", label: "Storefront", icon: Store },
+  { href: "/dashboard/affiliate", label: "Affiliate Network", icon: Share2 },
   { href: "/dashboard/reports", label: "Reports", icon: BarChart3 },
   { href: "/admin", label: "Admin Center", icon: Shield, adminOnly: true },
 ];
