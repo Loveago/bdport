@@ -40,6 +40,7 @@ import { BrandLogo } from "@/components/brand-logo";
 import { useToast } from "@/components/toast";
 import { useNavBadges } from "@/components/app-nav";
 import { ManualCreditDialog } from "@/components/admin/manual-credit-dialog";
+import { SystemChatWidget } from "@/components/chat/system-chat-widget";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import type { AuthUser } from "@/lib/types";
@@ -595,6 +596,8 @@ export function AdminShell({ user, children, allowedNavHrefs, supportWhatsapp }:
           }}
         />
       )}
+      {/* Floating System Support Chat Bubble */}
+      <SystemChatWidget user={user} />
     </div>
   );
 }

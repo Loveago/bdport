@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   MessageSquare,
   X,
@@ -38,6 +39,7 @@ interface Conversation {
 }
 
 export function SystemChatWidget({ user }: { user: AuthUser }) {
+  const pathname = usePathname();
   const isStaff = user.role === "ADMIN" || user.role === "MANAGER" || user.role === "SECRETARY";
   const [open, setOpen] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(false);
@@ -293,13 +295,19 @@ export function SystemChatWidget({ user }: { user: AuthUser }) {
     ? conversations.find((c) => c.userId === selectedUserId)
     : null;
 
+  if (pathname === "/admin/chat") return null;
+
   return (
     <>
       {/* Floating Chat Trigger Button */}
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label="Open support chat"
-        className="fixed bottom-5 right-5 z-40 flex h-13 w-13 items-center justify-center rounded-full bg-gradient-to-tr from-emerald-600 via-teal-600 to-cyan-600 text-white shadow-xl shadow-emerald-600/35 transition-all duration-300 hover:scale-105 hover:shadow-emerald-600/50 active:scale-95"
+        className={`fixed ${
+          isStaff
+            ? "bottom-5 right-5"
+            : "bottom-20 lg:bottom-6 right-4 lg:right-6"
+        } z-40 flex h-13 w-13 items-center justify-center rounded-full bg-gradient-to-tr from-emerald-600 via-teal-600 to-cyan-600 text-white shadow-xl shadow-emerald-600/35 transition-all duration-300 hover:scale-105 hover:shadow-emerald-600/50 active:scale-95 cursor-pointer`}
       >
         <div className="relative flex items-center justify-center">
           <MessageSquare className="h-6 w-6" />
@@ -321,7 +329,7 @@ export function SystemChatWidget({ user }: { user: AuthUser }) {
           className={`fixed z-50 flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-2xl transition-all duration-200 dark:border-[#162740] dark:bg-[#0b1322] ${
             isExpanded
               ? "bottom-4 right-4 left-4 top-4 md:left-auto md:top-auto md:bottom-6 md:right-6 md:w-[860px] md:h-[640px] max-w-[96vw] max-h-[92vh]"
-              : "bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[430px] max-w-[440px] h-[540px] max-h-[82vh]"
+              : `${isStaff ? "bottom-20 right-4 sm:right-6" : "bottom-24 lg:bottom-20 right-4 sm:right-6"} w-[92vw] sm:w-[430px] max-w-[440px] h-[540px] max-h-[82vh]`
           }`}
         >
           {/* Header */}

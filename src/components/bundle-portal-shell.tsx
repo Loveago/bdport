@@ -33,6 +33,7 @@ import {
 import { BrandLogo } from "@/components/brand-logo";
 import { useTheme } from "next-themes";
 import { NotificationCenter } from "@/components/notifications/notification-center";
+import { SystemChatWidget } from "@/components/chat/system-chat-widget";
 import { cn } from "@/lib/utils";
 import { formatGHS } from "@/lib/types";
 import type { AuthUser } from "@/lib/types";
@@ -416,6 +417,9 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
           );
         })}
       </nav>
+
+      {/* Floating System Support Chat Bubble */}
+      <SystemChatWidget user={user} />
     </div>
   );
 }
