@@ -188,6 +188,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Root URL redirection: authenticated users go to /dashboard, guests go to /login
+  if (pathname === "/") {
+    const url = request.nextUrl.clone();
+    url.pathname = role ? "/dashboard" : "/login";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
   if (!pathname.startsWith("/admin") && !pathname.startsWith("/api/admin")) {
     if (isAuthPage) return NextResponse.next();
   }
