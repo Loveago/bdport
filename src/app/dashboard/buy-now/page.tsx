@@ -127,12 +127,8 @@ export default function BuyNowPage() {
     return null;
   }, [phone]);
 
-  // When detected carrier changes and differs from current selected, suggest switch
-  useEffect(() => {
-    if (detectedCarrier && detectedCarrier !== selectedNetwork) {
-      setSelectedNetwork(detectedCarrier as Network);
-    }
-  }, [detectedCarrier]);
+  // Note: We do NOT automatically switch selectedNetwork when detectedCarrier differs,
+  // because numbers may be ported between networks (e.g. Telecel 050/020 ported to MTN).
 
   // Filter packages for selected network
   const filteredPackages = useMemo(() => {
@@ -500,10 +496,17 @@ export default function BuyNowPage() {
                   Recipient SIM Number
                 </label>
                 {detectedCarrier && (
-                  <span className="text-[10px] font-black uppercase tracking-wider text-[#00df82] flex items-center gap-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#00df82] animate-ping" />
-                    Auto: {detectedCarrier}
-                  </span>
+                  detectedCarrier === selectedNetwork ? (
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#00df82] flex items-center gap-1">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#00df82]" />
+                      Prefix: {detectedCarrier}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500 dark:text-amber-400 flex items-center gap-1">
+                      <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                      Ported SIM ({detectedCarrier} prefix)
+                    </span>
+                  )
                 )}
               </div>
               <div className="relative">
@@ -520,9 +523,28 @@ export default function BuyNowPage() {
                   className="w-full h-12 rounded-xl bg-slate-50 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740] pl-10 pr-4 text-sm font-mono font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 outline-none focus:border-[#00df82] focus:ring-1 focus:ring-[#00df82] transition-colors"
                 />
               </div>
-              <p className="text-[10px] text-slate-500">
-                Accepts Ghanaian numbers (024, 050, 027, etc.) with automatic gateway routing.
-              </p>
+
+              {detectedCarrier && detectedCarrier !== selectedNetwork ? (
+                <div className="rounded-xl border border-amber-500/25 bg-amber-500/10 p-2.5 text-xs text-amber-700 dark:text-amber-300 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 shrink-0 text-amber-500" />
+                    <span>
+                      Number prefix belongs to <strong>{CARRIER_CONFIG[detectedCarrier as Network]?.label || detectedCarrier}</strong>. If this SIM is ported to <strong>{CARRIER_CONFIG[selectedNetwork]?.label || selectedNetwork}</strong>, your package will be delivered via {selectedNetwork}.
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedNetwork(detectedCarrier as Network)}
+                    className="shrink-0 text-[11px] font-bold text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
+                  >
+                    Switch to {detectedCarrier}?
+                  </button>
+                </div>
+              ) : (
+                <p className="text-[10px] text-slate-500">
+                  Accepts Ghanaian numbers (024, 050, 027, etc.) including ported SIMs with automatic routing.
+                </p>
+              )}
             </div>
 
             {/* Selected Package Card HUD */}
