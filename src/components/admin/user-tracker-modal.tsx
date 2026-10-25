@@ -199,21 +199,21 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
 
   const getNetworkStyle = (net: string) => {
     const u = net.toUpperCase();
-    if (u === "MTN") return "bg-amber-500/10 text-amber-300 border-amber-500/30";
-    if (u === "AIRTELTIGO") return "bg-sky-500/10 text-sky-400 border-sky-500/30";
-    if (u === "TELECEL") return "bg-rose-500/10 text-rose-400 border-rose-500/30";
-    return "bg-slate-500/10 text-slate-300 border-slate-500/30";
+    if (u === "MTN") return "bg-amber-500/10 text-amber-600 dark:text-amber-300 border-amber-500/30";
+    if (u === "AIRTELTIGO") return "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30";
+    if (u === "TELECEL") return "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30";
+    return "bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-500/30";
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className="w-full max-w-5xl max-h-[92vh] flex flex-col rounded-3xl border border-[#162740] bg-[#070d18] text-slate-200 shadow-2xl overflow-hidden"
+        className="w-full max-w-5xl max-h-[92vh] flex flex-col rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#070d18] text-slate-900 dark:text-slate-200 shadow-2xl overflow-hidden"
         role="dialog"
         aria-modal="true"
       >
         {/* MODAL HEADER */}
-        <div className="p-4 sm:p-5 border-b border-[#14233a] bg-[#0a1220] flex items-start justify-between gap-4 shrink-0">
+        <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-[#14233a] bg-slate-50 dark:bg-[#0a1220] flex items-start justify-between gap-4 shrink-0">
           <div className="flex items-start gap-3.5">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#00df82]/20 to-cyan-500/20 text-[#00df82] border border-[#00df82]/30 shadow-inner">
               <ShoppingBag className="h-6 w-6" />
@@ -221,7 +221,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
 
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <h2 className="text-lg font-black text-white">
+                <h2 className="text-lg font-black text-slate-900 dark:text-white">
                   {data?.user.name || "User Activity Tracker"}
                 </h2>
                 {data?.user.role && (
@@ -233,8 +233,8 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                   <span
                     className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                       data.user.status === "ACTIVE"
-                        ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
-                        : "bg-rose-500/15 text-rose-400 border border-rose-500/30"
+                        ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
+                        : "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30"
                     }`}
                   >
                     {data.user.status}
@@ -242,18 +242,18 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                 )}
               </div>
 
-              <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-slate-400 font-mono">
+              <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 font-mono">
                 <span className="flex items-center gap-1">
-                  <Mail className="h-3.5 w-3.5 text-slate-500" />
+                  <Mail className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
                   {data?.user.email}
                   <button
                     type="button"
                     onClick={() => handleCopy(data!.user.email, "Email")}
-                    className="text-slate-500 hover:text-white transition ml-0.5"
+                    className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition ml-0.5"
                     title="Copy email"
                   >
                     {copiedText === "Email" ? (
-                      <Check className="h-3 w-3 text-emerald-400" />
+                      <Check className="h-3 w-3 text-emerald-500" />
                     ) : (
                       <Copy className="h-3 w-3" />
                     )}
@@ -262,7 +262,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
 
                 {data?.user.phone && (
                   <span className="flex items-center gap-1">
-                    <Phone className="h-3.5 w-3.5 text-slate-500" />
+                    <Phone className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
                     {data.user.phone}
                   </span>
                 )}
@@ -278,18 +278,18 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
               {/* Upline or Downline Indicators */}
               <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px]">
                 {data?.user.parentAgent && (
-                  <div className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 px-2 py-0.5 text-cyan-300">
-                    <span className="text-slate-400 font-normal">Referred by Main Agent:</span>
+                  <div className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 px-2 py-0.5 text-cyan-700 dark:text-cyan-300">
+                    <span className="text-slate-500 dark:text-slate-400 font-normal">Referred by Main Agent:</span>
                     <strong className="font-bold">{data.user.parentAgent.name}</strong>
-                    <span className="text-cyan-400/80 font-mono">({data.user.parentAgent.email})</span>
+                    <span className="text-cyan-600 dark:text-cyan-400 font-mono">({data.user.parentAgent.email})</span>
                   </div>
                 )}
 
                 {data?.user.affiliateCode && (
-                  <div className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 text-emerald-300">
-                    <span className="text-slate-400 font-normal">Affiliate Code:</span>
-                    <strong className="font-mono font-bold text-white">{data.user.affiliateCode}</strong>
-                    <span className="text-slate-400">({data.user.subAgentsCount} Sub-Agents)</span>
+                  <div className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 text-emerald-700 dark:text-emerald-300">
+                    <span className="text-slate-500 dark:text-slate-400 font-normal">Affiliate Code:</span>
+                    <strong className="font-mono font-bold text-slate-900 dark:text-white">{data.user.affiliateCode}</strong>
+                    <span className="text-slate-500 dark:text-slate-400">({data.user.subAgentsCount} Sub-Agents)</span>
                   </div>
                 )}
               </div>
@@ -301,7 +301,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
               type="button"
               onClick={loadData}
               disabled={loading}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#14233a] border border-[#14233a] transition"
+              className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#14233a] border border-slate-200 dark:border-[#14233a] transition"
               title="Refresh activity"
             >
               <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin text-[#00df82]" : ""}`} />
@@ -310,7 +310,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#14233a] border border-[#14233a] transition"
+              className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#14233a] border border-slate-200 dark:border-[#14233a] transition"
               title="Close modal"
             >
               <X className="h-4 w-4" />
@@ -322,41 +322,41 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
         {loading && !data && (
           <div className="flex-1 flex flex-col items-center justify-center p-16 space-y-3">
             <Spinner className="h-8 w-8 text-[#00df82]" />
-            <p className="text-xs text-slate-400 font-mono">Loading user sales & wallet ledger…</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">Loading user sales & wallet ledger…</p>
           </div>
         )}
 
         {data && (
           <>
             {/* KPI STAT CARDS BAR */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 bg-[#091220] border-b border-[#14233a] shrink-0">
-              <div className="rounded-2xl border border-[#14233a] bg-[#070d18] p-3 space-y-1">
-                <div className="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 bg-slate-50/80 dark:bg-[#091220] border-b border-slate-200 dark:border-[#14233a] shrink-0">
+              <div className="rounded-2xl border border-slate-200 dark:border-[#14233a] bg-white dark:bg-[#070d18] p-3 space-y-1 shadow-xs">
+                <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
                   <span>Main Wallet</span>
-                  <Wallet className="h-3.5 w-3.5 text-emerald-400" />
+                  <Wallet className="h-3.5 w-3.5 text-emerald-500" />
                 </div>
-                <div className="text-lg font-black font-mono text-white">
+                <div className="text-lg font-black font-mono text-slate-900 dark:text-white">
                   GH₵ {data.financialStats.balance.toFixed(2)}
                 </div>
                 <div className="text-[10px] text-slate-500 flex items-center gap-1 font-mono">
                   {data.financialStats.isReconciled ? (
-                    <span className="text-emerald-400 inline-flex items-center gap-0.5">
+                    <span className="text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-0.5">
                       <ShieldCheck className="h-3 w-3" /> Reconciled
                     </span>
                   ) : (
-                    <span className="text-amber-400 inline-flex items-center gap-0.5">
+                    <span className="text-amber-600 dark:text-amber-400 inline-flex items-center gap-0.5">
                       <AlertTriangle className="h-3 w-3" /> Net: GH₵{data.financialStats.netFlow.toFixed(2)}
                     </span>
                   )}
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-[#14233a] bg-[#070d18] p-3 space-y-1">
-                <div className="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+              <div className="rounded-2xl border border-slate-200 dark:border-[#14233a] bg-white dark:bg-[#070d18] p-3 space-y-1 shadow-xs">
+                <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
                   <span>Sales Volume</span>
-                  <ShoppingBag className="h-3.5 w-3.5 text-cyan-400" />
+                  <ShoppingBag className="h-3.5 w-3.5 text-cyan-500" />
                 </div>
-                <div className="text-lg font-black font-mono text-cyan-400">
+                <div className="text-lg font-black font-mono text-cyan-600 dark:text-cyan-400">
                   GH₵ {data.salesStats.totalSpend.toFixed(2)}
                 </div>
                 <div className="text-[10px] text-slate-500 font-mono">
@@ -364,12 +364,12 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-[#14233a] bg-[#070d18] p-3 space-y-1">
-                <div className="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+              <div className="rounded-2xl border border-slate-200 dark:border-[#14233a] bg-white dark:bg-[#070d18] p-3 space-y-1 shadow-xs">
+                <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
                   <span>Data Delivered</span>
-                  <Layers className="h-3.5 w-3.5 text-purple-400" />
+                  <Layers className="h-3.5 w-3.5 text-purple-500" />
                 </div>
-                <div className="text-lg font-black font-mono text-purple-300">
+                <div className="text-lg font-black font-mono text-purple-600 dark:text-purple-300">
                   {data.salesStats.totalGb.toFixed(1)} GB
                 </div>
                 <div className="text-[10px] text-slate-500 font-mono">
@@ -377,8 +377,8 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-[#14233a] bg-[#070d18] p-3 space-y-1">
-                <div className="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+              <div className="rounded-2xl border border-slate-200 dark:border-[#14233a] bg-white dark:bg-[#070d18] p-3 space-y-1 shadow-xs">
+                <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
                   <span>Affiliate Wallet</span>
                   <Share2 className="h-3.5 w-3.5 text-[#00df82]" />
                 </div>
@@ -392,14 +392,14 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
             </div>
 
             {/* TAB SELECTION */}
-            <div className="px-5 pt-3 border-b border-[#14233a] flex items-center gap-2 bg-[#08101d] shrink-0">
+            <div className="px-5 pt-3 border-b border-slate-200 dark:border-[#14233a] flex items-center gap-2 bg-slate-100/70 dark:bg-[#08101d] shrink-0">
               <button
                 type="button"
                 onClick={() => setActiveTab("sales")}
-                className={`px-4 py-2 text-xs font-bold rounded-t-xl transition border-b-2 flex items-center gap-1.5 ${
+                className={`px-4 py-2 text-xs font-bold rounded-t-xl transition border-b-2 flex items-center gap-1.5 cursor-pointer ${
                   activeTab === "sales"
-                    ? "border-[#00df82] text-[#00df82] bg-[#00df82]/10"
-                    : "border-transparent text-slate-400 hover:text-white"
+                    ? "border-[#00df82] text-slate-950 dark:text-[#00df82] bg-white dark:bg-[#00df82]/10 shadow-xs"
+                    : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 <ShoppingBag className="h-3.5 w-3.5" />
@@ -409,10 +409,10 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
               <button
                 type="button"
                 onClick={() => setActiveTab("wallet")}
-                className={`px-4 py-2 text-xs font-bold rounded-t-xl transition border-b-2 flex items-center gap-1.5 ${
+                className={`px-4 py-2 text-xs font-bold rounded-t-xl transition border-b-2 flex items-center gap-1.5 cursor-pointer ${
                   activeTab === "wallet"
-                    ? "border-[#00df82] text-[#00df82] bg-[#00df82]/10"
-                    : "border-transparent text-slate-400 hover:text-white"
+                    ? "border-[#00df82] text-slate-950 dark:text-[#00df82] bg-white dark:bg-[#00df82]/10 shadow-xs"
+                    : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 <Wallet className="h-3.5 w-3.5" />
@@ -423,10 +423,10 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                 <button
                   type="button"
                   onClick={() => setActiveTab("storefront")}
-                  className={`px-4 py-2 text-xs font-bold rounded-t-xl transition border-b-2 flex items-center gap-1.5 ${
+                  className={`px-4 py-2 text-xs font-bold rounded-t-xl transition border-b-2 flex items-center gap-1.5 cursor-pointer ${
                     activeTab === "storefront"
-                      ? "border-[#00df82] text-[#00df82] bg-[#00df82]/10"
-                      : "border-transparent text-slate-400 hover:text-white"
+                      ? "border-[#00df82] text-slate-950 dark:text-[#00df82] bg-white dark:bg-[#00df82]/10 shadow-xs"
+                      : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
                   <Store className="h-3.5 w-3.5" />
@@ -476,13 +476,13 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
 
                   {/* Channel Breakdown Pill Badges */}
                   <div className="flex flex-wrap items-center gap-2 text-xs">
-                    <span className="text-slate-400 font-bold text-[11px]">Sales Channels:</span>
+                    <span className="text-slate-500 dark:text-slate-400 font-bold text-[11px]">Sales Channels:</span>
                     {data.salesStats.channels.map((c) => (
                       <span
                         key={c.source}
-                        className="rounded-lg bg-[#0a1220] border border-[#14233a] px-2.5 py-1 font-mono text-[11px]"
+                        className="rounded-lg bg-slate-50 dark:bg-[#0a1220] border border-slate-200 dark:border-[#14233a] px-2.5 py-1 font-mono text-[11px] text-slate-700 dark:text-slate-300"
                       >
-                        <strong className="text-white">{c.source}</strong>: {c.count} orders (GH₵{c.amount.toFixed(2)})
+                        <strong className="text-slate-900 dark:text-white">{c.source}</strong>: {c.count} orders (GH₵{c.amount.toFixed(2)})
                       </span>
                     ))}
                   </div>
@@ -490,13 +490,13 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                   {/* Orders Filter Bar */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
                     <div className="relative flex-1 max-w-sm">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
                       <input
                         type="text"
                         placeholder="Search phone or reference…"
                         value={orderSearch}
                         onChange={(e) => setOrderSearch(e.target.value)}
-                        className="w-full bg-[#0a1220] border border-[#14233a] rounded-xl pl-9 pr-3 py-1.5 text-xs text-white placeholder:text-slate-500 outline-none focus:border-[#00df82]"
+                        className="w-full bg-white dark:bg-[#0a1220] border border-slate-200 dark:border-[#14233a] rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:border-[#00df82]"
                       />
                     </div>
 
@@ -504,7 +504,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                       <select
                         value={orderNetwork}
                         onChange={(e) => setOrderNetwork(e.target.value)}
-                        className="bg-[#0a1220] border border-[#14233a] rounded-xl px-2.5 py-1.5 text-xs text-slate-300 outline-none focus:border-[#00df82]"
+                        className="bg-white dark:bg-[#0a1220] border border-slate-200 dark:border-[#14233a] rounded-xl px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-300 outline-none focus:border-[#00df82]"
                       >
                         <option value="ALL">All Networks</option>
                         <option value="MTN">MTN</option>
@@ -515,7 +515,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                       <select
                         value={orderStatus}
                         onChange={(e) => setOrderStatus(e.target.value)}
-                        className="bg-[#0a1220] border border-[#14233a] rounded-xl px-2.5 py-1.5 text-xs text-slate-300 outline-none focus:border-[#00df82]"
+                        className="bg-white dark:bg-[#0a1220] border border-slate-200 dark:border-[#14233a] rounded-xl px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-300 outline-none focus:border-[#00df82]"
                       >
                         <option value="ALL">All Statuses</option>
                         <option value="SUCCESS">Success</option>
@@ -527,7 +527,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                   </div>
 
                   {/* Orders Table */}
-                  <div className="rounded-2xl border border-[#14233a] bg-[#070d18] overflow-hidden">
+                  <div className="rounded-2xl border border-slate-200 dark:border-[#14233a] bg-white dark:bg-[#070d18] overflow-hidden shadow-xs">
                     {filteredOrders.length === 0 ? (
                       <div className="p-8 text-center text-xs text-slate-500 space-y-1">
                         <ShoppingBag className="h-8 w-8 mx-auto opacity-30 text-slate-400" />
@@ -537,7 +537,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                       <div className="overflow-x-auto">
                         <table className="w-full text-left text-xs border-collapse">
                           <thead>
-                            <tr className="border-b border-[#14233a] bg-[#0a1220] text-slate-400 uppercase text-[10px] font-black">
+                            <tr className="border-b border-slate-200 dark:border-[#14233a] bg-slate-50 dark:bg-[#0a1220] text-slate-600 dark:text-slate-400 uppercase text-[10px] font-black">
                               <th className="p-3">Order ID</th>
                               <th className="p-3">Network</th>
                               <th className="p-3">Package / Recipient</th>
@@ -547,10 +547,10 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                               <th className="p-3 text-right">Date</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-[#14233a]/60 font-mono">
+                          <tbody className="divide-y divide-slate-100 dark:divide-[#14233a]/60 font-mono">
                             {filteredOrders.map((ord) => (
-                              <tr key={ord.id} className="hover:bg-[#0a1220]/60 transition">
-                                <td className="p-3 text-slate-400">#{ord.id}</td>
+                              <tr key={ord.id} className="hover:bg-slate-50 dark:hover:bg-[#0a1220]/60 transition">
+                                <td className="p-3 text-slate-500 dark:text-slate-400">#{ord.id}</td>
                                 <td className="p-3">
                                   <span
                                     className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${getNetworkStyle(
@@ -561,31 +561,31 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                                   </span>
                                 </td>
                                 <td className="p-3">
-                                  <div className="font-bold text-white">
+                                  <div className="font-bold text-slate-900 dark:text-white">
                                     {ord.gbAmount} GB
                                   </div>
-                                  <div className="text-[11px] text-slate-400">{ord.phoneNumber}</div>
+                                  <div className="text-[11px] text-slate-500 dark:text-slate-400">{ord.phoneNumber}</div>
                                 </td>
-                                <td className="p-3 text-slate-400 text-[11px]">
+                                <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
                                   {ord.source}
                                 </td>
-                                <td className="p-3 font-bold text-white">
+                                <td className="p-3 font-bold text-slate-900 dark:text-white">
                                   GH₵ {ord.amount.toFixed(2)}
                                 </td>
                                 <td className="p-3">
                                   <span
                                     className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                                       ord.status === "SUCCESS"
-                                        ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                                        ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
                                         : ord.status === "FAILED"
-                                        ? "bg-rose-500/15 text-rose-400 border border-rose-500/30"
-                                        : "bg-amber-500/15 text-amber-300 border border-amber-500/30"
+                                        ? "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30"
+                                        : "bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/30"
                                     }`}
                                   >
                                     {ord.status}
                                   </span>
                                 </td>
-                                <td className="p-3 text-right text-[11px] text-slate-400">
+                                <td className="p-3 text-right text-[11px] text-slate-500 dark:text-slate-400">
                                   {new Date(ord.createdAt).toLocaleString()}
                                 </td>
                               </tr>
@@ -606,11 +606,11 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                   {/* Flow Summary */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-3">
-                      <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-bold">
+                      <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-bold">
                         <ArrowDownLeft className="h-4 w-4" />
                         <span>Total Inflow (Topups)</span>
                       </div>
-                      <div className="mt-1 text-base font-black font-mono text-emerald-300">
+                      <div className="mt-1 text-base font-black font-mono text-emerald-600 dark:text-emerald-300">
                         GH₵ {data.financialStats.totalIn.toFixed(2)}
                       </div>
                       <div className="text-[10px] text-slate-500">
@@ -619,11 +619,11 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                     </div>
 
                     <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-3">
-                      <div className="flex items-center gap-1.5 text-xs text-rose-400 font-bold">
+                      <div className="flex items-center gap-1.5 text-xs text-rose-600 dark:text-rose-400 font-bold">
                         <ArrowUpRight className="h-4 w-4" />
                         <span>Total Outflow (Debits)</span>
                       </div>
-                      <div className="mt-1 text-base font-black font-mono text-rose-300">
+                      <div className="mt-1 text-base font-black font-mono text-rose-600 dark:text-rose-300">
                         GH₵ {data.financialStats.totalOut.toFixed(2)}
                       </div>
                       <div className="text-[10px] text-slate-500">
@@ -632,11 +632,11 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                     </div>
 
                     <div className="rounded-2xl border border-purple-500/20 bg-purple-500/5 p-3">
-                      <div className="flex items-center gap-1.5 text-xs text-purple-400 font-bold">
+                      <div className="flex items-center gap-1.5 text-xs text-purple-600 dark:text-purple-400 font-bold">
                         <RotateCcw className="h-4 w-4" />
                         <span>Total Refunds</span>
                       </div>
-                      <div className="mt-1 text-base font-black font-mono text-purple-300">
+                      <div className="mt-1 text-base font-black font-mono text-purple-600 dark:text-purple-300">
                         GH₵ {data.financialStats.totalRefunds.toFixed(2)}
                       </div>
                       <div className="text-[10px] text-slate-500">
@@ -647,7 +647,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
 
                   {/* Tx Filter Bar */}
                   <div className="flex items-center justify-between gap-3 pt-2">
-                    <div className="text-xs font-bold text-slate-400">
+                    <div className="text-xs font-bold text-slate-700 dark:text-slate-400">
                       Wallet Ledger Transactions ({filteredTransactions.length})
                     </div>
 
@@ -655,7 +655,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                       <select
                         value={txType}
                         onChange={(e) => setTxType(e.target.value)}
-                        className="bg-[#0a1220] border border-[#14233a] rounded-xl px-2.5 py-1.5 text-xs text-slate-300 outline-none focus:border-[#00df82]"
+                        className="bg-white dark:bg-[#0a1220] border border-slate-200 dark:border-[#14233a] rounded-xl px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-300 outline-none focus:border-[#00df82]"
                       >
                         <option value="ALL">All Types</option>
                         <option value="TOPUP">TOPUP</option>
@@ -667,7 +667,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                       <select
                         value={txStatus}
                         onChange={(e) => setTxStatus(e.target.value)}
-                        className="bg-[#0a1220] border border-[#14233a] rounded-xl px-2.5 py-1.5 text-xs text-slate-300 outline-none focus:border-[#00df82]"
+                        className="bg-white dark:bg-[#0a1220] border border-slate-200 dark:border-[#14233a] rounded-xl px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-300 outline-none focus:border-[#00df82]"
                       >
                         <option value="ALL">All Statuses</option>
                         <option value="APPROVED">Approved</option>
@@ -678,7 +678,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                   </div>
 
                   {/* Transactions Table */}
-                  <div className="rounded-2xl border border-[#14233a] bg-[#070d18] overflow-hidden">
+                  <div className="rounded-2xl border border-slate-200 dark:border-[#14233a] bg-white dark:bg-[#070d18] overflow-hidden shadow-xs">
                     {filteredTransactions.length === 0 ? (
                       <div className="p-8 text-center text-xs text-slate-500 space-y-1">
                         <Wallet className="h-8 w-8 mx-auto opacity-30 text-slate-400" />
@@ -688,7 +688,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                       <div className="overflow-x-auto">
                         <table className="w-full text-left text-xs border-collapse">
                           <thead>
-                            <tr className="border-b border-[#14233a] bg-[#0a1220] text-slate-400 uppercase text-[10px] font-black">
+                            <tr className="border-b border-slate-200 dark:border-[#14233a] bg-slate-50 dark:bg-[#0a1220] text-slate-600 dark:text-slate-400 uppercase text-[10px] font-black">
                               <th className="p-3">Type</th>
                               <th className="p-3">Amount</th>
                               <th className="p-3">Reference / Note</th>
@@ -696,7 +696,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                               <th className="p-3 text-right">Date</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-[#14233a]/60 font-mono">
+                          <tbody className="divide-y divide-slate-100 dark:divide-[#14233a]/60 font-mono">
                             {filteredTransactions.map((tx) => {
                               const isPositive =
                                 tx.type === "TOPUP" ||
@@ -704,22 +704,22 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                                 (tx.type === "ADJUSTMENT" && tx.amount > 0);
 
                               return (
-                                <tr key={tx.id} className="hover:bg-[#0a1220]/60 transition">
+                                <tr key={tx.id} className="hover:bg-slate-50 dark:hover:bg-[#0a1220]/60 transition">
                                   <td className="p-3">
                                     <div className="flex items-center gap-1.5">
                                       {isPositive ? (
-                                        <ArrowDownLeft className="h-3.5 w-3.5 text-emerald-400" />
+                                        <ArrowDownLeft className="h-3.5 w-3.5 text-emerald-500" />
                                       ) : (
-                                        <ArrowUpRight className="h-3.5 w-3.5 text-rose-400" />
+                                        <ArrowUpRight className="h-3.5 w-3.5 text-rose-500" />
                                       )}
-                                      <span className="font-bold text-white text-[11px]">{tx.type}</span>
+                                      <span className="font-bold text-slate-900 dark:text-white text-[11px]">{tx.type}</span>
                                     </div>
                                   </td>
 
                                   <td className="p-3">
                                     <span
                                       className={`font-black text-sm ${
-                                        isPositive ? "text-[#00df82]" : "text-rose-400"
+                                        isPositive ? "text-[#00df82]" : "text-rose-500"
                                       }`}
                                     >
                                       {isPositive ? "+" : "-"}GH₵ {Math.abs(tx.amount).toFixed(2)}
@@ -729,7 +729,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                                   <td className="p-3 text-[11px]">
                                     {tx.sendClaim ? (
                                       <div>
-                                        <span className="text-purple-300 font-bold">
+                                        <span className="text-purple-600 dark:text-purple-300 font-bold">
                                           MoMo Claim: {tx.sendClaim.transactionReference}
                                         </span>
                                         <span className="text-slate-500 block">
@@ -738,7 +738,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                                       </div>
                                     ) : (
                                       <div>
-                                        <span className="text-slate-300">{tx.reference || "N/A"}</span>
+                                        <span className="text-slate-800 dark:text-slate-300 font-medium">{tx.reference || "N/A"}</span>
                                         {tx.note && (
                                           <span className="text-slate-500 block text-[10px]">{tx.note}</span>
                                         )}
@@ -750,17 +750,17 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                                     <span
                                       className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                                         tx.status === "APPROVED"
-                                          ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                                          ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
                                           : tx.status === "PENDING"
-                                          ? "bg-amber-500/15 text-amber-300 border border-amber-500/30"
-                                          : "bg-rose-500/15 text-rose-400 border border-rose-500/30"
+                                          ? "bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/30"
+                                          : "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30"
                                       }`}
                                     >
                                       {tx.status}
                                     </span>
                                   </td>
 
-                                  <td className="p-3 text-right text-[11px] text-slate-400">
+                                  <td className="p-3 text-right text-[11px] text-slate-500 dark:text-slate-400">
                                     {new Date(tx.createdAt).toLocaleString()}
                                   </td>
                                 </tr>
@@ -779,16 +779,16 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
               {/* ───────────────────────────────────────────────────────────── */}
               {activeTab === "storefront" && data.user.storefront && (
                 <div className="space-y-4">
-                  <div className="rounded-2xl border border-[#14233a] bg-[#0a1220] p-4 flex items-center justify-between">
+                  <div className="rounded-2xl border border-slate-200 dark:border-[#14233a] bg-slate-50 dark:bg-[#0a1220] p-4 flex items-center justify-between">
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-black text-white">{data.user.storefront.name}</h4>
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                        <h4 className="text-sm font-black text-slate-900 dark:text-white">{data.user.storefront.name}</h4>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
                           {data.user.storefront.status}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-400 mt-1 font-mono">
-                        Slug: <strong className="text-cyan-400">/store/{data.user.storefront.slug}</strong>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono">
+                        Slug: <strong className="text-cyan-600 dark:text-cyan-400">/store/{data.user.storefront.slug}</strong>
                       </p>
                     </div>
 
@@ -796,7 +796,7 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                       href={`/store/${data.user.storefront.slug}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="px-3 py-1.5 rounded-xl bg-[#14233a] hover:bg-[#00df82] hover:text-slate-950 text-slate-200 font-bold text-xs transition inline-flex items-center gap-1.5"
+                      className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-[#14233a] hover:bg-[#00df82] hover:text-slate-950 text-slate-700 dark:text-slate-200 font-bold text-xs transition inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <span>Visit Storefront</span>
                       <ExternalLink className="h-3.5 w-3.5" />
@@ -804,16 +804,16 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="rounded-2xl border border-[#14233a] bg-[#070d18] p-3.5">
-                      <span className="text-[11px] text-slate-400 block">Storefront Available Balance</span>
-                      <span className="text-lg font-black font-mono text-emerald-400 mt-1 block">
+                    <div className="rounded-2xl border border-slate-200 dark:border-[#14233a] bg-white dark:bg-[#070d18] p-3.5">
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Storefront Available Balance</span>
+                      <span className="text-lg font-black font-mono text-emerald-600 dark:text-emerald-400 mt-1 block">
                         GH₵ {data.user.storefrontWallet?.balance.toFixed(2) || "0.00"}
                       </span>
                     </div>
 
-                    <div className="rounded-2xl border border-[#14233a] bg-[#070d18] p-3.5">
-                      <span className="text-[11px] text-slate-400 block">Pending Clearance</span>
-                      <span className="text-lg font-black font-mono text-amber-300 mt-1 block">
+                    <div className="rounded-2xl border border-slate-200 dark:border-[#14233a] bg-white dark:bg-[#070d18] p-3.5">
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Pending Clearance</span>
+                      <span className="text-lg font-black font-mono text-amber-600 dark:text-amber-300 mt-1 block">
                         GH₵ {data.user.storefrontWallet?.pendingBalance.toFixed(2) || "0.00"}
                       </span>
                     </div>
@@ -823,24 +823,24 @@ export function UserTrackerModal({ userId, onClose }: UserTrackerModalProps) {
             </div>
 
             {/* MODAL FOOTER */}
-            <div className="p-3 sm:p-4 border-t border-[#14233a] bg-[#0a1220] flex items-center justify-between shrink-0">
+            <div className="p-3 sm:p-4 border-t border-slate-200 dark:border-[#14233a] bg-slate-50 dark:bg-[#0a1220] flex items-center justify-between shrink-0">
               <div className="text-[11px] text-slate-500 font-mono">
-                Tracking User ID: <span className="text-slate-400">{data.user.id}</span>
+                Tracking User ID: <span className="text-slate-700 dark:text-slate-400 font-bold">{data.user.id}</span>
               </div>
 
               <div className="flex items-center gap-2">
                 <Link
                   href={`/admin/wallets?userId=${data.user.id}`}
-                  className="px-3 py-1.5 rounded-xl border border-[#14233a] hover:bg-[#14233a] text-slate-300 font-bold text-xs transition inline-flex items-center gap-1"
+                  className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-[#14233a] bg-white dark:bg-transparent hover:bg-slate-100 dark:hover:bg-[#14233a] text-slate-700 dark:text-slate-300 font-bold text-xs transition inline-flex items-center gap-1"
                 >
-                  <Wallet className="h-3.5 w-3.5 text-emerald-400" />
+                  <Wallet className="h-3.5 w-3.5 text-emerald-500" />
                   <span>Wallet Hub</span>
                 </Link>
 
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-1.5 rounded-xl bg-[#00df82] hover:bg-[#00f59b] text-slate-950 font-black text-xs transition"
+                  className="px-4 py-1.5 rounded-xl bg-[#00df82] hover:bg-[#00f59b] text-slate-950 font-black text-xs transition cursor-pointer"
                 >
                   Done
                 </button>

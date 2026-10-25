@@ -135,10 +135,10 @@ export function DeveloperCredentials({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#162740] pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-[#162740] pb-4">
         <div>
-          <h2 className="text-base font-black text-white uppercase tracking-wider">API Authentication Credentials</h2>
-          <p className="text-xs text-slate-400">
+          <h2 className="text-base font-black text-slate-900 dark:text-white uppercase tracking-wider">API Authentication Credentials</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Generate and rotate cryptographic access keys for your automated telecom endpoints.
           </p>
         </div>
@@ -151,7 +151,7 @@ export function DeveloperCredentials({
       </div>
 
       {/* Table */}
-      <div className="rounded-3xl border border-[#162740] bg-[#0b1322] shadow-xl overflow-hidden">
+      <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] shadow-xl overflow-hidden">
         {loading ? (
           <div className="flex justify-center py-16">
             <Spinner className="h-8 w-8 text-[#00df82]" />
@@ -161,8 +161,8 @@ export function DeveloperCredentials({
             <div className="h-12 w-12 rounded-2xl bg-[#00df82]/10 border border-[#00df82]/20 text-[#00df82] flex items-center justify-center mx-auto">
               <Key className="h-6 w-6" />
             </div>
-            <p className="text-base font-bold text-white">No API credentials generated yet</p>
-            <p className="text-xs text-slate-400 max-w-sm mx-auto">
+            <p className="text-base font-bold text-slate-900 dark:text-white">No API credentials generated yet</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
               Create your first credential to authorize REST requests against the Bundle Portal gateway.
             </p>
             <button
@@ -175,7 +175,7 @@ export function DeveloperCredentials({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-[#162740] bg-[#070d18] text-slate-400 uppercase tracking-wider text-[11px] font-bold">
+              <thead className="border-b border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[11px] font-bold">
                 <tr>
                   <th className="px-5 py-3.5 font-bold">Credential &amp; Key Prefix</th>
                   <th className="px-4 py-3.5 font-bold">Environment</th>
@@ -186,19 +186,19 @@ export function DeveloperCredentials({
                   <th className="px-5 py-3.5 text-right font-bold">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#162740]">
+              <tbody className="divide-y divide-slate-100 dark:divide-[#162740]">
                 {credentials.map((c) => (
-                  <tr key={c.id} className="hover:bg-white/[0.03] transition-colors">
+                  <tr key={c.id} className="hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors">
                     <td className="px-5 py-3.5">
-                      <p className="font-bold text-white">{c.name}</p>
-                      <p className="mt-0.5 font-mono text-[11px] text-[#00df82]">{c.keyPrefix}••••••••••••</p>
+                      <p className="font-bold text-slate-900 dark:text-white">{c.name}</p>
+                      <p className="mt-0.5 font-mono text-[11px] text-emerald-600 dark:text-[#00df82]">{c.keyPrefix}••••••••••••</p>
                     </td>
                     <td className="px-4 py-3.5">
                       <span
                         className={`inline-flex rounded-lg px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider border ${
                           c.environment === "PRODUCTION"
-                            ? "bg-cyan-500/10 text-cyan-300 border-cyan-500/30"
-                            : "bg-amber-500/10 text-amber-300 border-amber-500/30"
+                            ? "bg-cyan-500/10 text-cyan-600 dark:text-cyan-300 border-cyan-500/30"
+                            : "bg-amber-500/10 text-amber-600 dark:text-amber-300 border-amber-500/30"
                         }`}
                       >
                         {c.environment}
@@ -207,13 +207,13 @@ export function DeveloperCredentials({
                     <td className="px-4 py-3.5">
                       <StatusBadge status={c.status} />
                     </td>
-                    <td className="px-4 py-3.5 font-mono text-slate-200">
+                    <td className="px-4 py-3.5 font-mono text-slate-700 dark:text-slate-200">
                       {c.requestCount.toLocaleString()}
                     </td>
-                    <td className="px-4 py-3.5 text-slate-400 font-mono">
+                    <td className="px-4 py-3.5 text-slate-500 dark:text-slate-400 font-mono">
                       {c.rateLimitPerMin}/min
                     </td>
-                    <td className="hidden px-4 py-3.5 text-slate-400 font-mono md:table-cell">
+                    <td className="hidden px-4 py-3.5 text-slate-500 dark:text-slate-400 font-mono md:table-cell">
                       {c.lastUsedAt ? formatDateTime(c.lastUsedAt) : "Never"}
                     </td>
                     <td className="px-5 py-3.5 text-right">
@@ -222,7 +222,7 @@ export function DeveloperCredentials({
                           <button
                             onClick={() => handleAction(c.id, "DISABLE")}
                             title="Disable Key"
-                            className="inline-flex items-center gap-1 rounded-lg border border-[#162740] bg-[#070d18] px-2.5 py-1 text-xs font-bold text-slate-300 hover:text-white hover:border-amber-500/40"
+                            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#070d18] px-2.5 py-1 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-amber-500/40"
                           >
                             <Power className="h-3 w-3" /> Disable
                           </button>
@@ -230,7 +230,7 @@ export function DeveloperCredentials({
                           <button
                             onClick={() => handleAction(c.id, "ENABLE")}
                             title="Enable Key"
-                            className="inline-flex items-center gap-1 rounded-lg border border-[#00df82]/30 bg-[#00df82]/10 px-2.5 py-1 text-xs font-bold text-[#00df82]"
+                            className="inline-flex items-center gap-1 rounded-lg border border-[#00df82]/30 bg-[#00df82]/10 px-2.5 py-1 text-xs font-bold text-emerald-600 dark:text-[#00df82]"
                           >
                             <Power className="h-3 w-3" /> Enable
                           </button>
@@ -241,14 +241,14 @@ export function DeveloperCredentials({
                             <button
                               onClick={() => handleAction(c.id, "ROTATE")}
                               title="Rotate Key"
-                              className="inline-flex items-center gap-1 rounded-lg border border-[#162740] bg-[#070d18] px-2.5 py-1 text-xs font-bold text-cyan-400 hover:border-cyan-500/40"
+                              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#070d18] px-2.5 py-1 text-xs font-bold text-cyan-600 dark:text-cyan-400 hover:border-cyan-500/40"
                             >
                               <RefreshCw className="h-3 w-3" /> Rotate
                             </button>
                             <button
                               onClick={() => handleAction(c.id, "REVOKE")}
                               title="Revoke Key"
-                              className="inline-flex items-center gap-1 rounded-lg border border-rose-500/20 bg-rose-500/10 px-2.5 py-1 text-xs font-bold text-rose-400 hover:border-rose-500/40"
+                              className="inline-flex items-center gap-1 rounded-lg border border-rose-500/20 bg-rose-500/10 px-2.5 py-1 text-xs font-bold text-rose-600 dark:text-rose-400 hover:border-rose-500/40"
                             >
                               <Trash2 className="h-3 w-3" /> Revoke
                             </button>
@@ -267,15 +267,15 @@ export function DeveloperCredentials({
       {/* Create Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
-          <div className="w-full max-w-md rounded-3xl bg-[#0b1322] p-6 shadow-2xl border border-[#162740]">
-            <h3 className="text-base font-black text-white uppercase tracking-wider">Generate API Credential</h3>
-            <p className="mt-1 text-xs text-slate-400">
+          <div className="w-full max-w-md rounded-3xl bg-white dark:bg-[#0b1322] p-6 shadow-2xl border border-slate-200 dark:border-[#162740]">
+            <h3 className="text-base font-black text-slate-900 dark:text-white uppercase tracking-wider">Generate API Credential</h3>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
               Create a cryptographic Bearer token to authorize automated requests from your application.
             </p>
 
             <form onSubmit={handleCreate} className="mt-5 space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   Credential Name
                 </label>
                 <input
@@ -284,12 +284,12 @@ export function DeveloperCredentials({
                   placeholder="e.g. Production Webhook Server, Mobile App"
                   value={createName}
                   onChange={(e) => setCreateName(e.target.value)}
-                  className="w-full rounded-xl border border-[#162740] bg-[#070d18] px-3.5 py-2.5 text-xs text-white placeholder:text-slate-500 focus:border-[#00df82] focus:outline-none"
+                  className="w-full rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3.5 py-2.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-[#00df82] focus:outline-none"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   Environment
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -299,8 +299,8 @@ export function DeveloperCredentials({
                     disabled={!isApprovedForProduction}
                     className={`rounded-xl border p-3 text-left transition ${
                       createEnv === "PRODUCTION"
-                        ? "border-[#00df82] bg-[#00df82]/10 text-white"
-                        : "border-[#162740] bg-[#070d18] text-slate-400"
+                        ? "border-[#00df82] bg-[#00df82]/10 text-slate-900 dark:text-white"
+                        : "border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] text-slate-500 dark:text-slate-400"
                     } ${!isApprovedForProduction ? "cursor-not-allowed opacity-40" : ""}`}
                   >
                     <p className="text-xs font-bold">Production</p>
@@ -312,8 +312,8 @@ export function DeveloperCredentials({
                     onClick={() => setCreateEnv("SANDBOX")}
                     className={`rounded-xl border p-3 text-left transition ${
                       createEnv === "SANDBOX"
-                        ? "border-amber-400 bg-amber-400/10 text-white"
-                        : "border-[#162740] bg-[#070d18] text-slate-400"
+                        ? "border-amber-400 bg-amber-400/10 text-slate-900 dark:text-white"
+                        : "border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] text-slate-500 dark:text-slate-400"
                     }`}
                   >
                     <p className="text-xs font-bold">Sandbox (Test)</p>
@@ -322,18 +322,18 @@ export function DeveloperCredentials({
                 </div>
 
                 {!isApprovedForProduction && (
-                  <p className="flex items-center gap-1.5 text-[11px] text-amber-400 pt-1">
+                  <p className="flex items-center gap-1.5 text-[11px] text-amber-500 dark:text-amber-400 pt-1">
                     <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
                     Production keys require approved access (Status: {applicationStatus}).
                   </p>
                 )}
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#162740]">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-200 dark:border-[#162740]">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="rounded-xl border border-[#162740] bg-[#070d18] px-4 py-2 text-xs font-bold text-slate-300 hover:text-white"
+                  className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#070d18] px-4 py-2 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
                 >
                   Cancel
                 </button>
@@ -353,25 +353,25 @@ export function DeveloperCredentials({
       {/* Secret Shown Once Modal */}
       {newKeyModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
-          <div className="w-full max-w-lg rounded-3xl bg-[#0b1322] p-6 shadow-2xl border border-[#162740]">
-            <div className="flex items-center gap-2.5 text-amber-400">
+          <div className="w-full max-w-lg rounded-3xl bg-white dark:bg-[#0b1322] p-6 shadow-2xl border border-slate-200 dark:border-[#162740]">
+            <div className="flex items-center gap-2.5 text-amber-500 dark:text-amber-400">
               <ShieldAlert className="h-5 w-5" />
-              <h3 className="text-base font-black text-white uppercase tracking-wider">
+              <h3 className="text-base font-black text-slate-900 dark:text-white uppercase tracking-wider">
                 Store Your API Key Immediately
               </h3>
             </div>
-            <p className="mt-2 text-xs text-slate-400">
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
               This token is displayed <strong>only once</strong> for cryptographic safety. Store it in your secure environment variables.
             </p>
 
-            <div className="mt-4 rounded-2xl bg-[#03070d] p-4 border border-[#162740]">
+            <div className="mt-4 rounded-2xl bg-slate-950 p-4 border border-slate-800">
               <div className="flex items-center justify-between gap-3">
                 <code className="break-all font-mono text-xs font-semibold text-[#00df82]">
                   {newKeyModal}
                 </code>
                 <button
                   onClick={() => copyKey(newKeyModal)}
-                  className="shrink-0 inline-flex items-center gap-1 rounded-lg border border-[#162740] bg-[#0b1322] px-3 py-1.5 text-xs font-bold text-white hover:border-[#00df82]/40"
+                  className="shrink-0 inline-flex items-center gap-1 rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-bold text-white hover:border-[#00df82]/40"
                 >
                   {copied ? <Check className="h-3.5 w-3.5 text-[#00df82]" /> : <Copy className="h-3.5 w-3.5" />}
                   {copied ? "Copied" : "Copy"}

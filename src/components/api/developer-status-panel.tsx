@@ -68,14 +68,14 @@ export function DeveloperStatusPanel() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[#162740] bg-[#0b1322] p-6 shadow-xl">
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 shadow-xl">
         <div className="flex items-center gap-3">
           <div className="rounded-2xl border border-[#00df82]/30 bg-[#00df82]/10 p-2.5 text-[#00df82]">
             <Activity className="h-6 w-6" />
           </div>
           <div>
-            <h2 className="text-base font-black uppercase tracking-wider text-white">Carrier Telemetry &amp; System Health</h2>
-            <p className="mt-0.5 text-xs text-slate-400">
+            <h2 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-white">Carrier Telemetry &amp; System Health</h2>
+            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Live operational health across carrier baseband gateways, order ingestion pipelines, and auth services.
             </p>
           </div>
@@ -85,7 +85,7 @@ export function DeveloperStatusPanel() {
           variant="outline"
           size="sm"
           onClick={load}
-          className="gap-2 border-[#162740] bg-[#070d18] text-xs font-bold text-slate-200 hover:border-[#00df82]/40 hover:text-[#00df82]"
+          className="gap-2 border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#070d18] text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-[#00df82]/40 hover:text-[#00df82]"
         >
           <RefreshCw className="h-3.5 w-3.5 text-[#00df82]" /> Polling Status
         </Button>
@@ -95,14 +95,14 @@ export function DeveloperStatusPanel() {
         {Object.entries(components).map(([key, comp]: [string, any]) => (
           <div
             key={key}
-            className="flex items-center justify-between rounded-2xl border border-[#162740] bg-[#0b1322] p-5 shadow-lg transition-all duration-200 hover:border-[#162740]/80"
+            className="flex items-center justify-between rounded-2xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5 shadow-lg transition-all duration-200 hover:border-slate-300 dark:hover:border-[#162740]/80"
           >
             <div className="flex items-center gap-3.5">
-              <div className="rounded-xl border border-[#162740] bg-[#070d18] p-2.5">
+              <div className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] p-2.5">
                 {getStatusIcon(comp.status)}
               </div>
               <div>
-                <p className="text-sm font-black text-white">{comp.name}</p>
+                <p className="text-sm font-black text-slate-900 dark:text-white">{comp.name}</p>
                 <p className="text-[10px] uppercase tracking-wider font-mono text-slate-500">ID: {key}</p>
               </div>
             </div>

@@ -174,7 +174,7 @@ export default function ReportsPage() {
   return (
     <div className="space-y-6">
       {/* Top Cyber Telemetry Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl border border-[#162740] bg-[#0b1322] p-6 shadow-2xl backdrop-blur-xl">
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 shadow-2xl backdrop-blur-xl">
         <div className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full bg-[#00df82]/15 blur-3xl" />
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
@@ -184,12 +184,12 @@ export default function ReportsPage() {
                 <Activity className="h-3.5 w-3.5 text-[#00df82] animate-pulse" />
                 TELECOM ANALYTICS &amp; VOLUME TELEMETRY
               </span>
-              <span className="text-xs font-mono text-slate-400">· Real-Time Throughput</span>
+              <span className="text-xs font-mono text-slate-500 dark:text-slate-400">· Real-Time Throughput</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
               Spending &amp; Order Reports
             </h1>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl leading-relaxed">
               Track packet fulfillment ratios, carrier distribution volumes, and expenditure metrics across your single-order dispatch operations.
             </p>
           </div>
@@ -199,7 +199,7 @@ export default function ReportsPage() {
               type="button"
               onClick={() => loadData()}
               disabled={loading}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#162740] bg-[#070d18] px-4 py-2.5 text-xs font-bold text-slate-200 shadow-sm transition hover:bg-[#111e33] hover:text-white disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#070d18] px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm transition hover:bg-slate-200 dark:hover:bg-[#111e33] hover:text-slate-900 dark:hover:text-white disabled:opacity-50 cursor-pointer"
             >
               <RefreshCw className={`h-3.5 w-3.5 text-[#00df82] ${loading ? "animate-spin" : ""}`} />
               Sync Metrics
@@ -209,17 +209,17 @@ export default function ReportsPage() {
       </div>
 
       {/* Date Filter & Control Card */}
-      <div className="relative overflow-hidden rounded-3xl border border-[#162740] bg-[#0b1322] p-5 shadow-xl space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#162740] pb-3">
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5 shadow-xl space-y-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-200 dark:border-[#162740] pb-3">
           <div className="flex items-center gap-2">
             <SlidersHorizontal className="h-4 w-4 text-[#00df82]" />
-            <h2 className="text-sm font-black text-white uppercase tracking-wider">Date Range &amp; Telemetry Filters</h2>
+            <h2 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">Date Range &amp; Telemetry Filters</h2>
           </div>
           {hasActiveFilters && (
             <button
               type="button"
               onClick={resetFilters}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-[#00df82] transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-[#00df82] transition cursor-pointer"
             >
               <X className="h-3.5 w-3.5" />
               Reset all filters
@@ -229,7 +229,7 @@ export default function ReportsPage() {
 
         {/* Date Preset Selector */}
         <div className="space-y-2">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Query Period</p>
+          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Query Period</p>
           <div className="flex flex-wrap items-center gap-2">
             {[
               { id: "today", label: "Today" },
@@ -250,7 +250,7 @@ export default function ReportsPage() {
                   className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer ${
                     active
                       ? "bg-[#00df82] text-[#041d14] font-black shadow-[0_0_15px_rgba(0,223,130,0.3)]"
-                      : "bg-[#070d18] text-slate-300 hover:text-white border border-[#162740] hover:bg-[#111e33]"
+                      : "bg-slate-100 dark:bg-[#070d18] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-[#162740] hover:bg-slate-200 dark:hover:bg-[#111e33]"
                   }`}
                 >
                   {Icon && <Icon className="h-3 w-3" />}
@@ -263,9 +263,9 @@ export default function ReportsPage() {
 
         {/* Specific Date input */}
         {preset === "specific_date" && (
-          <div className="flex flex-wrap items-end gap-3 rounded-2xl border border-[#162740] bg-[#070d18] p-4">
+          <div className="flex flex-wrap items-end gap-3 rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50/70 dark:bg-[#070d18] p-4">
             <div className="space-y-1">
-              <label htmlFor="user-specific-date" className="text-xs font-bold text-slate-300">
+              <label htmlFor="user-specific-date" className="text-xs font-bold text-slate-700 dark:text-slate-300">
                 Choose Specific Day
               </label>
               <input
@@ -274,17 +274,17 @@ export default function ReportsPage() {
                 value={specificDate}
                 onChange={(e) => setSpecificDate(e.target.value)}
                 max={formatDateInput(new Date())}
-                className="block rounded-xl border border-[#162740] bg-[#0b1322] px-3 py-1.5 text-xs font-semibold text-white shadow-sm focus:border-[#00df82] focus:outline-none"
+                className="block rounded-xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] px-3 py-1.5 text-xs font-semibold text-slate-900 dark:text-white shadow-sm focus:border-[#00df82] focus:outline-none"
               />
             </div>
             <button
               type="button"
               onClick={() => setSpecificDate(formatDateInput(new Date()))}
-              className="rounded-xl border border-[#162740] bg-[#0b1322] px-3.5 py-1.5 text-xs font-bold text-slate-300 hover:text-white"
+              className="rounded-xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] px-3.5 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
             >
               Set to Today
             </button>
-            <p className="text-[11px] text-slate-400 self-center">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 self-center">
               Viewing 24-hour hourly timeline for this day.
             </p>
           </div>
@@ -292,9 +292,9 @@ export default function ReportsPage() {
 
         {/* Custom Range inputs */}
         {preset === "custom" && (
-          <div className="flex flex-wrap items-end gap-3 rounded-2xl border border-[#162740] bg-[#070d18] p-4">
+          <div className="flex flex-wrap items-end gap-3 rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50/70 dark:bg-[#070d18] p-4">
             <div className="space-y-1">
-              <label htmlFor="user-from-date" className="text-xs font-bold text-slate-300">
+              <label htmlFor="user-from-date" className="text-xs font-bold text-slate-700 dark:text-slate-300">
                 From Date
               </label>
               <input
@@ -303,11 +303,11 @@ export default function ReportsPage() {
                 value={customFrom}
                 onChange={(e) => setCustomFrom(e.target.value)}
                 max={customTo || formatDateInput(new Date())}
-                className="block rounded-xl border border-[#162740] bg-[#0b1322] px-3 py-1.5 text-xs font-semibold text-white shadow-sm focus:border-[#00df82] focus:outline-none"
+                className="block rounded-xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] px-3 py-1.5 text-xs font-semibold text-slate-900 dark:text-white shadow-sm focus:border-[#00df82] focus:outline-none"
               />
             </div>
             <div className="space-y-1">
-              <label htmlFor="user-to-date" className="text-xs font-bold text-slate-300">
+              <label htmlFor="user-to-date" className="text-xs font-bold text-slate-700 dark:text-slate-300">
                 To Date
               </label>
               <input
@@ -317,7 +317,7 @@ export default function ReportsPage() {
                 onChange={(e) => setCustomTo(e.target.value)}
                 min={customFrom}
                 max={formatDateInput(new Date())}
-                className="block rounded-xl border border-[#162740] bg-[#0b1322] px-3 py-1.5 text-xs font-semibold text-white shadow-sm focus:border-[#00df82] focus:outline-none"
+                className="block rounded-xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] px-3 py-1.5 text-xs font-semibold text-slate-900 dark:text-white shadow-sm focus:border-[#00df82] focus:outline-none"
               />
             </div>
             <button
@@ -326,7 +326,7 @@ export default function ReportsPage() {
                 setCustomFrom(formatDateInput(new Date()));
                 setCustomTo(formatDateInput(new Date()));
               }}
-              className="rounded-xl border border-[#162740] bg-[#0b1322] px-3.5 py-1.5 text-xs font-bold text-slate-300 hover:text-white"
+              className="rounded-xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] px-3.5 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
             >
               Today Only
             </button>
@@ -337,14 +337,14 @@ export default function ReportsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
           {/* Network Filter */}
           <div className="space-y-1">
-            <label htmlFor="user-filter-network" className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <label htmlFor="user-filter-network" className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Telecom Network
             </label>
             <select
               id="user-filter-network"
               value={network}
               onChange={(e) => setNetwork(e.target.value)}
-              className="w-full rounded-xl border border-[#162740] bg-[#070d18] px-3 py-2 text-xs font-bold text-white focus:border-[#00df82] focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3 py-2 text-xs font-bold text-slate-900 dark:text-white focus:border-[#00df82] focus:outline-none [&>option]:bg-white dark:[&>option]:bg-[#070d18] [&>option]:text-slate-900 dark:[&>option]:text-white"
             >
               <option value="ALL">All Networks (MTN, Telecel, AT)</option>
               <option value="MTN">MTN Ghana</option>
@@ -355,14 +355,14 @@ export default function ReportsPage() {
 
           {/* Status Filter */}
           <div className="space-y-1">
-            <label htmlFor="user-filter-status" className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <label htmlFor="user-filter-status" className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Order Status
             </label>
             <select
               id="user-filter-status"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="w-full rounded-xl border border-[#162740] bg-[#070d18] px-3 py-2 text-xs font-bold text-white focus:border-[#00df82] focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3 py-2 text-xs font-bold text-slate-900 dark:text-white focus:border-[#00df82] focus:outline-none [&>option]:bg-white dark:[&>option]:bg-[#070d18] [&>option]:text-slate-900 dark:[&>option]:text-white"
             >
               <option value="ALL">All Statuses</option>
               <option value="SUCCESS">Completed (Success)</option>
@@ -376,14 +376,14 @@ export default function ReportsPage() {
 
           {/* Source Filter */}
           <div className="space-y-1">
-            <label htmlFor="user-filter-source" className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <label htmlFor="user-filter-source" className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Order Source
             </label>
             <select
               id="user-filter-source"
               value={source}
               onChange={(e) => setSource(e.target.value)}
-              className="w-full rounded-xl border border-[#162740] bg-[#070d18] px-3 py-2 text-xs font-bold text-white focus:border-[#00df82] focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3 py-2 text-xs font-bold text-slate-900 dark:text-white focus:border-[#00df82] focus:outline-none [&>option]:bg-white dark:[&>option]:bg-[#070d18] [&>option]:text-slate-900 dark:[&>option]:text-white"
             >
               <option value="ALL">All Sources (Web + API)</option>
               <option value="WEB">Web Dispatch Console</option>
@@ -394,8 +394,8 @@ export default function ReportsPage() {
 
         {/* Active Filter Chips */}
         {hasActiveFilters && (
-          <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-[#162740]">
-            <span className="text-[11px] font-mono text-slate-400">Active filters:</span>
+          <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-200 dark:border-[#162740]">
+            <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">Active filters:</span>
             {network !== "ALL" && (
               <span className="inline-flex items-center gap-1 rounded-full bg-[#00df82]/10 border border-[#00df82]/30 px-2.5 py-0.5 text-[11px] font-bold text-[#00df82]">
                 Network: {network}
@@ -436,81 +436,81 @@ export default function ReportsPage() {
       )}
 
       {loading || !data ? (
-        <div className="flex flex-col items-center justify-center rounded-3xl border border-[#162740] bg-[#0b1322] py-20 space-y-3">
+        <div className="flex flex-col items-center justify-center rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] py-20 space-y-3">
           <Spinner className="h-8 w-8 text-[#00df82]" />
-          <p className="text-xs font-mono text-slate-400 tracking-wider">COMPILING TELECOM METRICS...</p>
+          <p className="text-xs font-mono text-slate-500 dark:text-slate-400 tracking-wider">COMPILING TELECOM METRICS...</p>
         </div>
       ) : (
         <>
           {/* Key Stat Cards */}
           <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-            <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-5 flex flex-col justify-between">
+            <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5 flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Dispatches</span>
-                <div className="h-8 w-8 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Dispatches</span>
+                <div className="h-8 w-8 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400">
                   <ClipboardList className="h-4 w-4" />
                 </div>
               </div>
               <div className="mt-3">
-                <p className="font-mono text-2xl sm:text-3xl font-black text-white tabular-nums tracking-tight">
+                <p className="font-mono text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tabular-nums tracking-tight">
                   {total.toLocaleString()}
                 </p>
-                <p className="mt-1 text-[11px] font-medium text-slate-400">{data.daily.length} active periods recorded</p>
+                <p className="mt-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">{data.daily.length} active periods recorded</p>
               </div>
             </div>
 
-            <div className="rounded-3xl border border-[#00df82]/30 bg-[#0b1322] p-5 flex flex-col justify-between">
+            <div className="rounded-3xl border border-[#00df82]/30 bg-white dark:bg-[#0b1322] p-5 flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Successful Deliveries</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Successful Deliveries</span>
                 <div className="h-8 w-8 rounded-xl bg-[#00df82]/15 border border-[#00df82]/30 flex items-center justify-center text-[#00df82]">
                   <CheckCircle2 className="h-4 w-4" />
                 </div>
               </div>
               <div className="mt-3">
-                <p className="font-mono text-2xl sm:text-3xl font-black text-[#00df82] tabular-nums tracking-tight">
+                <p className="font-mono text-2xl sm:text-3xl font-black text-emerald-600 dark:text-[#00df82] tabular-nums tracking-tight">
                   {success.toLocaleString()}
                 </p>
-                <p className="mt-1 text-[11px] font-medium text-[#00df82]/80">{successRate}% fulfillment success rate</p>
+                <p className="mt-1 text-[11px] font-medium text-emerald-600/80 dark:text-[#00df82]/80">{successRate}% fulfillment success rate</p>
               </div>
             </div>
 
-            <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-5 flex flex-col justify-between">
+            <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5 flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Failed / Reversals</span>
-                <div className="h-8 w-8 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Failed / Reversals</span>
+                <div className="h-8 w-8 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500 dark:text-rose-400">
                   <XCircle className="h-4 w-4" />
                 </div>
               </div>
               <div className="mt-3">
-                <p className="font-mono text-2xl sm:text-3xl font-black text-rose-400 tabular-nums tracking-tight">
+                <p className="font-mono text-2xl sm:text-3xl font-black text-rose-500 dark:text-rose-400 tabular-nums tracking-tight">
                   {failed.toLocaleString()}
                 </p>
-                <p className="mt-1 text-[11px] font-medium text-slate-400">Auto-refunded to treasury</p>
+                <p className="mt-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">Auto-refunded to treasury</p>
               </div>
             </div>
 
-            <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-5 flex flex-col justify-between">
+            <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5 flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Spend</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Spend</span>
                 <div className="h-8 w-8 rounded-xl bg-[#00df82]/10 border border-[#00df82]/20 flex items-center justify-center text-[#00df82]">
                   <TrendingUp className="h-4 w-4" />
                 </div>
               </div>
               <div className="mt-3">
-                <p className="font-mono text-2xl sm:text-3xl font-black text-white tabular-nums tracking-tight">
+                <p className="font-mono text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tabular-nums tracking-tight">
                   {formatGHS(data.totalSpend)}
                 </p>
-                <p className="mt-1 text-[11px] font-medium text-slate-400">Total cleared volume</p>
+                <p className="mt-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">Total cleared volume</p>
               </div>
             </div>
           </div>
 
           {/* Orders & Spend Timeline chart */}
-          <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-5 sm:p-6 shadow-xl">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#162740] pb-4">
+          <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5 sm:p-6 shadow-xl">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-[#162740] pb-4">
               <div>
-                <h2 className="text-base font-black text-white">{timelineTitle}</h2>
-                <p className="text-xs text-slate-400">
+                <h2 className="text-base font-black text-slate-900 dark:text-white">{timelineTitle}</h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   {isHourly
                     ? "Orders and spending recorded per hour of the selected date"
                     : "Daily order volume and expenditure throughout the selected timeframe"}
@@ -521,8 +521,8 @@ export default function ReportsPage() {
                   <span className="h-2 w-2 rounded-full bg-[#00df82]" />
                   Orders
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 px-3 py-1 text-[11px] font-bold text-cyan-400">
-                  <span className="h-2 w-2 rounded-full bg-cyan-400" />
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 px-3 py-1 text-[11px] font-bold text-cyan-600 dark:text-cyan-400">
+                  <span className="h-2 w-2 rounded-full bg-cyan-500" />
                   Spend (GHS)
                 </span>
               </div>
@@ -536,7 +536,7 @@ export default function ReportsPage() {
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={daily} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#162740" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#94a3b833" />
                     <XAxis
                       dataKey="day"
                       fontSize={11}
@@ -587,11 +587,11 @@ export default function ReportsPage() {
           {/* Grid: Spend per package + Status breakdown */}
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
             {/* Spend per Package */}
-            <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-5 sm:p-6 shadow-xl">
-              <div className="flex items-center justify-between border-b border-[#162740] pb-4">
+            <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5 sm:p-6 shadow-xl">
+              <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#162740] pb-4">
                 <div>
-                  <h2 className="text-base font-black text-white">Spend per Package Tier</h2>
-                  <p className="text-xs text-slate-400">
+                  <h2 className="text-base font-black text-slate-900 dark:text-white">Spend per Package Tier</h2>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
                     Cumulative GHS volume across top bundle denominations
                   </p>
                 </div>
@@ -614,7 +614,7 @@ export default function ReportsPage() {
                       }))}
                       margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
                     >
-                      <CartesianGrid strokeDasharray="3 3" stroke="#162740" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#94a3b833" />
                       <XAxis dataKey="name" fontSize={10} tickLine={false} stroke="#64748b" />
                       <YAxis fontSize={11} tickLine={false} stroke="#64748b" />
                       <Tooltip
@@ -635,12 +635,12 @@ export default function ReportsPage() {
             </div>
 
             {/* Status breakdown */}
-            <div className="flex flex-col justify-between rounded-3xl border border-[#162740] bg-[#0b1322] p-5 sm:p-6 shadow-xl">
+            <div className="flex flex-col justify-between rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5 sm:p-6 shadow-xl">
               <div>
-                <div className="flex items-center justify-between border-b border-[#162740] pb-4">
+                <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#162740] pb-4">
                   <div>
-                    <h2 className="text-base font-black text-white">Status Telemetry Breakdown</h2>
-                    <p className="text-xs text-slate-400">
+                    <h2 className="text-base font-black text-slate-900 dark:text-white">Status Telemetry Breakdown</h2>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       Distribution across SIM dispatch clearing stages
                     </p>
                   </div>
@@ -657,12 +657,12 @@ export default function ReportsPage() {
                     const isPending = s === "PENDING";
 
                     const badgeColor = isSuccess
-                      ? "bg-[#00df82]/10 text-[#00df82] border-[#00df82]/30"
+                      ? "bg-[#00df82]/10 text-emerald-600 dark:text-[#00df82] border-[#00df82]/30"
                       : isFailed
-                      ? "bg-rose-500/10 text-rose-400 border-rose-500/30"
+                      ? "bg-rose-500/10 text-rose-500 dark:text-rose-400 border-rose-500/30"
                       : isPending
-                      ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
-                      : "bg-cyan-500/10 text-cyan-400 border-cyan-500/30";
+                      ? "bg-amber-500/10 text-amber-500 dark:text-amber-400 border-amber-500/30"
+                      : "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/30";
 
                     const barColor = isSuccess
                       ? "bg-[#00df82]"
@@ -675,7 +675,7 @@ export default function ReportsPage() {
                     return (
                       <div
                         key={s}
-                        className="rounded-2xl border border-[#162740] bg-[#070d18] p-3.5"
+                        className="rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50/70 dark:bg-[#070d18] p-3.5"
                       >
                         <div className="flex items-center justify-between text-xs">
                           <span
@@ -684,11 +684,11 @@ export default function ReportsPage() {
                             <span className={`h-1.5 w-1.5 rounded-full ${barColor}`} />
                             {s}
                           </span>
-                          <span className="font-mono font-bold text-white">
-                            {c} <span className="text-slate-400 font-normal">({pct}%)</span>
+                          <span className="font-mono font-bold text-slate-900 dark:text-white">
+                            {c} <span className="text-slate-500 dark:text-slate-400 font-normal">({pct}%)</span>
                           </span>
                         </div>
-                        <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-[#162740]">
+                        <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-[#162740]">
                           <div
                             className={`h-full rounded-full ${barColor} transition-all duration-500`}
                             style={{ width: `${pct}%` }}

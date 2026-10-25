@@ -8,14 +8,14 @@ export default function StorefrontDashboardLoading() {
       </div>
 
       {/* Store status banner skeleton */}
-      <div className="h-20 rounded-3xl border border-[#162740] bg-[#0b1322] p-4" />
+      <div className="h-20 rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-4" />
 
       {/* Grid cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="h-36 rounded-3xl border border-[#162740] bg-[#0b1322] p-5"
+            className="h-36 rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5"
           >
             <div className="h-4 w-24 rounded bg-slate-200 dark:bg-white/10" />
             <div className="mt-4 h-8 w-32 rounded bg-slate-200 dark:bg-white/10" />

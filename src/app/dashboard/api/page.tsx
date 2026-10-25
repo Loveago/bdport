@@ -162,7 +162,7 @@ print(response.json())`,
   return (
     <div className="space-y-6">
       {/* Top Cyber Telecom Studio Header */}
-      <div className="relative overflow-hidden rounded-3xl border border-[#162740] bg-[#0b1322] p-6 shadow-2xl backdrop-blur-xl">
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 shadow-xl backdrop-blur-xl">
         <div className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full bg-[#00df82]/15 blur-3xl" />
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
@@ -172,12 +172,12 @@ print(response.json())`,
                 <Cpu className="h-3.5 w-3.5 text-[#00df82] animate-pulse" />
                 TELECOM GATEWAY TERMINAL · v2.0
               </span>
-              <span className="text-xs font-mono text-slate-400">· REST &amp; Webhooks</span>
+              <span className="text-xs font-mono text-slate-500 dark:text-slate-400">· REST &amp; Webhooks</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
               Developer API Engine
             </h1>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
               Programmatic automated telecom fulfillment. Dispatch high-speed non-expiry data directly to MTN, Telecel, and AirtelTigo SIMs via low-latency REST endpoints.
             </p>
           </div>
@@ -186,7 +186,7 @@ print(response.json())`,
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2.5">
             <button
               onClick={copyBaseUrl}
-              className="flex items-center gap-2 rounded-xl border border-[#162740] bg-[#070d18] px-3.5 py-2 text-xs font-mono text-slate-300 hover:border-[#00df82]/40 transition group cursor-pointer"
+              className="flex items-center gap-2 rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3.5 py-2 text-xs font-mono text-slate-700 dark:text-slate-300 hover:border-[#00df82]/40 transition group cursor-pointer"
               title="Click to copy endpoint"
             >
               <Globe className="h-3.5 w-3.5 text-[#00df82]" />
@@ -194,7 +194,7 @@ print(response.json())`,
               {copiedUrl ? (
                 <Check className="h-3 w-3 text-[#00df82]" />
               ) : (
-                <Copy className="h-3 w-3 text-slate-500 group-hover:text-slate-300" />
+                <Copy className="h-3 w-3 text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300" />
               )}
             </button>
             <div className="inline-flex items-center gap-1.5 rounded-xl bg-[#00df82]/10 border border-[#00df82]/30 px-3 py-2 text-xs font-black text-[#00df82]">
@@ -206,7 +206,7 @@ print(response.json())`,
       </div>
 
       {/* Cyber Station Modular Navigation Dock */}
-      <div className="rounded-2xl border border-[#162740] bg-[#0b1322] p-2">
+      <div className="rounded-2xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-2 shadow-sm">
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -225,7 +225,7 @@ print(response.json())`,
                 className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                   isCurrent
                     ? "bg-[#00df82] text-[#041d14] font-black shadow-[0_0_15px_rgba(0,223,130,0.3)]"
-                    : "bg-[#070d18] text-slate-300 hover:text-white border border-[#162740] hover:bg-[#111e33]"
+                    : "bg-slate-100 dark:bg-[#070d18] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-[#162740] hover:bg-slate-200 dark:hover:bg-[#111e33]"
                 }`}
               >
                 <Icon className={`h-3.5 w-3.5 ${isCurrent ? "text-[#041d14]" : "text-[#00df82]"}`} />
@@ -239,7 +239,7 @@ print(response.json())`,
       {loading ? (
         <div className="flex flex-col items-center justify-center py-24 space-y-3">
           <Spinner className="h-8 w-8 text-[#00df82]" />
-          <p className="text-xs font-mono text-slate-400 tracking-wider">CONNECTING TO DEVELOPER GATEWAY...</p>
+          <p className="text-xs font-mono text-slate-500 dark:text-slate-400 tracking-wider">CONNECTING TO DEVELOPER GATEWAY...</p>
         </div>
       ) : (
         <>
@@ -251,48 +251,48 @@ print(response.json())`,
 
               {/* KPI Telemetry Strip */}
               <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-6">
-                <div className="rounded-2xl border border-[#162740] bg-[#0b1322] p-4 flex flex-col justify-between">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Requests Today</p>
-                  <p className="mt-2 font-mono text-xl sm:text-2xl font-black text-white tabular-nums">
+                <div className="rounded-2xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-4 flex flex-col justify-between shadow-sm">
+                  <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Requests Today</p>
+                  <p className="mt-2 font-mono text-xl sm:text-2xl font-black text-slate-900 dark:text-white tabular-nums">
                     {metrics.requestsToday?.toLocaleString() || "0"}
                   </p>
                   <p className="mt-1 text-[11px] font-medium text-slate-500">{metrics.requestsMonth?.toLocaleString() || 0} this month</p>
                 </div>
 
-                <div className="rounded-2xl border border-[#162740] bg-[#0b1322] p-4 flex flex-col justify-between">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Dispatched Today</p>
-                  <p className="mt-2 font-mono text-xl sm:text-2xl font-black text-white tabular-nums">
+                <div className="rounded-2xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-4 flex flex-col justify-between shadow-sm">
+                  <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Dispatched Today</p>
+                  <p className="mt-2 font-mono text-xl sm:text-2xl font-black text-slate-900 dark:text-white tabular-nums">
                     {metrics.ordersToday?.toLocaleString() || "0"}
                   </p>
                   <p className="mt-1 text-[11px] font-medium text-slate-500">{metrics.ordersTotal?.toLocaleString() || 0} lifetime</p>
                 </div>
 
-                <div className="rounded-2xl border border-[#00df82]/30 bg-[#0b1322] p-4 flex flex-col justify-between">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Successful (200)</p>
+                <div className="rounded-2xl border border-[#00df82]/30 bg-white dark:bg-[#0b1322] p-4 flex flex-col justify-between shadow-sm">
+                  <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Successful (200)</p>
                   <p className="mt-2 font-mono text-xl sm:text-2xl font-black text-[#00df82] tabular-nums">
                     {metrics.successfulRequests?.toLocaleString() || "0"}
                   </p>
                   <p className="mt-1 text-[11px] font-medium text-[#00df82]/80">99.9% Reliability</p>
                 </div>
 
-                <div className="rounded-2xl border border-[#162740] bg-[#0b1322] p-4 flex flex-col justify-between">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Errors / Failed</p>
-                  <p className="mt-2 font-mono text-xl sm:text-2xl font-black text-rose-400 tabular-nums">
+                <div className="rounded-2xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-4 flex flex-col justify-between shadow-sm">
+                  <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Errors / Failed</p>
+                  <p className="mt-2 font-mono text-xl sm:text-2xl font-black text-rose-500 dark:text-rose-400 tabular-nums">
                     {metrics.failedRequests?.toLocaleString() || "0"}
                   </p>
                   <p className="mt-1 text-[11px] font-medium text-slate-500">Zero USSD drops</p>
                 </div>
 
-                <div className="rounded-2xl border border-[#162740] bg-[#0b1322] p-4 flex flex-col justify-between">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Rate Limit</p>
-                  <p className="mt-2 font-mono text-xl sm:text-2xl font-black text-white tabular-nums">
+                <div className="rounded-2xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-4 flex flex-col justify-between shadow-sm">
+                  <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Rate Limit</p>
+                  <p className="mt-2 font-mono text-xl sm:text-2xl font-black text-slate-900 dark:text-white tabular-nums">
                     {usageData?.rateLimit || 60}/min
                   </p>
                   <p className="mt-1 text-[11px] font-medium text-slate-500">Per API Key</p>
                 </div>
 
-                <div className="rounded-2xl border border-[#162740] bg-[#0b1322] p-4 flex flex-col justify-between">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Webhook Health</p>
+                <div className="rounded-2xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-4 flex flex-col justify-between shadow-sm">
+                  <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Webhook Health</p>
                   <p className="mt-2 font-mono text-xl sm:text-2xl font-black text-[#00df82] tabular-nums">
                     {metrics.webhookSuccessRate || 100}%
                   </p>
@@ -301,20 +301,20 @@ print(response.json())`,
               </div>
 
               {/* Interactive Code Dispatch Terminal Preview */}
-              <div className="rounded-3xl border border-[#162740] bg-[#070d18] p-5 sm:p-6 shadow-xl space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#162740] pb-4">
+              <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#070d18] p-5 sm:p-6 shadow-xl space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-[#162740] pb-4">
                   <div className="flex items-center gap-2.5">
                     <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#00df82]/10 border border-[#00df82]/30 text-[#00df82]">
                       <Terminal className="h-4 w-4" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-black text-white">Single-Order Bundle Dispatch Snippet</h3>
-                      <p className="text-[11px] text-slate-400">Trigger programmatic telecom delivery in 3 lines of code</p>
+                      <h3 className="text-sm font-black text-slate-900 dark:text-white">Single-Order Bundle Dispatch Snippet</h3>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">Trigger programmatic telecom delivery in 3 lines of code</p>
                     </div>
                   </div>
 
                   {/* Language Selector */}
-                  <div className="flex items-center gap-1 rounded-xl bg-[#0b1322] p-1 border border-[#162740]">
+                  <div className="flex items-center gap-1 rounded-xl bg-slate-100 dark:bg-[#0b1322] p-1 border border-slate-200 dark:border-[#162740]">
                     {(["curl", "js", "python"] as const).map((lang) => (
                       <button
                         key={lang}
@@ -322,7 +322,7 @@ print(response.json())`,
                         className={`rounded-lg px-3 py-1 text-xs font-mono font-bold uppercase transition ${
                           snippetLanguage === lang
                             ? "bg-[#00df82] text-[#041d14]"
-                            : "text-slate-400 hover:text-white"
+                            : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                         }`}
                       >
                         {lang}
@@ -331,7 +331,7 @@ print(response.json())`,
                   </div>
                 </div>
 
-                <div className="relative rounded-2xl bg-[#03070d] p-4 border border-[#162740] font-mono text-xs overflow-x-auto text-emerald-400 selection:bg-[#00df82]/30">
+                <div className="relative rounded-2xl bg-slate-950 p-4 border border-slate-800 dark:border-[#162740] font-mono text-xs overflow-x-auto text-emerald-400 selection:bg-[#00df82]/30">
                   <pre className="leading-relaxed">
                     <code>{sampleSnippets[snippetLanguage]}</code>
                   </pre>
@@ -340,7 +340,7 @@ print(response.json())`,
                       navigator.clipboard.writeText(sampleSnippets[snippetLanguage]);
                       alert("Snippet copied to clipboard!");
                     }}
-                    className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-lg border border-[#162740] bg-[#0b1322] px-2.5 py-1 text-[11px] font-sans font-bold text-slate-300 hover:border-[#00df82]/40 hover:text-white transition"
+                    className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-lg border border-slate-700 dark:border-[#162740] bg-slate-800 dark:bg-[#0b1322] px-2.5 py-1 text-[11px] font-sans font-bold text-slate-200 hover:border-[#00df82]/40 hover:text-white transition cursor-pointer"
                   >
                     <Copy className="h-3 w-3" />
                     Copy
@@ -351,38 +351,38 @@ print(response.json())`,
               {/* Recent Activity Sections */}
               <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
                 {/* Recent Requests */}
-                <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-5 space-y-4">
-                  <div className="flex items-center justify-between border-b border-[#162740] pb-3">
-                    <h3 className="text-xs font-black uppercase tracking-wider text-white">Recent API Requests</h3>
+                <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5 space-y-4 shadow-sm">
+                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#162740] pb-3">
+                    <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">Recent API Requests</h3>
                     <button
                       onClick={() => setActiveTab("logs")}
-                      className="text-xs font-bold text-[#00df82] hover:underline"
+                      className="text-xs font-bold text-[#00df82] hover:underline cursor-pointer"
                     >
                       View Logs →
                     </button>
                   </div>
                   {!usageData?.recentRequests || usageData.recentRequests.length === 0 ? (
-                    <p className="py-8 text-center text-xs text-slate-500 font-mono">No logged requests yet.</p>
+                    <p className="py-8 text-center text-xs text-slate-400 dark:text-slate-500 font-mono">No logged requests yet.</p>
                   ) : (
                     <div className="space-y-2">
                       {usageData.recentRequests.slice(0, 5).map((r: any) => (
                         <div
                           key={r.id}
-                          className="flex items-center justify-between text-xs font-mono p-2 rounded-xl bg-[#070d18] border border-[#162740]"
+                          className="flex items-center justify-between text-xs font-mono p-2 rounded-xl bg-slate-50 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740]"
                         >
                           <div className="flex items-center gap-2 truncate">
                             <span
                               className={`rounded-lg px-2 py-0.5 text-[10px] font-black ${
                                 r.success
                                   ? "bg-[#00df82]/15 text-[#00df82]"
-                                  : "bg-rose-500/15 text-rose-400"
+                                  : "bg-rose-500/15 text-rose-500 dark:text-rose-400"
                               }`}
                             >
                               {r.method} {r.status}
                             </span>
-                            <span className="truncate text-slate-300">{r.endpoint}</span>
+                            <span className="truncate text-slate-700 dark:text-slate-300">{r.endpoint}</span>
                           </div>
-                          <span className="text-[10px] text-slate-500 shrink-0 font-sans">
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500 shrink-0 font-sans">
                             {formatDateTime(r.createdAt)}
                           </span>
                         </div>
@@ -392,28 +392,28 @@ print(response.json())`,
                 </div>
 
                 {/* Recent Orders */}
-                <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-5 space-y-4">
-                  <div className="flex items-center justify-between border-b border-[#162740] pb-3">
-                    <h3 className="text-xs font-black uppercase tracking-wider text-white">Dispatched via API</h3>
+                <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5 space-y-4 shadow-sm">
+                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#162740] pb-3">
+                    <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">Dispatched via API</h3>
                     <button
                       onClick={() => setActiveTab("orders")}
-                      className="text-xs font-bold text-[#00df82] hover:underline"
+                      className="text-xs font-bold text-[#00df82] hover:underline cursor-pointer"
                     >
                       View All →
                     </button>
                   </div>
                   {!usageData?.recentOrders || usageData.recentOrders.length === 0 ? (
-                    <p className="py-8 text-center text-xs text-slate-500 font-mono">No API orders dispatched yet.</p>
+                    <p className="py-8 text-center text-xs text-slate-400 dark:text-slate-500 font-mono">No API orders dispatched yet.</p>
                   ) : (
                     <div className="space-y-2">
                       {usageData.recentOrders.slice(0, 5).map((o: any) => (
                         <div
                           key={o.id}
-                          className="flex items-center justify-between text-xs p-2 rounded-xl bg-[#070d18] border border-[#162740]"
+                          className="flex items-center justify-between text-xs p-2 rounded-xl bg-slate-50 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740]"
                         >
                           <div>
-                            <p className="font-mono font-bold text-white">{o.orderId}</p>
-                            <p className="text-[11px] text-slate-400">
+                            <p className="font-mono font-bold text-slate-900 dark:text-white">{o.orderId}</p>
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400">
                               {o.network} {o.gbAmount}GB • {o.phoneNumber}
                             </p>
                           </div>
@@ -425,34 +425,34 @@ print(response.json())`,
                 </div>
 
                 {/* Recent Webhook Events */}
-                <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-5 space-y-4">
-                  <div className="flex items-center justify-between border-b border-[#162740] pb-3">
-                    <h3 className="text-xs font-black uppercase tracking-wider text-white">Webhook Deliveries</h3>
+                <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5 space-y-4 shadow-sm">
+                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#162740] pb-3">
+                    <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">Webhook Deliveries</h3>
                     <button
                       onClick={() => setActiveTab("webhooks")}
-                      className="text-xs font-bold text-[#00df82] hover:underline"
+                      className="text-xs font-bold text-[#00df82] hover:underline cursor-pointer"
                     >
                       Configure →
                     </button>
                   </div>
                   {!usageData?.recentWebhooks || usageData.recentWebhooks.length === 0 ? (
-                    <p className="py-8 text-center text-xs text-slate-500 font-mono">No webhook deliveries yet.</p>
+                    <p className="py-8 text-center text-xs text-slate-400 dark:text-slate-500 font-mono">No webhook deliveries yet.</p>
                   ) : (
                     <div className="space-y-2">
                       {usageData.recentWebhooks.slice(0, 5).map((w: any) => (
                         <div
                           key={w.id}
-                          className="flex items-center justify-between text-xs p-2 rounded-xl bg-[#070d18] border border-[#162740]"
+                          className="flex items-center justify-between text-xs p-2 rounded-xl bg-slate-50 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740]"
                         >
                           <div>
-                            <p className="font-mono font-semibold text-white">{w.event}</p>
-                            <p className="text-[11px] text-slate-400">{w.orderId || "Ping test"}</p>
+                            <p className="font-mono font-semibold text-slate-900 dark:text-white">{w.event}</p>
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400">{w.orderId || "Ping test"}</p>
                           </div>
                           <span
                             className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
                               w.status === "SUCCESS"
                                 ? "bg-[#00df82]/15 text-[#00df82]"
-                                : "bg-rose-500/15 text-rose-400"
+                                : "bg-rose-500/15 text-rose-500 dark:text-rose-400"
                             }`}
                           >
                             {w.statusCode ? `HTTP ${w.statusCode}` : w.status}

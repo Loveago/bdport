@@ -368,12 +368,12 @@ export default function AdminAffiliatesPage() {
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black transition cursor-pointer whitespace-nowrap ${
             activeTab === "hierarchy"
               ? "bg-[#00df82] text-slate-950 shadow-sm shadow-[#00df82]/20"
-              : "text-slate-500 hover:text-white hover:bg-slate-100 dark:hover:bg-[#0a1220]"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#0a1220]"
           }`}
         >
           <Share2 className="h-4 w-4" />
           <span>Main Affiliates Hierarchy</span>
-          <span className="rounded-full bg-black/15 px-1.5 py-0.2 text-[10px]">
+          <span className="rounded-full bg-black/10 dark:bg-black/25 px-1.5 py-0.2 text-[10px]">
             {affiliates.length}
           </span>
         </button>
@@ -384,12 +384,12 @@ export default function AdminAffiliatesPage() {
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black transition cursor-pointer whitespace-nowrap ${
             activeTab === "subagents"
               ? "bg-[#00df82] text-slate-950 shadow-sm shadow-[#00df82]/20"
-              : "text-slate-500 hover:text-white hover:bg-slate-100 dark:hover:bg-[#0a1220]"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#0a1220]"
           }`}
         >
           <Users className="h-4 w-4" />
           <span>All Sub-Agents Directory</span>
-          <span className="rounded-full bg-black/15 px-1.5 py-0.2 text-[10px]">
+          <span className="rounded-full bg-black/10 dark:bg-black/25 px-1.5 py-0.2 text-[10px]">
             {allSubAgents.length}
           </span>
         </button>
@@ -400,7 +400,7 @@ export default function AdminAffiliatesPage() {
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black transition cursor-pointer whitespace-nowrap ${
             activeTab === "withdrawals"
               ? "bg-[#00df82] text-slate-950 shadow-sm shadow-[#00df82]/20"
-              : "text-slate-500 hover:text-white hover:bg-slate-100 dark:hover:bg-[#0a1220]"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#0a1220]"
           }`}
         >
           <Banknote className="h-4 w-4" />
@@ -804,19 +804,19 @@ export default function AdminAffiliatesPage() {
 
       {/* ── DETAIL DRAWER / MODAL FOR MAIN AFFILIATE ─────────────────────────── */}
       {selectedAffiliateId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-end bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-2xl h-full bg-[#070d18] border-l border-[#14233a] shadow-2xl flex flex-col justify-between overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-2xl h-full bg-white dark:bg-[#070d18] border-l border-slate-200 dark:border-[#14233a] shadow-2xl flex flex-col justify-between overflow-hidden">
             {/* Drawer Header */}
-            <div className="p-4 sm:p-5 border-b border-[#14233a] flex items-center justify-between">
+            <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-[#14233a] bg-slate-50/80 dark:bg-[#0a1220] flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#00df82]/15 text-[#00df82] border border-[#00df82]/30">
                   <Share2 className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-black text-white">
+                  <h3 className="text-base font-black text-slate-900 dark:text-white">
                     {detailData?.affiliate.name || "Affiliate Details"}
                   </h3>
-                  <p className="text-xs text-slate-400 font-mono">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                     {detailData?.affiliate.email} · Code:{" "}
                     <strong className="text-[#00df82] font-mono">
                       {detailData?.affiliate.affiliateCode || "N/A"}
@@ -831,21 +831,21 @@ export default function AdminAffiliatesPage() {
                   setSelectedAffiliateId(null);
                   setDetailData(null);
                 }}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#14233a] transition"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#14233a] transition cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Modal Subnav */}
-            <div className="px-5 pt-3 border-b border-[#14233a] flex items-center gap-2 bg-[#091220]">
+            <div className="px-5 pt-3 border-b border-slate-200 dark:border-[#14233a] flex items-center gap-2 bg-slate-100/70 dark:bg-[#091220]">
               <button
                 type="button"
                 onClick={() => setActiveModalTab("downline")}
-                className={`px-3 py-1.5 text-xs font-bold rounded-t-lg transition border-b-2 ${
+                className={`px-3 py-1.5 text-xs font-bold rounded-t-lg transition border-b-2 cursor-pointer ${
                   activeModalTab === "downline"
-                    ? "border-[#00df82] text-[#00df82] bg-[#00df82]/10"
-                    : "border-transparent text-slate-400 hover:text-white"
+                    ? "border-[#00df82] text-slate-900 dark:text-[#00df82] bg-white dark:bg-[#00df82]/10"
+                    : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 Sub-Agents ({detailData?.affiliate.subAgentsCount || 0})
@@ -853,10 +853,10 @@ export default function AdminAffiliatesPage() {
               <button
                 type="button"
                 onClick={() => setActiveModalTab("pricing")}
-                className={`px-3 py-1.5 text-xs font-bold rounded-t-lg transition border-b-2 ${
+                className={`px-3 py-1.5 text-xs font-bold rounded-t-lg transition border-b-2 cursor-pointer ${
                   activeModalTab === "pricing"
-                    ? "border-[#00df82] text-[#00df82] bg-[#00df82]/10"
-                    : "border-transparent text-slate-400 hover:text-white"
+                    ? "border-[#00df82] text-slate-900 dark:text-[#00df82] bg-white dark:bg-[#00df82]/10"
+                    : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 Wholesale Price Sheet ({detailData?.affiliate.pricingSheet.length || 0})
@@ -864,10 +864,10 @@ export default function AdminAffiliatesPage() {
               <button
                 type="button"
                 onClick={() => setActiveModalTab("commissions")}
-                className={`px-3 py-1.5 text-xs font-bold rounded-t-lg transition border-b-2 ${
+                className={`px-3 py-1.5 text-xs font-bold rounded-t-lg transition border-b-2 cursor-pointer ${
                   activeModalTab === "commissions"
-                    ? "border-[#00df82] text-[#00df82] bg-[#00df82]/10"
-                    : "border-transparent text-slate-400 hover:text-white"
+                    ? "border-[#00df82] text-slate-900 dark:text-[#00df82] bg-white dark:bg-[#00df82]/10"
+                    : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 Commissions Log ({detailData?.affiliate.commissions.length || 0})
@@ -879,10 +879,10 @@ export default function AdminAffiliatesPage() {
               {loadingDetail ? (
                 <div className="flex flex-col items-center justify-center p-12 space-y-3">
                   <Spinner className="h-8 w-8 text-[#00df82]" />
-                  <p className="text-xs text-slate-400">Loading downline data…</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Loading downline data…</p>
                 </div>
               ) : !detailData ? (
-                <div className="p-8 text-center text-slate-400 text-xs">
+                <div className="p-8 text-center text-slate-500 dark:text-slate-400 text-xs">
                   Could not load affiliate records.
                 </div>
               ) : (
@@ -891,7 +891,7 @@ export default function AdminAffiliatesPage() {
                   {activeModalTab === "downline" && (
                     <div className="space-y-3">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-slate-300">
+                        <span className="font-bold text-slate-700 dark:text-slate-300">
                           Users Referred by {detailData.affiliate.name}
                         </span>
                         <span className="text-slate-500 font-mono">
@@ -900,7 +900,7 @@ export default function AdminAffiliatesPage() {
                       </div>
 
                       {detailData.affiliate.subAgents.length === 0 ? (
-                        <div className="rounded-xl border border-[#14233a] p-8 text-center text-xs text-slate-400">
+                        <div className="rounded-xl border border-slate-200 dark:border-[#14233a] p-8 text-center text-xs text-slate-500 dark:text-slate-400">
                           This agent has not registered any sub-agents yet.
                         </div>
                       ) : (
@@ -908,16 +908,16 @@ export default function AdminAffiliatesPage() {
                           {detailData.affiliate.subAgents.map((sub) => (
                             <div
                               key={sub.id}
-                              className="rounded-xl border border-[#14233a] bg-[#091220] p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                              className="rounded-xl border border-slate-200 dark:border-[#14233a] bg-slate-50/80 dark:bg-[#091220] p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                             >
                               <div>
-                                <div className="font-bold text-white text-xs flex items-center gap-2">
+                                <div className="font-bold text-slate-900 dark:text-white text-xs flex items-center gap-2">
                                   <span>{sub.name}</span>
                                   <span className="px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider bg-[#00df82]/15 text-[#00df82] border border-[#00df82]/30">
                                     {sub.role}
                                   </span>
                                 </div>
-                                <div className="text-[11px] text-slate-400 font-mono">
+                                <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                                   {sub.email} {sub.phone && `· ${sub.phone}`}
                                 </div>
                                 <div className="text-[10px] text-slate-500 mt-1">
@@ -928,16 +928,16 @@ export default function AdminAffiliatesPage() {
                               <div className="flex items-center gap-4 text-xs font-mono">
                                 <div>
                                   <span className="text-[10px] uppercase text-slate-500 block">Balance</span>
-                                  <span className="font-bold text-white">GH₵ {sub.balance.toFixed(2)}</span>
+                                  <span className="font-bold text-slate-900 dark:text-white">GH₵ {sub.balance.toFixed(2)}</span>
                                 </div>
                                 <div>
                                   <span className="text-[10px] uppercase text-slate-500 block">Orders</span>
-                                  <span className="font-bold text-cyan-400">{sub.ordersCount}</span>
+                                  <span className="font-bold text-cyan-600 dark:text-cyan-400">{sub.ordersCount}</span>
                                 </div>
                                 <button
                                   type="button"
                                   onClick={() => setTrackedUserId(sub.id)}
-                                  className="p-2 rounded-lg bg-[#14233a] hover:bg-[#00df82] hover:text-slate-950 transition text-slate-300 cursor-pointer"
+                                  className="p-2 rounded-lg bg-slate-200 dark:bg-[#14233a] hover:bg-[#00df82] hover:text-slate-950 transition text-slate-700 dark:text-slate-300 cursor-pointer"
                                   title="Track sales & wallet transactions"
                                 >
                                   <TrendingUp className="h-3.5 w-3.5" />
@@ -953,36 +953,36 @@ export default function AdminAffiliatesPage() {
                   {/* TAB 2: PRICING SHEET */}
                   {activeModalTab === "pricing" && (
                     <div className="space-y-3">
-                      <div className="text-xs text-slate-400">
-                        These are the custom wholesale rates configured by <strong className="text-white">{detailData.affiliate.name}</strong> for their sub-agents.
+                      <div className="text-xs text-slate-600 dark:text-slate-400">
+                        These are the custom wholesale rates configured by <strong className="text-slate-900 dark:text-white">{detailData.affiliate.name}</strong> for their sub-agents.
                       </div>
 
                       {detailData.affiliate.pricingSheet.length === 0 ? (
-                        <div className="rounded-xl border border-[#14233a] p-8 text-center text-xs text-slate-400">
+                        <div className="rounded-xl border border-slate-200 dark:border-[#14233a] p-8 text-center text-xs text-slate-500 dark:text-slate-400">
                           This agent has not configured custom prices yet. Sub-agents are billed at standard wholesale rates.
                         </div>
                       ) : (
-                        <div className="overflow-x-auto rounded-xl border border-[#14233a]">
+                        <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-[#14233a] bg-white dark:bg-[#070d18]">
                           <table className="w-full text-left text-xs border-collapse">
                             <thead>
-                              <tr className="border-b border-[#14233a] bg-[#0a1220] text-slate-400 uppercase text-[10px] font-black">
+                              <tr className="border-b border-slate-200 dark:border-[#14233a] bg-slate-50 dark:bg-[#0a1220] text-slate-600 dark:text-slate-400 uppercase text-[10px] font-black">
                                 <th className="p-3">Package</th>
                                 <th className="p-3">Agent Cost</th>
                                 <th className="p-3">Sub-Agent Price</th>
                                 <th className="p-3 text-right">Profit / Margin</th>
                               </tr>
                             </thead>
-                            <tbody className="divide-y divide-[#14233a]/60 font-mono">
+                            <tbody className="divide-y divide-slate-100 dark:divide-[#14233a]/60 font-mono">
                               {detailData.affiliate.pricingSheet.map((p) => (
-                                <tr key={p.packageId} className="hover:bg-[#091220]">
+                                <tr key={p.packageId} className="hover:bg-slate-50 dark:hover:bg-[#091220]">
                                   <td className="p-3">
-                                    <div className="font-bold text-white">{p.packageName}</div>
+                                    <div className="font-bold text-slate-900 dark:text-white">{p.packageName}</div>
                                     <div className="text-[10px] text-slate-500">{p.network} · {p.gbAmount} GB</div>
                                   </td>
-                                  <td className="p-3 text-slate-400">
+                                  <td className="p-3 text-slate-600 dark:text-slate-400">
                                     GH₵ {p.agentBaseCost.toFixed(2)}
                                   </td>
-                                  <td className="p-3 text-white font-bold">
+                                  <td className="p-3 text-slate-900 dark:text-white font-bold">
                                     GH₵ {p.subAgentWholesalePrice.toFixed(2)}
                                   </td>
                                   <td className="p-3 text-right font-bold text-[#00df82]">
@@ -1000,12 +1000,12 @@ export default function AdminAffiliatesPage() {
                   {/* TAB 3: COMMISSIONS LOG */}
                   {activeModalTab === "commissions" && (
                     <div className="space-y-3">
-                      <div className="text-xs text-slate-400">
-                        Real-time sales commission records credited to <strong className="text-white">{detailData.affiliate.name}</strong>.
+                      <div className="text-xs text-slate-600 dark:text-slate-400">
+                        Real-time sales commission records credited to <strong className="text-slate-900 dark:text-white">{detailData.affiliate.name}</strong>.
                       </div>
 
                       {detailData.affiliate.commissions.length === 0 ? (
-                        <div className="rounded-xl border border-[#14233a] p-8 text-center text-xs text-slate-400">
+                        <div className="rounded-xl border border-slate-200 dark:border-[#14233a] p-8 text-center text-xs text-slate-500 dark:text-slate-400">
                           No commissions recorded yet.
                         </div>
                       ) : (
@@ -1013,10 +1013,10 @@ export default function AdminAffiliatesPage() {
                           {detailData.affiliate.commissions.map((c) => (
                             <div
                               key={c.id}
-                              className="rounded-xl border border-[#14233a] bg-[#091220] p-3 flex items-center justify-between text-xs"
+                              className="rounded-xl border border-slate-200 dark:border-[#14233a] bg-slate-50/80 dark:bg-[#091220] p-3 flex items-center justify-between text-xs"
                             >
                               <div>
-                                <div className="font-bold text-white">
+                                <div className="font-bold text-slate-900 dark:text-white">
                                   From {c.sourceUserName} ({c.sourceUserEmail})
                                 </div>
                                 <div className="text-[10px] text-slate-500 font-mono">
@@ -1041,9 +1041,9 @@ export default function AdminAffiliatesPage() {
             </div>
 
             {/* Drawer Footer */}
-            <div className="p-4 border-t border-[#14233a] flex items-center justify-between bg-[#091220]">
+            <div className="p-4 border-t border-slate-200 dark:border-[#14233a] flex items-center justify-between bg-slate-50 dark:bg-[#091220]">
               <div className="font-mono text-xs">
-                <span className="text-slate-400">Affiliate Balance: </span>
+                <span className="text-slate-500 dark:text-slate-400">Affiliate Balance: </span>
                 <strong className="text-[#00df82] font-black">
                   GH₵ {detailData?.affiliate.affiliateBalance.toFixed(2) || "0.00"}
                 </strong>
@@ -1064,35 +1064,35 @@ export default function AdminAffiliatesPage() {
 
       {/* ── APPROVE / REJECT WITHDRAWAL CONFIRMATION MODAL ───────────────────── */}
       {withdrawalActionId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-sm rounded-3xl border border-[#14233a] bg-[#070d18] p-5 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-[#14233a] pb-3">
-              <h3 className="text-sm font-black text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-sm rounded-3xl border border-slate-200 dark:border-[#14233a] bg-white dark:bg-[#070d18] p-5 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#14233a] pb-3">
+              <h3 className="text-sm font-black text-slate-900 dark:text-white">
                 {actionType === "APPROVE" ? "Confirm Payout Approval" : "Reject Payout Request"}
               </h3>
               <button
                 type="button"
                 onClick={() => setWithdrawalActionId(null)}
-                className="p-1 rounded-lg text-slate-400 hover:text-white"
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-600 dark:text-slate-400">
               {actionType === "APPROVE"
                 ? "Are you sure you want to approve and mark this affiliate payout as completed?"
                 : "Enter an optional note explaining the rejection. The funds will be refunded to the agent's affiliate balance."}
             </p>
 
             <div className="space-y-1">
-              <label className="text-[11px] font-bold text-slate-400">Admin Note (Optional)</label>
+              <label className="text-[11px] font-bold text-slate-600 dark:text-slate-400">Admin Note (Optional)</label>
               <textarea
                 rows={2}
                 placeholder="e.g. Paid via MoMo Bulk Transfer #984392"
                 value={actionNote}
                 onChange={(e) => setActionNote(e.target.value)}
-                className="w-full bg-[#0a1220] border border-[#14233a] rounded-xl p-2.5 text-xs text-white placeholder:text-slate-600 outline-none focus:border-[#00df82] resize-none"
+                className="w-full bg-slate-50 dark:bg-[#0a1220] border border-slate-200 dark:border-[#14233a] rounded-xl p-2.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 outline-none focus:border-[#00df82] resize-none"
               />
             </div>
 
@@ -1100,7 +1100,7 @@ export default function AdminAffiliatesPage() {
               <button
                 type="button"
                 onClick={() => setWithdrawalActionId(null)}
-                className="flex-1 py-2.5 rounded-xl border border-[#14233a] bg-[#0a1220] text-xs font-bold text-slate-300 hover:bg-[#14233a]"
+                className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-[#14233a] bg-slate-100 dark:bg-[#0a1220] text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#14233a] cursor-pointer"
               >
                 Cancel
               </button>

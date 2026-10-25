@@ -293,7 +293,7 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
                 <button
                   type="button"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-slate-400 hover:text-white p-1 rounded-lg"
+                  className="text-slate-400 hover:text-slate-900 dark:hover:text-white p-1 rounded-lg"
                   aria-label="Close menu"
                 >
                   <X className="h-5 w-5" />
@@ -337,7 +337,7 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
                         "flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold min-h-[44px]",
                         isActive
                           ? "bg-[#00df82] text-slate-950 font-black shadow-md shadow-[#00df82]/20"
-                          : "text-slate-600 dark:text-slate-400 hover:text-white hover:bg-slate-100 dark:hover:bg-[#0a1220]"
+                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#0a1220]"
                       )}
                     >
                       <Icon className="h-4 w-4" />

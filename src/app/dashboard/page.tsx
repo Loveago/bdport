@@ -62,7 +62,7 @@ export default async function DashboardPage() {
       {/* ── TOP SECTION: WELCOME HERO + WALLET CARD ──────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Welcome Hero Banner (Col 8) */}
-        <div className="lg:col-span-8 relative overflow-hidden rounded-3xl border border-slate-200 dark:border-[#14233a] bg-gradient-to-br from-emerald-500/10 via-[#0a1526] to-[#07111e] p-6 lg:p-7 flex flex-col justify-between shadow-xl">
+        <div className="lg:col-span-8 relative overflow-hidden rounded-3xl border border-slate-200 dark:border-[#14233a] bg-gradient-to-br from-emerald-500/10 via-white to-slate-50 dark:via-[#0a1526] dark:to-[#07111e] p-6 lg:p-7 flex flex-col justify-between shadow-xl">
           {/* Ambient Glow */}
           <div className="pointer-events-none absolute -right-10 -bottom-10 h-64 w-64 rounded-full bg-[#00df82]/10 blur-3xl" />
 
@@ -84,11 +84,11 @@ export default async function DashboardPage() {
               <CheckCircle2 className="h-3.5 w-3.5" />
               <span>Fast &amp; Reliable</span>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-bold">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-700 dark:text-cyan-300 text-xs font-bold">
               <Lock className="h-3.5 w-3.5" />
               <span>Secure</span>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
               <Headphones className="h-3.5 w-3.5" />
               <span>24/7 Support</span>
             </div>
@@ -96,11 +96,11 @@ export default async function DashboardPage() {
 
           {/* Right Floating 3D Graphic */}
           <div className="hidden sm:flex absolute right-6 top-1/2 -translate-y-1/2 flex-col items-center">
-            <div className="h-28 w-24 rounded-2xl border-2 border-[#00df82]/40 bg-[#071322] shadow-2xl shadow-[#00df82]/20 flex flex-col items-center justify-center p-3 relative transform rotate-6 hover:rotate-0 transition-transform">
+            <div className="h-28 w-24 rounded-2xl border-2 border-[#00df82]/40 bg-white dark:bg-[#071322] shadow-2xl shadow-[#00df82]/20 flex flex-col items-center justify-center p-3 relative transform rotate-6 hover:rotate-0 transition-transform">
               <div className="h-10 w-10 rounded-xl bg-[#00df82] flex items-center justify-center shadow-lg shadow-[#00df82]/30">
                 <Zap className="h-5 w-5 text-slate-950 fill-slate-950" />
               </div>
-              <span className="text-[9px] font-black uppercase text-slate-300 mt-2 tracking-wider">
+              <span className="text-[9px] font-black uppercase text-slate-700 dark:text-slate-300 mt-2 tracking-wider">
                 Active SIM
               </span>
               <div className="flex items-center gap-1 mt-1">

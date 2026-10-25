@@ -68,21 +68,21 @@ export function WalletLedgerView({
 
   if (total === 0) {
     return (
-      <div className="rounded-3xl border border-dashed border-[#162740] bg-[#0b1322] p-12 text-center text-xs text-slate-500 shadow-xl">
-        <History className="mx-auto h-8 w-8 text-slate-600 mb-2" />
+      <div className="rounded-3xl border border-dashed border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-12 text-center text-xs text-slate-500 shadow-xl">
+        <History className="mx-auto h-8 w-8 text-slate-400 dark:text-slate-600 mb-2" />
         No settlement transactions recorded yet.
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-[#162740] bg-[#0b1322] shadow-xl">
+    <div className="overflow-hidden rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] shadow-xl">
       {/* Mobile Cards (sm:hidden) */}
-      <div className="divide-y divide-[#162740]/60 sm:hidden">
+      <div className="divide-y divide-slate-100 dark:divide-[#162740]/60 sm:hidden">
         {transactions.map((t) => {
           const isPositive = t.amount >= 0;
           const style = TYPE_STYLES[t.type] || {
-            cls: "border border-slate-700 bg-slate-800 text-slate-300",
+            cls: "border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300",
             dot: "bg-slate-400",
           };
 
@@ -102,13 +102,13 @@ export function WalletLedgerView({
                 <div>
                   <p
                     className={`font-mono text-base font-black ${
-                      isPositive ? "text-[#00df82]" : "text-rose-400"
+                      isPositive ? "text-[#00df82]" : "text-rose-500 dark:text-rose-400"
                     }`}
                   >
                     {isPositive ? "+" : "−"}GHS {fromPesewas(Math.abs(t.amount)).toFixed(2)}
                   </p>
                   {t.description && (
-                    <p className="text-[11px] text-slate-400 mt-0.5">{t.description}</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{t.description}</p>
                   )}
                   {t.reference && (
                     <p className="font-mono text-[10px] text-slate-500">Ref: {t.reference}</p>
@@ -116,7 +116,7 @@ export function WalletLedgerView({
                 </div>
                 <div className="text-right">
                   <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Wallet Balance</span>
-                  <span className="font-mono font-bold text-white">
+                  <span className="font-mono font-bold text-slate-900 dark:text-white">
                     GHS {fromPesewas(t.balanceAfter).toFixed(2)}
                   </span>
                 </div>
@@ -130,7 +130,7 @@ export function WalletLedgerView({
       <div className="hidden sm:block overflow-x-auto">
         <table className="w-full text-left text-xs">
           <thead>
-            <tr className="border-b border-[#162740] bg-[#070d18]/50 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <tr className="border-b border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18]/50 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               <th className="px-5 py-3.5">Type &amp; Description</th>
               <th className="px-5 py-3.5">Transaction Amount</th>
               <th className="px-5 py-3.5">Reference ID</th>
@@ -138,41 +138,41 @@ export function WalletLedgerView({
               <th className="px-5 py-3.5 text-right">Timestamp</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#162740]/60 font-mono">
+          <tbody className="divide-y divide-slate-100 dark:divide-[#162740]/60 font-mono">
             {transactions.map((t) => {
               const isPositive = t.amount >= 0;
               const style = TYPE_STYLES[t.type] || {
-                cls: "border border-slate-700 bg-slate-800 text-slate-300",
+                cls: "border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300",
                 dot: "bg-slate-400",
               };
 
               return (
-                <tr key={t.id} className="hover:bg-[#0e192d]/50 transition-colors">
+                <tr key={t.id} className="hover:bg-slate-50 dark:hover:bg-[#0e192d]/50 transition-colors">
                   <td className="px-5 py-3.5 font-sans">
                     <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider ${style.cls}`}>
                       <span className={`h-1.5 w-1.5 rounded-full ${style.dot}`} />
                       {t.type}
                     </span>
                     {t.description && (
-                      <p className="mt-1 text-xs text-slate-300 font-medium">{t.description}</p>
+                      <p className="mt-1 text-xs text-slate-700 dark:text-slate-300 font-medium">{t.description}</p>
                     )}
                   </td>
                   <td className="px-5 py-3.5">
                     <span
                       className={`font-black text-sm ${
-                        isPositive ? "text-[#00df82]" : "text-rose-400"
+                        isPositive ? "text-[#00df82]" : "text-rose-500 dark:text-rose-400"
                       }`}
                     >
                       {isPositive ? "+" : "−"}GHS {fromPesewas(Math.abs(t.amount)).toFixed(2)}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-cyan-400 font-semibold">
+                  <td className="px-5 py-3.5 text-cyan-600 dark:text-cyan-400 font-semibold">
                     {t.reference || "—"}
                   </td>
-                  <td className="px-5 py-3.5 text-white font-bold">
+                  <td className="px-5 py-3.5 text-slate-900 dark:text-white font-bold">
                     GHS {fromPesewas(t.balanceAfter).toFixed(2)}
                   </td>
-                  <td className="px-5 py-3.5 text-right font-sans text-slate-400 text-[11px]">
+                  <td className="px-5 py-3.5 text-right font-sans text-slate-500 dark:text-slate-400 text-[11px]">
                     {new Date(t.createdAt).toLocaleString("en-GB", { dateStyle: "short", timeStyle: "short" })}
                   </td>
                 </tr>
@@ -184,16 +184,16 @@ export function WalletLedgerView({
 
       {/* Pagination Bar */}
       {totalPages > 1 && (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#162740] p-4 text-xs">
-          <span className="text-slate-400">
-            Page <strong className="text-white">{page}</strong> of <strong className="text-white">{totalPages}</strong> ({total} entries)
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 dark:border-[#162740] p-4 text-xs">
+          <span className="text-slate-500 dark:text-slate-400">
+            Page <strong className="text-slate-900 dark:text-white">{page}</strong> of <strong className="text-slate-900 dark:text-white">{totalPages}</strong> ({total} entries)
           </span>
           <div className="flex items-center gap-2">
             <button
               type="button"
               disabled={page <= 1}
               onClick={() => goToPage(page - 1)}
-              className="flex items-center gap-1 rounded-xl border border-[#162740] bg-[#070d18] px-3.5 py-1.5 font-bold text-slate-300 hover:border-[#00df82]/40 hover:text-white disabled:opacity-40 transition"
+              className="flex items-center gap-1 rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#070d18] px-3.5 py-1.5 font-bold text-slate-700 dark:text-slate-300 hover:border-[#00df82]/40 hover:text-slate-900 dark:hover:text-white disabled:opacity-40 transition cursor-pointer"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
               <span>Previous</span>
@@ -202,7 +202,7 @@ export function WalletLedgerView({
               type="button"
               disabled={page >= totalPages}
               onClick={() => goToPage(page + 1)}
-              className="flex items-center gap-1 rounded-xl border border-[#162740] bg-[#070d18] px-3.5 py-1.5 font-bold text-slate-300 hover:border-[#00df82]/40 hover:text-white disabled:opacity-40 transition"
+              className="flex items-center gap-1 rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#070d18] px-3.5 py-1.5 font-bold text-slate-700 dark:text-slate-300 hover:border-[#00df82]/40 hover:text-slate-900 dark:hover:text-white disabled:opacity-40 transition cursor-pointer"
             >
               <span>Next</span>
               <ChevronRight className="h-3.5 w-3.5" />

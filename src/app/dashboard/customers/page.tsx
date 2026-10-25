@@ -259,23 +259,23 @@ export default function CustomersPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <PhoneCall className="h-3.5 w-3.5 text-[#00df82]" />
-                    <span className="font-mono text-sm font-black text-white">{c.phoneNumber}</span>
+                    <span className="font-mono text-sm font-black text-slate-900 dark:text-white">{c.phoneNumber}</span>
                   </div>
                   {getNetworkBadge(c.network)}
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 rounded-2xl border border-[#162740] bg-[#070d18] p-2.5 text-center">
+                <div className="grid grid-cols-3 gap-2 rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] p-2.5 text-center">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block">Orders</span>
-                    <span className="font-mono text-xs font-black text-white">{c.totalOrders}</span>
+                    <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block">Orders</span>
+                    <span className="font-mono text-xs font-black text-slate-900 dark:text-white">{c.totalOrders}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block">Delivered</span>
-                    <span className="font-mono text-xs font-bold text-slate-300">{c.totalVolumeGb > 0 ? `${c.totalVolumeGb} GB` : "—"}</span>
+                    <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block">Delivered</span>
+                    <span className="font-mono text-xs font-bold text-slate-700 dark:text-slate-300">{c.totalVolumeGb > 0 ? `${c.totalVolumeGb} GB` : "—"}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block">Spend</span>
-                    <span className="font-mono text-xs font-black text-[#00df82]">{formatGHS(c.totalSpend)}</span>
+                    <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block">Spend</span>
+                    <span className="font-mono text-xs font-black text-emerald-600 dark:text-[#00df82]">{formatGHS(c.totalSpend)}</span>
                   </div>
                 </div>
 

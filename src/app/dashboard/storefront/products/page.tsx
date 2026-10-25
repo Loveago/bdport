@@ -41,7 +41,7 @@ export default async function StorefrontProductsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="relative overflow-hidden rounded-3xl border border-[#162740] bg-[#0b1322] p-6 shadow-xl">
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
@@ -49,12 +49,12 @@ export default async function StorefrontProductsPage() {
                 <span className="h-1.5 w-1.5 rounded-full bg-[#00df82] animate-pulse" />
                 Retail Pricing Engine
               </span>
-              <span className="text-[11px] font-mono text-slate-400">· Instant Commission Clearing</span>
+              <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">· Instant Commission Clearing</span>
             </div>
-            <h1 className="text-2xl font-black text-white tracking-tight">
+            <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
               Products &amp; Retail Pricing Matrix
             </h1>
-            <p className="text-xs text-slate-400 max-w-2xl leading-relaxed">
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
               Set your own retail selling prices for each bundle displayed on your storefront. You can add whatever profit margin you desire on top of wholesale cost — your margin profit is automatically released to your settlement wallet on successful customer checkout.
             </p>
           </div>

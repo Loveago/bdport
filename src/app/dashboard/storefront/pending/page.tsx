@@ -19,22 +19,22 @@ export default async function StorePendingPage() {
 
   return (
     <div className="mx-auto max-w-lg space-y-6 py-8">
-      <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-8 text-center shadow-xl">
+      <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-8 text-center shadow-xl">
         <span
           className={`mx-auto inline-flex h-16 w-16 items-center justify-center rounded-2xl border ${
             pending
-              ? "border-amber-500/30 bg-amber-500/10 text-amber-400"
-              : "border-red-500/30 bg-red-500/10 text-red-400"
+              ? "border-amber-500/30 bg-amber-500/10 text-amber-500 dark:text-amber-400"
+              : "border-red-500/30 bg-red-500/10 text-red-500 dark:text-red-400"
           }`}
         >
           {pending ? <Clock className="h-8 w-8 animate-pulse" /> : <XCircle className="h-8 w-8" />}
         </span>
 
-        <h1 className="mt-5 text-2xl font-black text-white tracking-tight">
+        <h1 className="mt-5 text-2xl font-black text-slate-900 dark:text-white tracking-tight">
           {pending ? "Application Telemetry: In Review" : "Application Not Approved"}
         </h1>
 
-        <p className="mt-2 text-xs text-slate-400 leading-relaxed max-w-md mx-auto">
+        <p className="mt-2 text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-md mx-auto">
           {pending
             ? `Our operations team is currently reviewing “${storefront.name}”. Once verified, your public storefront domain and automated USSD routing will activate immediately.`
             : storefront.rejectionNote
@@ -43,7 +43,7 @@ export default async function StorePendingPage() {
         </p>
 
         {pending && (
-          <div className="mx-auto mt-6 flex max-w-xs items-center justify-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-xs font-black uppercase tracking-wider text-amber-300">
+          <div className="mx-auto mt-6 flex max-w-xs items-center justify-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-300">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-400" />
@@ -54,7 +54,7 @@ export default async function StorePendingPage() {
       </div>
 
       {pending ? (
-        <p className="mt-4 text-center text-xs text-slate-500">
+        <p className="mt-4 text-center text-xs text-slate-500 dark:text-slate-400">
           Need adjustments prior to clearance? Contact support via WhatsApp.
         </p>
       ) : (

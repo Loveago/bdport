@@ -101,25 +101,25 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#060b13] text-slate-100 flex flex-col justify-center items-center p-4 selection:bg-[#00df82] selection:text-slate-950 font-sans">
+    <div className="min-h-screen bg-[#f3f6fa] dark:bg-[#060b13] text-slate-900 dark:text-slate-100 flex flex-col justify-center items-center p-4 selection:bg-[#00df82] selection:text-slate-950 font-sans">
       <div className="w-full max-w-md space-y-6">
         {/* Header / Brand Logo */}
         <div className="flex flex-col items-center text-center space-y-2">
           <BrandMark size="lg" className="shadow-2xl shadow-[#00df82]/30 mb-2" />
           <div className="flex items-center gap-2">
-            <span className="text-xl font-black text-white tracking-tight">BUNDLE PORTAL</span>
+            <span className="text-xl font-black text-slate-900 dark:text-white tracking-tight">BUNDLE PORTAL</span>
             <span className="rounded bg-[#00df82]/15 text-[#00df82] border border-[#00df82]/40 px-1.5 py-0.5 text-[10px] font-black uppercase tracking-wider">
               PORTAL
             </span>
           </div>
-          <p className="text-xs text-slate-400">Telecom Wholesale &amp; Reseller Engine</p>
-          <h2 className="text-xl font-bold text-white pt-2">Sign in to your account</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Telecom Wholesale &amp; Reseller Engine</p>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white pt-2">Sign in to your account</h2>
         </div>
 
         {/* Login Form Card */}
-        <div className="rounded-3xl border border-[#14233a] bg-[#0a1220]/90 backdrop-blur-xl p-6 sm:p-7 shadow-2xl space-y-5">
+        <div className="rounded-3xl border border-slate-200 dark:border-[#14233a] bg-white dark:bg-[#0a1220]/90 backdrop-blur-xl p-6 sm:p-7 shadow-xl space-y-5">
           {serverError && (
-            <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-300">
+            <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-600 dark:text-rose-300">
               {serverError}
             </div>
           )}
@@ -128,27 +128,27 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Email Input */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-black uppercase tracking-wider text-slate-400">
+                <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-400">
                   Email Address
                 </label>
                 <div className="relative">
-                  <Mail className="h-4 w-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Mail className="h-4 w-4 text-slate-400 dark:text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     {...register("email")}
                     type="email"
                     placeholder="you@example.com"
-                    className="w-full h-11 rounded-xl bg-[#070d18] border border-[#14233a] pl-10 pr-4 text-xs text-white placeholder:text-slate-600 outline-none focus:border-[#00df82] transition-colors"
+                    className="w-full h-11 rounded-xl bg-slate-50 dark:bg-[#070d18] border border-slate-200 dark:border-[#14233a] pl-10 pr-4 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 outline-none focus:border-[#00df82] transition-colors"
                   />
                 </div>
                 {errors.email && (
-                  <p className="text-[10px] text-rose-400">{errors.email.message}</p>
+                  <p className="text-[10px] text-rose-500 dark:text-rose-400">{errors.email.message}</p>
                 )}
               </div>
 
               {/* Password Input */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-400">
+                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-400">
                     Password
                   </label>
                   <Link
@@ -159,23 +159,23 @@ export default function LoginPage() {
                   </Link>
                 </div>
                 <div className="relative">
-                  <Lock className="h-4 w-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Lock className="h-4 w-4 text-slate-400 dark:text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     {...register("password")}
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••••"
-                    className="w-full h-11 rounded-xl bg-[#070d18] border border-[#14233a] pl-10 pr-10 text-xs text-white placeholder:text-slate-600 outline-none focus:border-[#00df82] transition-colors"
+                    className="w-full h-11 rounded-xl bg-slate-50 dark:bg-[#070d18] border border-slate-200 dark:border-[#14233a] pl-10 pr-10 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 outline-none focus:border-[#00df82] transition-colors"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="text-[10px] text-rose-400">{errors.password.message}</p>
+                  <p className="text-[10px] text-rose-500 dark:text-rose-400">{errors.password.message}</p>
                 )}
               </div>
 
@@ -183,7 +183,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-11 rounded-xl bg-[#00df82] hover:bg-[#00f59b] text-slate-950 font-black text-xs shadow-lg shadow-[#00df82]/25 flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50 mt-2"
+                className="w-full h-11 rounded-xl bg-[#00df82] hover:bg-[#00f59b] text-slate-950 font-black text-xs shadow-lg shadow-[#00df82]/25 flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50 mt-2 cursor-pointer"
               >
                 {isSubmitting ? (
                   <>
@@ -204,12 +204,12 @@ export default function LoginPage() {
                 <div className="inline-flex p-3 rounded-full bg-[#00df82]/15 text-[#00df82]">
                   <KeyRound className="h-5 w-5" />
                 </div>
-                <h3 className="text-sm font-bold text-white">Enter Security Code</h3>
-                <p className="text-[11px] text-slate-400">
-                  Check <span className="text-white">{otpEmail}</span> for your 6-digit passcode.
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Enter Security Code</h3>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                  Check <span className="text-slate-900 dark:text-white font-semibold">{otpEmail}</span> for your 6-digit passcode.
                 </p>
                 {devOtp && (
-                  <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono">
+                  <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-mono">
                     Development OTP: <strong>{devOtp}</strong>
                   </div>
                 )}
@@ -221,14 +221,14 @@ export default function LoginPage() {
                 value={otpCode}
                 onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
                 placeholder="123456"
-                className="w-full h-12 text-center text-xl font-mono tracking-widest rounded-xl bg-[#070d18] border border-[#14233a] text-white outline-none focus:border-[#00df82]"
+                className="w-full h-12 text-center text-xl font-mono tracking-widest rounded-xl bg-slate-50 dark:bg-[#070d18] border border-slate-200 dark:border-[#14233a] text-slate-900 dark:text-white outline-none focus:border-[#00df82]"
               />
 
               <button
                 type="button"
                 onClick={handleVerifyOtp}
                 disabled={verifyingOtp || otpCode.length !== 6}
-                className="w-full h-11 rounded-xl bg-[#00df82] hover:bg-[#00f59b] text-slate-950 font-black text-xs shadow-lg shadow-[#00df82]/25 flex items-center justify-center gap-2 transition-all"
+                className="w-full h-11 rounded-xl bg-[#00df82] hover:bg-[#00f59b] text-slate-950 font-black text-xs shadow-lg shadow-[#00df82]/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
                 {verifyingOtp ? <Spinner className="h-4 w-4" /> : <span>Verify &amp; Enter Dashboard</span>}
               </button>
@@ -237,7 +237,7 @@ export default function LoginPage() {
 
           {/* Footer Link */}
           <div className="text-center pt-2">
-            <span className="text-xs text-slate-400">Don't have an account? </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">Don't have an account? </span>
             <Link
               href="/register"
               className="text-xs font-bold text-[#00df82] hover:underline"

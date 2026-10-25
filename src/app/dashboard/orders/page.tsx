@@ -96,7 +96,7 @@ interface BatchDetail {
 }
 
 const selectCls =
-  "h-9 rounded-xl border border-[#162740] bg-[#070d18] px-3 text-xs font-bold text-white outline-none transition focus:border-[#00df82] placeholder:text-slate-500 [&>option]:bg-[#070d18]";
+  "h-9 rounded-xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#070d18] px-3 text-xs font-bold text-slate-900 dark:text-white outline-none transition focus:border-[#00df82] placeholder:text-slate-400 dark:placeholder:text-slate-500 [&>option]:bg-white dark:[&>option]:bg-[#070d18] [&>option]:text-slate-900 dark:[&>option]:text-white";
 
 export default function OrdersPage() {
   const { toast } = useToast();
@@ -750,7 +750,7 @@ export default function OrdersPage() {
       ) : viewMode === "api" ? (
         /* ── API Orders View ── */
         apiOrders.length === 0 ? (
-          <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-12 text-center">
+          <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-12 text-center">
             <EmptyState
               icon={Code2}
               title={q ? `No API orders found for "${q}"` : "No API orders found"}
@@ -768,7 +768,7 @@ export default function OrdersPage() {
                       setDateFilter(getAllTimeRange());
                       setPage(1);
                     }}
-                    className="border-[#162740] bg-[#070d18] text-white hover:border-[#00df82]/40"
+                    className="border-slate-200 dark:border-[#162740] bg-white dark:bg-[#070d18] text-slate-800 dark:text-white hover:border-[#00df82]/40"
                   >
                     View All Time API Orders
                   </Button>
@@ -783,15 +783,15 @@ export default function OrdersPage() {
               {apiOrders.map((o) => (
                 <div
                   key={o.id}
-                  className="rounded-2xl border border-[#162740] bg-[#0b1322] p-4 shadow-sm"
+                  className="rounded-2xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-4 shadow-sm"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                      <p className="font-mono text-xs font-black text-cyan-400">
+                      <p className="font-mono text-xs font-black text-cyan-600 dark:text-cyan-400">
                         {`API-${o.id}`}
                       </p>
                       {o.externalReference && (
-                        <p className="mt-0.5 font-mono text-[11px] text-slate-400 truncate" title={o.externalReference}>
+                        <p className="mt-0.5 font-mono text-[11px] text-slate-500 dark:text-slate-400 truncate" title={o.externalReference}>
                           Ref: {o.externalReference}
                         </p>
                       )}
@@ -803,21 +803,21 @@ export default function OrdersPage() {
                   <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
                     <div>
                       <span className="text-slate-500 uppercase text-[10px] font-bold">Recipient</span>
-                      <p className="font-mono font-bold text-white truncate">
+                      <p className="font-mono font-bold text-slate-900 dark:text-white truncate">
                         {o.phoneNumber}
                       </p>
                     </div>
                     <div>
                       <span className="text-slate-500 uppercase text-[10px] font-bold">Carrier</span>
                       <p>
-                        <span className="inline-flex rounded-md bg-[#070d18] border border-[#162740] px-2 py-0.5 text-[11px] font-bold text-slate-300">
+                        <span className="inline-flex rounded-md bg-slate-100 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740] px-2 py-0.5 text-[11px] font-bold text-slate-700 dark:text-slate-300">
                           {o.network}
                         </span>
                       </p>
                     </div>
                     <div>
                       <span className="text-slate-500 uppercase text-[10px] font-bold">Volume</span>
-                      <p className="font-bold text-slate-200">{o.gbAmount} GB</p>
+                      <p className="font-bold text-slate-800 dark:text-slate-200">{o.gbAmount} GB</p>
                     </div>
                     <div>
                       <span className="text-slate-500 uppercase text-[10px] font-bold">Amount</span>
@@ -827,7 +827,7 @@ export default function OrdersPage() {
 
                   {o.failureReason && (
                     <p
-                      className="mt-2 truncate text-[11px] text-rose-400 bg-rose-500/10 p-1.5 rounded-lg border border-rose-500/20"
+                      className="mt-2 truncate text-[11px] text-rose-500 dark:text-rose-400 bg-rose-500/10 p-1.5 rounded-lg border border-rose-500/20"
                       title={sanitizeCustomerRefundNote(o.failureReason, o.amount) ?? o.failureReason}
                     >
                       {sanitizeCustomerRefundNote(o.failureReason, o.amount)}
@@ -847,10 +847,10 @@ export default function OrdersPage() {
             </div>
 
             {/* Desktop table */}
-            <div className="hidden overflow-hidden rounded-2xl border border-[#162740] bg-[#0b1322] shadow-xl sm:block">
+            <div className="hidden overflow-hidden rounded-2xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] shadow-xl sm:block">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[850px] text-left text-sm">
-                  <thead className="border-b border-[#162740] bg-[#070d18] text-xs font-bold uppercase tracking-wider text-slate-400">
+                  <thead className="border-b border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                     <tr>
                       <th className="px-5 py-3.5">API Order</th>
                       <th className="px-4 py-3.5">Client Reference</th>
@@ -863,41 +863,41 @@ export default function OrdersPage() {
                       <th className="px-5 py-3.5 text-right">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#162740]">
+                  <tbody className="divide-y divide-slate-100 dark:divide-[#162740]">
                     {apiOrders.map((o) => (
-                      <tr key={o.id} className="hover:bg-white/[0.03] transition-colors">
+                      <tr key={o.id} className="hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors">
                         <td className="px-5 py-3.5">
-                          <p className="font-mono text-xs font-bold text-cyan-400">
+                          <p className="font-mono text-xs font-bold text-cyan-600 dark:text-cyan-400">
                             {`API-${o.id}`}
                           </p>
                           <p className="text-[11px] text-slate-500 font-mono">{formatDateTime(o.createdAt)}</p>
                         </td>
-                        <td className="px-4 py-3.5 font-mono text-xs text-slate-300">
+                        <td className="px-4 py-3.5 font-mono text-xs text-slate-700 dark:text-slate-300">
                           {o.externalReference ? (
-                            <span className="rounded bg-[#070d18] border border-[#162740] px-2 py-0.5">
+                            <span className="rounded bg-slate-100 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740] px-2 py-0.5">
                               {o.externalReference}
                             </span>
                           ) : (
-                            <span className="text-slate-600">—</span>
+                            <span className="text-slate-400 dark:text-slate-600">—</span>
                           )}
                         </td>
-                        <td className="px-4 py-3.5 font-mono font-bold text-white">
+                        <td className="px-4 py-3.5 font-mono font-bold text-slate-900 dark:text-white">
                           {o.phoneNumber}
                         </td>
                         <td className="px-4 py-3.5">
                           <span
                             className={`inline-flex items-center rounded-lg px-2.5 py-0.5 text-xs font-bold ${
                               o.network === "MTN"
-                                ? "bg-amber-400/15 text-amber-300 border border-amber-400/30"
+                                ? "bg-amber-400/15 text-amber-700 dark:text-amber-300 border border-amber-400/30"
                                 : o.network === "TELECEL"
-                                ? "bg-rose-500/15 text-rose-300 border border-rose-500/30"
-                                : "bg-cyan-500/15 text-cyan-300 border border-cyan-500/30"
+                                ? "bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/30"
+                                : "bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border border-cyan-500/30"
                             }`}
                           >
                             {o.network}
                           </span>
                         </td>
-                        <td className="px-4 py-3.5 font-semibold text-slate-200">
+                        <td className="px-4 py-3.5 font-semibold text-slate-800 dark:text-slate-200">
                           {o.gbAmount} GB
                         </td>
                         <td className="px-4 py-3.5 font-mono font-black text-[#00df82]">
@@ -912,7 +912,7 @@ export default function OrdersPage() {
                               {formatDateTime(o.completedAt ?? o.updatedAt ?? o.createdAt)}
                             </span>
                           ) : o.status === "FAILED" ? (
-                            <span className="text-[11px] font-medium text-rose-400">Failed</span>
+                            <span className="text-[11px] font-medium text-rose-500 dark:text-rose-400">Failed</span>
                           ) : (
                             <span className="text-[11px] text-slate-500">—</span>
                           )}
@@ -930,7 +930,7 @@ export default function OrdersPage() {
         )
       ) : rows.length === 0 ? (
         /* ── Batches Empty State ── */
-        <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-12 text-center">
+        <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-12 text-center">
           {dateFilter.mode !== "all" ? (
             <EmptyState
               icon={Layers}
@@ -944,7 +944,7 @@ export default function OrdersPage() {
                     setDateFilter(getAllTimeRange());
                     setPage(1);
                   }}
-                  className="border-[#162740] bg-[#070d18] text-white hover:border-[#00df82]/40"
+                  className="border-slate-200 dark:border-[#162740] bg-white dark:bg-[#070d18] text-slate-800 dark:text-white hover:border-[#00df82]/40"
                 >
                   View All Time Batches
                 </Button>
@@ -968,7 +968,7 @@ export default function OrdersPage() {
                 key={b.id}
                 type="button"
                 onClick={() => openDetail(b.id)}
-                className="w-full rounded-2xl border border-[#162740] bg-[#0b1322] p-4 text-left shadow-sm transition active:scale-[0.99] hover:border-[#00df82]/40"
+                className="w-full rounded-2xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-4 text-left shadow-sm transition active:scale-[0.99] hover:border-[#00df82]/40"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
@@ -977,7 +977,7 @@ export default function OrdersPage() {
                   </div>
                   <div className="flex shrink-0 flex-col items-end gap-1">
                     <BatchStatusBadge status={b.status} />
-                    <span className="inline-flex rounded-lg bg-[#070d18] border border-[#162740] px-2 py-0.5 text-[10px] font-bold text-slate-300">
+                    <span className="inline-flex rounded-lg bg-slate-100 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740] px-2 py-0.5 text-[10px] font-bold text-slate-700 dark:text-slate-300">
                       {b.network}
                     </span>
                   </div>
@@ -986,13 +986,13 @@ export default function OrdersPage() {
                 <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
                   <div>
                     <span className="text-slate-500 uppercase text-[10px]">Recipients</span>
-                    <p className="font-bold text-white">
+                    <p className="font-bold text-slate-900 dark:text-white">
                       {b.stats.total || b.totalRecipients}
                     </p>
                   </div>
                   <div>
                     <span className="text-slate-500 uppercase text-[10px]">Total GB</span>
-                    <p className="font-bold text-white">{b.totalGb} GB</p>
+                    <p className="font-bold text-slate-900 dark:text-white">{b.totalGb} GB</p>
                   </div>
                   <div>
                     <span className="text-slate-500 uppercase text-[10px]">Value</span>
@@ -1015,10 +1015,10 @@ export default function OrdersPage() {
           </div>
 
           {/* Desktop table */}
-          <div className="hidden overflow-hidden rounded-2xl border border-[#162740] bg-[#0b1322] shadow-xl sm:block">
+          <div className="hidden overflow-hidden rounded-2xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] shadow-xl sm:block">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[760px] text-left text-sm">
-                <thead className="border-b border-[#162740] bg-[#070d18] text-xs font-bold uppercase tracking-wider text-slate-400">
+                <thead className="border-b border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   <tr>
                     <th className="px-5 py-3.5">Batch Code</th>
                     <th className="px-4 py-3.5">Network</th>
@@ -1030,12 +1030,12 @@ export default function OrdersPage() {
                     <th className="px-5 py-3.5 text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#162740]">
+                <tbody className="divide-y divide-slate-100 dark:divide-[#162740]">
                   {rows.map((b) => (
                     <tr
                       key={b.id}
                       onClick={() => openDetail(b.id)}
-                      className="cursor-pointer transition-colors hover:bg-white/[0.03]"
+                      className="cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-white/[0.03]"
                     >
                       <td className="px-5 py-3.5">
                         <p className="font-mono text-xs font-bold text-[#00df82]">
@@ -1044,14 +1044,14 @@ export default function OrdersPage() {
                         <p className="mt-0.5 text-xs text-slate-500 font-mono">Sent: {formatDateTime(b.createdAt)}</p>
                       </td>
                       <td className="px-4 py-3.5">
-                        <span className="inline-flex rounded-lg bg-[#070d18] border border-[#162740] px-2.5 py-1 text-xs font-bold text-slate-200">
+                        <span className="inline-flex rounded-lg bg-slate-100 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740] px-2.5 py-1 text-xs font-bold text-slate-700 dark:text-slate-200">
                           {b.network}
                         </span>
                       </td>
-                      <td className="px-4 py-3.5 font-bold text-white">
+                      <td className="px-4 py-3.5 font-bold text-slate-900 dark:text-white">
                         {b.stats.total || b.totalRecipients}
                       </td>
-                      <td className="px-4 py-3.5 font-bold text-white">
+                      <td className="px-4 py-3.5 font-bold text-slate-900 dark:text-white">
                         {b.totalGb} GB
                       </td>
                       <td className="px-4 py-3.5 font-mono font-black text-[#00df82]">
@@ -1078,7 +1078,7 @@ export default function OrdersPage() {
                             e.stopPropagation();
                             openDetail(b.id);
                           }}
-                          className="inline-flex items-center gap-1 rounded-lg border border-[#162740] bg-[#070d18] px-3 py-1 text-xs font-bold text-slate-200 transition hover:border-[#00df82]/40 hover:text-[#00df82]"
+                          className="inline-flex items-center gap-1 rounded-lg border border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#070d18] px-3 py-1 text-xs font-bold text-slate-700 dark:text-slate-200 transition hover:border-[#00df82]/40 hover:text-[#00df82]"
                         >
                           Details <ChevronRight className="h-3 w-3" />
                         </button>
@@ -1171,9 +1171,9 @@ export default function OrdersPage() {
               )}
             </div>
 
-            <div className="max-h-96 overflow-y-auto rounded-xl border border-[#162740] bg-[#070d18]">
+            <div className="max-h-96 overflow-y-auto rounded-xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#070d18]">
               {filteredModalOrders.length === 0 ? (
-                <div className="py-8 text-center text-xs text-slate-400 font-mono">
+                <div className="py-8 text-center text-xs text-slate-500 dark:text-slate-400 font-mono">
                   No orders in this batch match &quot;{batchSearch}&quot;.
                   <button
                     type="button"
@@ -1185,8 +1185,8 @@ export default function OrdersPage() {
                 </div>
               ) : (
                 <table className="w-full text-sm">
-                  <thead className="sticky top-0 bg-[#070d18] border-b border-[#162740]">
-                    <tr className="text-left text-xs font-bold uppercase tracking-wider text-slate-400">
+                  <thead className="sticky top-0 bg-slate-50 dark:bg-[#070d18] border-b border-slate-200 dark:border-[#162740]">
+                    <tr className="text-left text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                       <th className="px-3 py-2">Order</th>
                       <th className="px-3 py-2">Phone</th>
                       <th className="px-3 py-2">Size</th>
@@ -1195,17 +1195,17 @@ export default function OrdersPage() {
                       <th className="px-3 py-2 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#162740]">
+                  <tbody className="divide-y divide-slate-100 dark:divide-[#162740]">
                     {filteredModalOrders.map((o) => (
-                      <tr key={o.id} className="hover:bg-white/[0.03]">
+                      <tr key={o.id} className="hover:bg-slate-50 dark:hover:bg-white/[0.03]">
                         <td className="px-3 py-2 font-mono text-xs font-bold text-[#00df82]">{orderCode(o.id)}</td>
-                        <td className="px-3 py-2 font-mono font-bold text-white">{o.phoneNumber}</td>
-                        <td className="px-3 py-2 text-slate-200">{o.gbAmount} GB</td>
+                        <td className="px-3 py-2 font-mono font-bold text-slate-900 dark:text-white">{o.phoneNumber}</td>
+                        <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{o.gbAmount} GB</td>
                         <td className="px-3 py-2">
                           <StatusBadge status={o.status} />
                           {o.failureReason && (
                             <p
-                              className="mt-0.5 max-w-[150px] truncate text-[11px] text-rose-400"
+                              className="mt-0.5 max-w-[150px] truncate text-[11px] text-rose-500 dark:text-rose-400"
                               title={sanitizeCustomerRefundNote(o.failureReason, o.amount) ?? o.failureReason}
                             >
                               {sanitizeCustomerRefundNote(o.failureReason, o.amount)}

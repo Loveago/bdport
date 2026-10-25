@@ -63,7 +63,7 @@ export default function StorefrontIndexPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#060b13] text-slate-100 flex flex-col justify-between selection:bg-[#00df82] selection:text-[#041d14] overflow-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#060b13] text-slate-900 dark:text-slate-100 flex flex-col justify-between selection:bg-[#00df82] selection:text-[#041d14] overflow-hidden">
       {/* Ambient Neon Glow Lights */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-40 left-1/4 w-[750px] h-[550px] bg-gradient-to-tr from-[#00df82]/15 via-emerald-600/10 to-transparent blur-3xl opacity-70" />
@@ -72,15 +72,15 @@ export default function StorefrontIndexPage() {
       </div>
 
       {/* Top Navigation Bar */}
-      <header className="relative z-20 border-b border-[#162740] px-4 sm:px-8 py-4 backdrop-blur-xl bg-[#060b13]/85 sticky top-0">
+      <header className="relative z-20 border-b border-slate-200 dark:border-[#162740] px-4 sm:px-8 py-4 backdrop-blur-xl bg-white/85 dark:bg-[#060b13]/85 sticky top-0">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
             <BrandMark size="md" />
             <div className="flex flex-col">
-              <span className="text-base font-black tracking-tight text-white group-hover:text-[#00df82] transition-colors">
+              <span className="text-base font-black tracking-tight text-slate-900 dark:text-white group-hover:text-[#00df82] transition-colors">
                 BUNDLE PORTAL
               </span>
-              <span className="text-[10px] font-bold text-slate-400 tracking-wider">
+              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider">
                 STOREFRONTS &amp; MARKETPLACE
               </span>
             </div>
@@ -112,15 +112,15 @@ export default function StorefrontIndexPage() {
               Ghana&apos;s High-Speed Reseller Telecom Network
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.08]">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white leading-[1.08]">
               Connect to Any <br className="hidden sm:block" />
-              <span className="bg-gradient-to-r from-[#00df82] via-emerald-300 to-cyan-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#00df82] via-emerald-400 to-cyan-500 bg-clip-text text-transparent">
                 Merchant Storefront
               </span>{" "}
               Instantly.
             </h1>
 
-            <p className="text-slate-400 text-sm sm:text-base max-w-xl leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base max-w-xl leading-relaxed">
               Every verified merchant operates an automated digital shop with direct telecom switch integration.
               Select packages, pay with Mobile Money, and receive non-expiry SIM data in under 2 seconds.
             </p>
@@ -129,9 +129,9 @@ export default function StorefrontIndexPage() {
             <div className="pt-2 max-w-xl">
               <form
                 onSubmit={(e) => handleGoToStore(e)}
-                className="flex flex-col sm:flex-row items-stretch gap-2.5 bg-[#0b1322] border border-[#162740] rounded-2xl p-2.5 shadow-2xl backdrop-blur-xl focus-within:border-[#00df82] focus-within:ring-1 focus-within:ring-[#00df82]/40 transition-all"
+                className="flex flex-col sm:flex-row items-stretch gap-2.5 bg-white dark:bg-[#0b1322] border border-slate-200 dark:border-[#162740] rounded-2xl p-2.5 shadow-2xl backdrop-blur-xl focus-within:border-[#00df82] focus-within:ring-1 focus-within:ring-[#00df82]/40 transition-all"
               >
-                <div className="flex items-center flex-1 px-3 text-slate-400 text-sm">
+                <div className="flex items-center flex-1 px-3 text-slate-500 dark:text-slate-400 text-sm">
                   <span className="font-semibold text-[#00df82] select-none mr-2 flex items-center gap-1.5 shrink-0">
                     <Store className="h-4 w-4" />
                     {displayHost ? `${displayHost}/` : "store/"}
@@ -141,7 +141,7 @@ export default function StorefrontIndexPage() {
                     value={slugInput}
                     onChange={(e) => setSlugInput(e.target.value)}
                     placeholder="reseller-handle"
-                    className="w-full bg-transparent text-white placeholder:text-slate-500 focus:outline-none text-sm font-semibold"
+                    className="w-full bg-transparent text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none text-sm font-semibold"
                     required
                   />
                 </div>
@@ -155,8 +155,8 @@ export default function StorefrontIndexPage() {
               </form>
 
               {/* Sample / Quick handles */}
-              <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-400">
-                <span className="text-slate-500">Popular Stores:</span>
+              <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                <span className="text-slate-400 dark:text-slate-500">Popular Stores:</span>
                 {POPULAR_HANDLES.map((handle) => (
                   <button
                     key={handle}
@@ -165,7 +165,7 @@ export default function StorefrontIndexPage() {
                       setSlugInput(handle);
                       handleGoToStore(e, handle);
                     }}
-                    className="rounded-lg bg-white/5 hover:bg-[#00df82]/10 hover:text-[#00df82] hover:border-[#00df82]/30 border border-[#162740] px-2.5 py-1 text-slate-300 transition cursor-pointer font-mono text-[11px]"
+                    className="rounded-lg bg-slate-100 hover:bg-[#00df82]/10 hover:text-[#00df82] hover:border-[#00df82]/30 border border-slate-200 dark:bg-white/5 dark:border-[#162740] px-2.5 py-1 text-slate-700 dark:text-slate-300 transition cursor-pointer font-mono text-[11px]"
                   >
                     @{handle}
                   </button>
@@ -175,16 +175,16 @@ export default function StorefrontIndexPage() {
 
             {/* Carrier Status Bar */}
             <div className="pt-2 flex flex-wrap items-center gap-3">
-              <span className="text-xs font-semibold text-slate-400">Carrier Nodes:</span>
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-xs font-bold text-amber-400">
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Carrier Nodes:</span>
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-xs font-bold text-amber-500 dark:text-amber-400">
                 <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
                 MTN Ghana (Active)
               </div>
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-rose-500/25 bg-rose-500/10 px-3 py-1 text-xs font-bold text-rose-400">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-rose-500/25 bg-rose-500/10 px-3 py-1 text-xs font-bold text-rose-500 dark:text-rose-400">
                 <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
                 Telecel (Active)
               </div>
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/25 bg-sky-500/10 px-3 py-1 text-xs font-bold text-sky-400">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/25 bg-sky-500/10 px-3 py-1 text-xs font-bold text-sky-500 dark:text-sky-400">
                 <span className="h-1.5 w-1.5 rounded-full bg-sky-500" />
                 AirtelTigo (Active)
               </div>
@@ -193,18 +193,18 @@ export default function StorefrontIndexPage() {
 
           {/* Right Column: Live Simulated Dispatch Terminal */}
           <div className="lg:col-span-5">
-            <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-5 sm:p-6 shadow-2xl backdrop-blur-2xl relative overflow-hidden">
+            <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5 sm:p-6 shadow-2xl backdrop-blur-2xl relative overflow-hidden">
               <div className="pointer-events-none absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[#00df82]/15 blur-2xl" />
 
               {/* Terminal Title Bar */}
-              <div className="flex items-center justify-between pb-4 border-b border-[#162740]">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-[#162740]">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1.5">
                     <span className="h-2.5 w-2.5 rounded-full bg-red-500/80" />
                     <span className="h-2.5 w-2.5 rounded-full bg-amber-500/80" />
                     <span className="h-2.5 w-2.5 rounded-full bg-[#00df82]" />
                   </div>
-                  <span className="text-xs font-mono font-bold text-slate-300 ml-2 flex items-center gap-1.5">
+                  <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 ml-2 flex items-center gap-1.5">
                     <Terminal className="h-3.5 w-3.5 text-[#00df82]" />
                     telecom-dispatch.live
                   </span>
@@ -217,7 +217,7 @@ export default function StorefrontIndexPage() {
 
               {/* Terminal Content: Live Feed */}
               <div className="mt-4 space-y-3">
-                <div className="text-[11px] font-mono text-slate-400 flex items-center justify-between pb-1">
+                <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 flex items-center justify-between pb-1">
                   <span>REAL-TIME SIM FULFILLMENT STREAM</span>
                   <span className="text-[#00df82]">PULSE: OK</span>
                 </div>
@@ -225,12 +225,12 @@ export default function StorefrontIndexPage() {
                 {LIVE_DISPATCHES.map((item, idx) => (
                   <div
                     key={idx}
-                    className="rounded-xl border border-[#162740] bg-[#070d18] p-3 space-y-1.5 hover:border-[#00df82]/40 transition-colors"
+                    className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] p-3 space-y-1.5 hover:border-[#00df82]/40 transition-colors"
                   >
                     <div className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2">
-                        <span className="font-extrabold text-white">{item.network}</span>
-                        <span className="text-slate-400 font-mono text-[11px]">{item.bundle}</span>
+                        <span className="font-extrabold text-slate-900 dark:text-white">{item.network}</span>
+                        <span className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">{item.bundle}</span>
                       </div>
                       <span className="text-[10px] font-semibold text-[#00df82] bg-[#00df82]/10 border border-[#00df82]/20 px-2 py-0.5 rounded-md">
                         {item.status} ({item.latency})
@@ -245,7 +245,7 @@ export default function StorefrontIndexPage() {
               </div>
 
               {/* Terminal Summary Card */}
-              <div className="mt-4 pt-3 border-t border-[#162740] flex items-center justify-between text-xs text-slate-400">
+              <div className="mt-4 pt-3 border-t border-slate-200 dark:border-[#162740] flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                 <span className="flex items-center gap-1.5">
                   <Cpu className="h-3.5 w-3.5 text-[#00df82]" />
                   Direct Multi-SIM Daemon
@@ -259,7 +259,7 @@ export default function StorefrontIndexPage() {
         {/* Asymmetrical Bento Platform Grid */}
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Bento Card 1: Direct Carrier Pipeline */}
-          <div className="md:col-span-2 rounded-3xl border border-[#162740] bg-[#0b1322] p-6 sm:p-8 backdrop-blur-xl space-y-4 hover:border-[#00df82]/30 transition-all group">
+          <div className="md:col-span-2 rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 sm:p-8 backdrop-blur-xl space-y-4 hover:border-[#00df82]/30 transition-all group">
             <div className="flex items-center justify-between">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#00df82]/10 text-[#00df82] border border-[#00df82]/20 group-hover:scale-105 transition-transform">
                 <Zap className="h-5 w-5" />
@@ -269,39 +269,39 @@ export default function StorefrontIndexPage() {
               </span>
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white group-hover:text-[#00df82] transition-colors">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-[#00df82] transition-colors">
                 Instant Automated Dispatch Engine
               </h3>
-              <p className="mt-2 text-sm text-slate-400 leading-relaxed max-w-xl">
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
                 Unlike legacy manual resellers, storefronts on Bundle Portal trigger immediate automated packet dispatches directly upon payment confirmation. Bundles land on recipient SIM cards without delay.
               </p>
             </div>
             <div className="grid grid-cols-3 gap-2 pt-2 text-center text-xs">
-              <div className="rounded-xl border border-[#162740] bg-[#070d18] p-2.5">
-                <div className="font-extrabold text-amber-400 text-base">MTN</div>
-                <div className="text-[10px] text-slate-400">4G/5G Non-Expiry</div>
+              <div className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] p-2.5">
+                <div className="font-extrabold text-amber-500 dark:text-amber-400 text-base">MTN</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400">4G/5G Non-Expiry</div>
               </div>
-              <div className="rounded-xl border border-[#162740] bg-[#070d18] p-2.5">
-                <div className="font-extrabold text-rose-400 text-base">Telecel</div>
-                <div className="text-[10px] text-slate-400">Official Bundles</div>
+              <div className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] p-2.5">
+                <div className="font-extrabold text-rose-500 dark:text-rose-400 text-base">Telecel</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400">Official Bundles</div>
               </div>
-              <div className="rounded-xl border border-[#162740] bg-[#070d18] p-2.5">
-                <div className="font-extrabold text-sky-400 text-base">AirtelTigo</div>
-                <div className="text-[10px] text-slate-400">Fast Data Delivery</div>
+              <div className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] p-2.5">
+                <div className="font-extrabold text-sky-500 dark:text-sky-400 text-base">AirtelTigo</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400">Fast Data Delivery</div>
               </div>
             </div>
           </div>
 
           {/* Bento Card 2: Track Orders Directly */}
-          <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-6 sm:p-8 backdrop-blur-xl space-y-4 hover:border-[#00df82]/30 transition-all group flex flex-col justify-between">
+          <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 sm:p-8 backdrop-blur-xl space-y-4 hover:border-[#00df82]/30 transition-all group flex flex-col justify-between">
             <div className="space-y-4">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#00df82]/10 text-[#00df82] border border-[#00df82]/20 group-hover:scale-105 transition-transform">
                 <Search className="h-5 w-5" />
               </div>
-              <h3 className="text-xl font-bold text-white group-hover:text-[#00df82] transition-colors">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-[#00df82] transition-colors">
                 Track Existing Purchases
               </h3>
-              <p className="text-sm text-slate-400 leading-relaxed">
+              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                 Have an ongoing order? Track carrier delivery status anytime with your phone number or Paystack payment reference.
               </p>
             </div>
@@ -315,17 +315,17 @@ export default function StorefrontIndexPage() {
       </main>
 
       {/* Global Footer */}
-      <footer className="relative z-10 border-t border-[#162740] px-4 sm:px-8 py-6 backdrop-blur-md bg-[#060b13]/85 text-xs text-slate-500">
+      <footer className="relative z-10 border-t border-slate-200 dark:border-[#162740] px-4 sm:px-8 py-6 backdrop-blur-md bg-white/85 dark:bg-[#060b13]/85 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-2 text-slate-400">
+          <div className="flex flex-wrap items-center gap-2 text-slate-500 dark:text-slate-400">
             <div className="flex h-5 w-5 items-center justify-center rounded-md bg-[#00df82]/20 text-[#00df82]">
               <Store className="h-3 w-3" />
             </div>
-            <span className="font-semibold text-slate-300">Bundle Portal Storefronts © {new Date().getFullYear()}</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-300">Bundle Portal Storefronts © {new Date().getFullYear()}</span>
             <span>·</span>
-            <span className="text-slate-400">Stay Connected · Stay Ahead</span>
+            <span className="text-slate-500 dark:text-slate-400">Stay Connected · Stay Ahead</span>
           </div>
-          <div className="flex flex-wrap items-center gap-3 text-slate-400">
+          <div className="flex flex-wrap items-center gap-3 text-slate-500 dark:text-slate-400">
             <Link href="/terms" className="hover:text-[#00df82] transition-colors">
               Terms
             </Link>

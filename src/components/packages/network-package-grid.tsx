@@ -193,7 +193,7 @@ export function NetworkPackageGrid({ groups }: { groups: PackageGroup[] }) {
                 <Percent className="h-4 w-4 text-[#00df82]" />
                 Simulate Your Storefront Retail Margin
               </p>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                 Adjust the profit slider to preview your expected buyer pricing and retail profit per bundle.
               </p>
             </div>
@@ -207,7 +207,7 @@ export function NetworkPackageGrid({ groups }: { groups: PackageGroup[] }) {
                     "rounded-lg px-2.5 py-1 text-xs font-mono font-bold transition cursor-pointer",
                     markupPercent === p
                       ? "bg-[#00df82] text-[#041d14]"
-                      : "bg-[#0b1322] border border-[#162740] text-slate-300 hover:text-white"
+                      : "bg-white dark:bg-[#0b1322] border border-slate-200 dark:border-[#162740] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
                   )}
                 >
                   +{p}%

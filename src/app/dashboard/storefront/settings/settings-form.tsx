@@ -168,20 +168,20 @@ export function StorefrontSettingsForm({
   }
 
   const inputCls =
-    "h-10 w-full rounded-xl border border-[#162740] bg-[#070d18] px-3.5 font-mono text-xs text-white placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none";
+    "h-10 w-full rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3.5 font-mono text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none";
 
   return (
     <div className="space-y-6">
       {/* Store Address / Slug Card */}
-      <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-6 shadow-xl">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-[#162740] pb-4">
+      <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 shadow-xl">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 dark:border-[#162740] pb-4">
           <div className="flex items-center gap-3">
             <div className="rounded-xl border border-[#00df82]/30 bg-[#00df82]/10 p-2.5 text-[#00df82]">
               <Globe className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-sm font-black uppercase tracking-wider text-white">Public Storefront Slug</h2>
-              <p className="text-xs text-slate-400">
+              <h2 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">Public Storefront Slug</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Your exclusive domain slug for customer checkouts and shareable storefront links.
               </p>
             </div>
@@ -192,7 +192,7 @@ export function StorefrontSettingsForm({
               href={liveStoreUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#162740] bg-[#070d18] px-3.5 py-2 text-xs font-bold text-slate-200 hover:border-[#00df82]/40 hover:text-white transition"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3.5 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-[#00df82]/40 hover:text-slate-900 dark:hover:text-white transition"
             >
               <ExternalLink className="h-3.5 w-3.5 text-[#00df82]" />
               Visit Store
@@ -222,12 +222,12 @@ export function StorefrontSettingsForm({
 
         <form onSubmit={saveSlug} className="mt-5 space-y-3">
           <div>
-            <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-400">
+            <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Customize Web Slug
             </label>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-              <div className="flex min-h-10 flex-1 items-stretch overflow-hidden rounded-xl border border-[#162740] bg-[#070d18] focus-within:border-[#00df82]">
-                <span className="flex items-center bg-[#060b13] px-3.5 text-xs font-mono font-bold text-slate-500 select-none border-r border-[#162740]">
+              <div className="flex min-h-10 flex-1 items-stretch overflow-hidden rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] focus-within:border-[#00df82]">
+                <span className="flex items-center bg-slate-100 dark:bg-[#060b13] px-3.5 text-xs font-mono font-bold text-slate-500 select-none border-r border-slate-200 dark:border-[#162740]">
                   {cleanDomainStr.startsWith("localhost") || cleanDomainStr.startsWith("127.0.0.1")
                     ? `http://${cleanDomainStr}/store/`
                     : `https://${cleanDomainStr}/`}
@@ -238,7 +238,7 @@ export function StorefrontSettingsForm({
                   onChange={handleSlugChange}
                   placeholder="kofi-bundles"
                   maxLength={32}
-                  className="flex-1 bg-transparent px-3 py-2 font-mono text-xs font-bold text-white placeholder:text-slate-600 focus:outline-none"
+                  className="flex-1 bg-transparent px-3 py-2 font-mono text-xs font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none"
                 />
               </div>
               <button
@@ -284,63 +284,63 @@ export function StorefrontSettingsForm({
       )}
 
       {/* Store Profile Form */}
-      <form onSubmit={saveProfile} className="space-y-4 rounded-3xl border border-[#162740] bg-[#0b1322] p-6 shadow-xl">
-        <div className="flex items-center gap-3 border-b border-[#162740] pb-4">
+      <form onSubmit={saveProfile} className="space-y-4 rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 shadow-xl">
+        <div className="flex items-center gap-3 border-b border-slate-200 dark:border-[#162740] pb-4">
           <div className="rounded-xl border border-[#00df82]/30 bg-[#00df82]/10 p-2.5 text-[#00df82]">
             <Building2 className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-sm font-black uppercase tracking-wider text-white">Storefront Branding &amp; Customer Support</h2>
-            <p className="text-xs text-slate-400">Information displayed on your public customer checkout interface.</p>
+            <h2 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">Storefront Branding &amp; Customer Support</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Information displayed on your public customer checkout interface.</p>
           </div>
         </div>
 
         <div>
-          <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">Store Brand Name</label>
+          <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Store Brand Name</label>
           <input value={form.name} onChange={set("name")} placeholder="Kofi Express Bundles" required className={inputCls} />
         </div>
 
         <div>
-          <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">Storefront Bio Description</label>
+          <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Storefront Bio Description</label>
           <textarea
             value={form.description}
             onChange={set("description")}
             placeholder="Affordable non-expiry MTN, Telecel, and AirtelTigo data bundles with automated MoMo processing."
             rows={2}
-            className="w-full rounded-xl border border-[#162740] bg-[#070d18] px-3.5 py-2 font-mono text-xs text-white placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none"
+            className="w-full rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3.5 py-2 font-mono text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none"
           />
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">Primary Contact Phone</label>
+            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Primary Contact Phone</label>
             <input value={form.phone} onChange={set("phone")} placeholder="0241234567" inputMode="tel" className={inputCls} />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">WhatsApp Community Group Link</label>
+            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">WhatsApp Community Group Link</label>
             <input value={form.whatsappGroupLink} onChange={set("whatsappGroupLink")} placeholder="https://chat.whatsapp.com/..." className={inputCls} />
           </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">Customer Support WhatsApp</label>
+            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Customer Support WhatsApp</label>
             <input value={form.whatsapp} onChange={set("whatsapp")} placeholder="0241234567" inputMode="tel" className={inputCls} />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">Location Tag (Optional)</label>
+            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Location Tag (Optional)</label>
             <input value={form.location} onChange={set("location")} placeholder="Accra, Ghana" className={inputCls} />
           </div>
         </div>
 
         {/* Floating WhatsApp Bubble Config */}
-        <div className="rounded-2xl border border-[#162740] bg-[#070d18] p-4.5">
-          <p className="mb-3 text-xs font-black uppercase tracking-wider text-white">
+        <div className="rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50/70 dark:bg-[#070d18] p-4.5">
+          <p className="mb-3 text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
             Floating WhatsApp Support Pill
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs text-slate-400">Bubble Tooltip Text</label>
+              <label className="mb-1 block text-xs text-slate-500 dark:text-slate-400">Bubble Tooltip Text</label>
               <input
                 value={form.contactText}
                 onChange={set("contactText")}
@@ -350,7 +350,7 @@ export function StorefrontSettingsForm({
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-slate-400">Button Label</label>
+              <label className="mb-1 block text-xs text-slate-500 dark:text-slate-400">Button Label</label>
               <input
                 value={form.whatsappLabel}
                 onChange={set("whatsappLabel")}
@@ -363,11 +363,11 @@ export function StorefrontSettingsForm({
         </div>
 
         {/* Marquee Notice Banner Config */}
-        <div className="rounded-2xl border border-[#162740] bg-[#070d18] p-4.5 space-y-3">
+        <div className="rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50/70 dark:bg-[#070d18] p-4.5 space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Megaphone className="h-4 w-4 text-[#00df82]" />
-              <h3 className="text-xs font-black uppercase tracking-wider text-white">
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
                 Storefront Marquee Notice Banner
               </h3>
             </div>
@@ -375,7 +375,7 @@ export function StorefrontSettingsForm({
               <button
                 type="button"
                 onClick={() => setForm((f) => ({ ...f, notice: "" }))}
-                className="text-xs font-bold text-red-400 hover:underline"
+                className="text-xs font-bold text-red-500 dark:text-red-400 hover:underline"
               >
                 Clear Notice
               </button>
@@ -383,7 +383,7 @@ export function StorefrontSettingsForm({
           </div>
 
           <div>
-            <label className="mb-1 block text-xs text-slate-400">
+            <label className="mb-1 block text-xs text-slate-500 dark:text-slate-400">
               Notice Text ({form.notice.length}/300 characters)
             </label>
             <input
@@ -397,15 +397,15 @@ export function StorefrontSettingsForm({
 
           {/* Live Preview */}
           <div>
-            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Live Preview
             </span>
-            <div className="rounded-xl border border-[#162740] bg-[#060b13] px-4 py-2.5">
-              <div className="flex items-center justify-center gap-2 text-xs font-medium text-white">
+            <div className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#060b13] px-4 py-2.5">
+              <div className="flex items-center justify-center gap-2 text-xs font-medium text-slate-900 dark:text-white">
                 <span className="rounded-full border border-[#00df82]/40 bg-[#00df82]/20 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#00df82]">
                   ALERT
                 </span>
-                <span className="truncate text-slate-300">
+                <span className="truncate text-slate-700 dark:text-slate-300">
                   {form.notice.trim() || "⚡ Fast MoMo checkout — bundles delivered instantly to any network."}
                 </span>
               </div>
@@ -416,7 +416,7 @@ export function StorefrontSettingsForm({
           <div>
             <div className="flex items-center gap-1.5 mb-2">
               <Sparkles className="h-3.5 w-3.5 text-[#00df82]" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Preset Marquee Templates
               </span>
             </div>
@@ -432,7 +432,7 @@ export function StorefrontSettingsForm({
                   key={idx}
                   type="button"
                   onClick={() => setForm((f) => ({ ...f, notice: tmpl }))}
-                  className="rounded-lg border border-[#162740] bg-[#060b13] px-2.5 py-1 text-left text-[11px] text-slate-300 hover:border-[#00df82]/40 hover:text-white transition"
+                  className="rounded-lg border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#060b13] px-2.5 py-1 text-left text-[11px] text-slate-700 dark:text-slate-300 hover:border-[#00df82]/40 hover:text-slate-900 dark:hover:text-white transition"
                 >
                   {tmpl}
                 </button>
@@ -442,17 +442,17 @@ export function StorefrontSettingsForm({
         </div>
 
         {/* Customer Reviews Feature Toggle */}
-        <div className="rounded-2xl border border-[#162740] bg-[#070d18] p-4.5 space-y-3">
+        <div className="rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50/70 dark:bg-[#070d18] p-4.5 space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
-              <div className={`p-2 rounded-xl border transition-colors ${form.reviewsEnabled ? "border-amber-400/30 bg-amber-400/10 text-amber-400" : "border-slate-700 bg-slate-800 text-slate-500"}`}>
+              <div className={`p-2 rounded-xl border transition-colors ${form.reviewsEnabled ? "border-amber-400/30 bg-amber-400/10 text-amber-500 dark:text-amber-400" : "border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500"}`}>
                 <Star className={`h-4 w-4 ${form.reviewsEnabled ? "fill-current" : ""}`} />
               </div>
               <div>
-                <h3 className="text-xs font-black uppercase tracking-wider text-white">
+                <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
                   Customer Reviews &amp; Testimonials
                 </h3>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
                   Allow customers to view verified customer ratings and submit feedback on your public storefront.
                 </p>
               </div>
@@ -462,13 +462,13 @@ export function StorefrontSettingsForm({
               type="button"
               onClick={() => setForm((f) => ({ ...f, reviewsEnabled: !f.reviewsEnabled }))}
               className={`relative inline-flex h-7 w-13 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                form.reviewsEnabled ? "bg-[#00df82]" : "bg-slate-700"
+                form.reviewsEnabled ? "bg-[#00df82]" : "bg-slate-300 dark:bg-slate-700"
               }`}
               role="switch"
               aria-checked={form.reviewsEnabled}
             >
               <span
-                className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-[#060b13] shadow-lg ring-0 transition duration-200 ease-in-out ${
+                className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white dark:bg-[#060b13] shadow-lg ring-0 transition duration-200 ease-in-out ${
                   form.reviewsEnabled ? "translate-x-6" : "translate-x-0"
                 }`}
               />
@@ -476,15 +476,15 @@ export function StorefrontSettingsForm({
           </div>
 
           <div className="flex items-center gap-2 pt-1 text-[11px]">
-            <span className="text-slate-400">Public visibility:</span>
+            <span className="text-slate-500 dark:text-slate-400">Public visibility:</span>
             {form.reviewsEnabled ? (
               <span className="font-bold text-[#00df82] flex items-center gap-1">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#00df82]" />
                 Enabled — ⭐ Reviews tab is visible on storefront
               </span>
             ) : (
-              <span className="font-bold text-slate-400 flex items-center gap-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-slate-500" />
+              <span className="font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-slate-400 dark:bg-slate-500" />
                 Disabled — Reviews tab is hidden from storefront
               </span>
             )}
@@ -501,24 +501,24 @@ export function StorefrontSettingsForm({
       </form>
 
       {/* Default MoMo Payout Form */}
-      <form onSubmit={savePayout} className="space-y-4 rounded-3xl border border-[#162740] bg-[#0b1322] p-6 shadow-xl">
-        <div className="flex items-center gap-3 border-b border-[#162740] pb-4">
+      <form onSubmit={savePayout} className="space-y-4 rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 shadow-xl">
+        <div className="flex items-center gap-3 border-b border-slate-200 dark:border-[#162740] pb-4">
           <div className="rounded-xl border border-[#00df82]/30 bg-[#00df82]/10 p-2.5 text-[#00df82]">
             <Wallet className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-sm font-black uppercase tracking-wider text-white">Default MoMo Settlement Coordinates</h2>
-            <p className="text-xs text-slate-400">These details auto-fill whenever you submit a profit cash-out request.</p>
+            <h2 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">Default MoMo Settlement Coordinates</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">These details auto-fill whenever you submit a profit cash-out request.</p>
           </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">Mobile Money Provider</label>
+            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Mobile Money Provider</label>
             <select
               value={form.payoutNetwork}
               onChange={set("payoutNetwork")}
-              className="h-10 w-full rounded-xl border border-[#162740] bg-[#070d18] px-3.5 text-xs font-bold text-white focus:border-[#00df82] focus:outline-none"
+              className="h-10 w-full rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3.5 text-xs font-bold text-slate-900 dark:text-white focus:border-[#00df82] focus:outline-none [&>option]:bg-white dark:[&>option]:bg-[#070d18] [&>option]:text-slate-900 dark:[&>option]:text-white"
             >
               <option value="MTN">MTN MoMo</option>
               <option value="TELECEL">Telecel Cash</option>
@@ -526,13 +526,13 @@ export function StorefrontSettingsForm({
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">Subscriber MoMo Number</label>
+            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Subscriber MoMo Number</label>
             <input value={form.payoutNumber} onChange={set("payoutNumber")} placeholder="0241234567" inputMode="tel" className={inputCls} />
           </div>
         </div>
 
         <div>
-          <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">Registered Account Name</label>
+          <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Registered Account Name</label>
           <input value={form.payoutAccountName} onChange={set("payoutAccountName")} placeholder="Official Account Name" className={inputCls} />
         </div>
 

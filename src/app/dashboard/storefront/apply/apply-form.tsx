@@ -63,16 +63,16 @@ export function StoreApplyForm({
   }
 
   const inputCls =
-    "h-11 w-full rounded-xl border border-[#162740] bg-[#070d18] px-3.5 font-mono text-xs text-white placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none";
+    "h-11 w-full rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3.5 font-mono text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none";
 
   if (done) {
     return (
       <div className="mt-6 rounded-3xl border border-[#00df82]/30 bg-[#00df82]/10 p-8 text-center shadow-xl">
         <CheckCircle2 className="mx-auto h-10 w-10 text-[#00df82]" />
-        <p className="mt-3 text-sm font-black uppercase tracking-wider text-white">
+        <p className="mt-3 text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
           Application Ingested Successfully!
         </p>
-        <p className="mt-1 text-xs text-slate-300">
+        <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
           Re-routing to application verification telemetry…
         </p>
       </div>
@@ -85,19 +85,19 @@ export function StoreApplyForm({
     whatsappGroupLink.trim().length >= 5;
 
   return (
-    <form onSubmit={submit} className="mt-6 space-y-4 rounded-3xl border border-[#162740] bg-[#0b1322] p-6 shadow-xl">
+    <form onSubmit={submit} className="mt-6 space-y-4 rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 shadow-xl">
       {rejected && (
-        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-xs text-red-300">
-          <p className="flex items-center gap-2 font-bold text-red-200">
+        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-xs text-red-600 dark:text-red-300">
+          <p className="flex items-center gap-2 font-bold text-red-700 dark:text-red-200">
             <AlertCircle className="h-4 w-4" /> Previous submission was not approved
           </p>
           {rejectionNote && <p className="mt-1 font-mono">Feedback: {rejectionNote}</p>}
-          <p className="mt-1 text-slate-400">You may recalibrate and submit an updated application below.</p>
+          <p className="mt-1 text-slate-500 dark:text-slate-400">You may recalibrate and submit an updated application below.</p>
         </div>
       )}
 
       <div>
-        <label htmlFor="storeName" className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">
+        <label htmlFor="storeName" className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           Storefront Brand Name <span className="text-[#00df82]">*</span>
         </label>
         <input
@@ -116,7 +116,7 @@ export function StoreApplyForm({
       </div>
 
       <div>
-        <label htmlFor="contactNumber" className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">
+        <label htmlFor="contactNumber" className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           Primary Contact Phone <span className="text-[#00df82]">*</span>
         </label>
         <input
@@ -133,7 +133,7 @@ export function StoreApplyForm({
       </div>
 
       <div>
-        <label htmlFor="whatsappGroupLink" className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">
+        <label htmlFor="whatsappGroupLink" className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           WhatsApp Community Link <span className="text-[#00df82]">*</span>
         </label>
         <input
@@ -150,7 +150,7 @@ export function StoreApplyForm({
       </div>
 
       <div>
-        <label htmlFor="storeDesc" className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">
+        <label htmlFor="storeDesc" className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           Storefront Description <span className="font-normal text-slate-500">(optional)</span>
         </label>
         <textarea
@@ -160,7 +160,7 @@ export function StoreApplyForm({
           placeholder="Tell buyers about your fast non-expiry data bundles"
           rows={3}
           maxLength={600}
-          className="w-full rounded-xl border border-[#162740] bg-[#070d18] px-3.5 py-2 font-mono text-xs text-white placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none"
+          className="w-full rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3.5 py-2 font-mono text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none"
         />
       </div>
 

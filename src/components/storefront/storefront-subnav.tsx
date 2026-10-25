@@ -29,7 +29,7 @@ export function StorefrontSubnav() {
   }, [pendingHref]);
 
   return (
-    <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none rounded-2xl border border-[#162740] bg-[#0b1322] p-1.5 text-xs font-bold shadow-xl backdrop-blur-xl">
+    <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none rounded-2xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-1.5 text-xs font-bold shadow-xl backdrop-blur-xl">
       {SUBNAV_ITEMS.map((item) => {
         const active = item.exact
           ? pathname === item.href
@@ -55,8 +55,8 @@ export function StorefrontSubnav() {
               active
                 ? "bg-[#00df82] text-[#060b13] font-black shadow-[0_0_15px_rgba(0,223,130,0.35)]"
                 : isPending
-                ? "bg-[#111e33] text-white opacity-90 animate-pulse border border-[#162740]"
-                : "text-slate-400 hover:text-white hover:bg-[#111e33]"
+                ? "bg-slate-100 dark:bg-[#111e33] text-slate-900 dark:text-white opacity-90 animate-pulse border border-slate-200 dark:border-[#162740]"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111e33]"
             )}
           >
             {isPending ? (

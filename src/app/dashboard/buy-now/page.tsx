@@ -221,7 +221,7 @@ export default function BuyNowPage() {
   return (
     <div className="space-y-6">
       {/* ── HIGH-TECH CONSOLE HEADER ────────────────────────────────────────── */}
-      <div className="relative overflow-hidden rounded-3xl border border-[#162740] bg-[#0b1322] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5 sm:p-6 shadow-sm backdrop-blur-xl">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
@@ -240,13 +240,13 @@ export default function BuyNowPage() {
           </div>
 
           {/* Quick Balance Status HUD */}
-          <div className="flex items-center gap-3 rounded-2xl border border-[#162740] bg-[#070d18] px-4 py-2.5">
+          <div className="flex items-center gap-3 rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-4 py-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#00df82]/15 text-[#00df82]">
               <CreditCard className="h-4 w-4" />
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Available Balance</p>
-              <p className="text-sm font-black text-white font-mono">{formatGHS(balance)}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Available Balance</p>
+              <p className="text-sm font-black text-slate-900 dark:text-white font-mono">{formatGHS(balance)}</p>
             </div>
           </div>
         </div>
@@ -297,7 +297,7 @@ export default function BuyNowPage() {
                   "relative rounded-2xl border p-2.5 sm:p-4 text-left transition-all overflow-hidden cursor-pointer",
                   active
                     ? conf.borderActive
-                    : "border-[#162740] bg-[#0b1322] hover:border-slate-600 dark:hover:border-[#1e3555]"
+                    : "border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] hover:border-slate-300 dark:hover:border-[#1e3555]"
                 )}
               >
                 {/* Active Indicator Bar */}
@@ -318,13 +318,13 @@ export default function BuyNowPage() {
                       {conf.label}
                     </span>
                   </div>
-                  <span className="hidden sm:inline-block text-[10px] font-mono font-bold text-slate-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-md">
+                  <span className="hidden sm:inline-block text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 px-2 py-0.5 rounded-md">
                     {conf.latency}
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-400 text-[10px] sm:text-[11px] truncate">{conf.sub}</span>
+                  <span className="text-slate-500 dark:text-slate-400 text-[10px] sm:text-[11px] truncate">{conf.sub}</span>
                   <span
                     className="hidden sm:inline-block text-[10px] font-black tracking-wider uppercase px-2 py-0.5 rounded-full"
                     style={{
@@ -361,10 +361,10 @@ export default function BuyNowPage() {
                     type="button"
                     onClick={() => setFilter(t.id as any)}
                     className={cn(
-                      "rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all whitespace-nowrap",
+                      "rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all whitespace-nowrap cursor-pointer",
                       active
                         ? "bg-[#00df82] text-[#041d14] font-black shadow-[0_0_15px_rgba(0,223,130,0.3)]"
-                        : "border border-[#162740] bg-[#0b1322] text-slate-400 hover:text-white hover:bg-[#111e33]"
+                        : "border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#111e33]"
                     )}
                   >
                     {t.label}
@@ -372,7 +372,7 @@ export default function BuyNowPage() {
                 );
               })}
             </div>
-            <span className="text-[11px] font-mono text-slate-400 shrink-0">
+            <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 shrink-0">
               {filteredPackages.length} package{filteredPackages.length === 1 ? "" : "s"}
             </span>
           </div>
@@ -385,7 +385,7 @@ export default function BuyNowPage() {
                 <span className="text-xs font-mono text-slate-400">Querying carrier catalogs...</span>
               </div>
             ) : filteredPackages.length === 0 ? (
-              <div className="col-span-full py-12 text-center text-xs text-slate-400 rounded-3xl border border-[#162740] p-6 bg-[#0b1322]">
+              <div className="col-span-full py-12 text-center text-xs text-slate-500 dark:text-slate-400 rounded-3xl border border-slate-200 dark:border-[#162740] p-6 bg-white dark:bg-[#0b1322]">
                 No packages match this capacity filter. Switch filters to view more sizes.
               </div>
             ) : (
@@ -400,10 +400,10 @@ export default function BuyNowPage() {
                     type="button"
                     onClick={() => setSelectedPackage(pkg)}
                     className={cn(
-                      "relative rounded-2xl border p-4 text-left transition-all flex flex-col justify-between gap-4 group cursor-pointer",
+                      "relative rounded-2xl border p-4 text-left transition-all flex flex-col justify-between gap-4 group cursor-pointer shadow-xs",
                       isSelected
                         ? "border-[#00df82] bg-[#00df82]/[0.08] ring-1 ring-[#00df82]/50 shadow-[0_0_20px_rgba(0,223,130,0.15)]"
-                        : "border-[#162740] bg-[#0b1322] hover:border-[#1e3555] hover:bg-[#111e33]"
+                        : "border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] hover:border-slate-300 dark:hover:border-[#1e3555] hover:bg-slate-50/80 dark:hover:bg-[#111e33]"
                     )}
                   >
                     {/* Top Row: GB Capacity & Never Expires Tag */}
@@ -419,10 +419,10 @@ export default function BuyNowPage() {
                           {pkg.gbAmount}G
                         </span>
                         <div>
-                          <p className="text-sm font-black text-white group-hover:text-[#00df82] transition-colors">
+                          <p className="text-sm font-black text-slate-900 dark:text-white group-hover:text-[#00df82] transition-colors">
                             {pkg.gbAmount} GB
                           </p>
-                          <p className="text-[10px] text-slate-400">Non-Expiry</p>
+                          <p className="text-[10px] text-slate-500 dark:text-slate-400">Non-Expiry</p>
                         </div>
                       </div>
 
@@ -431,7 +431,7 @@ export default function BuyNowPage() {
                           <Check className="h-3 w-3 stroke-[3]" />
                         </span>
                       ) : (
-                        <span className="text-[10px] font-mono text-slate-500 uppercase">
+                        <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase">
                           READY
                         </span>
                       )}
@@ -439,7 +439,7 @@ export default function BuyNowPage() {
 
                     {/* Middle Info */}
                     <div className="space-y-1">
-                      <p className="text-xs font-semibold text-slate-300 truncate">
+                      <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate">
                         {pkg.name || `${conf.label} ${pkg.gbAmount}GB`}
                       </p>
                       <p className="text-[11px] text-slate-500 flex items-center gap-1">
@@ -448,9 +448,9 @@ export default function BuyNowPage() {
                     </div>
 
                     {/* Bottom Pricing Row */}
-                    <div className="pt-2 border-t border-[#162740] flex items-center justify-between w-full">
+                    <div className="pt-2 border-t border-slate-200 dark:border-[#162740] flex items-center justify-between w-full">
                       <div>
-                        <span className="text-[9px] uppercase font-bold text-slate-500 block">
+                        <span className="text-[9px] uppercase font-bold text-slate-400 dark:text-slate-500 block">
                           WHOLESALE RATE
                         </span>
                         <span className="text-base font-black text-[#00df82] font-mono">
@@ -462,7 +462,7 @@ export default function BuyNowPage() {
                           "rounded-lg px-2 py-1 text-[10px] font-bold transition",
                           isSelected
                             ? "bg-[#00df82] text-[#041d14]"
-                            : "bg-white/5 text-slate-300 group-hover:bg-[#00df82]/20 group-hover:text-[#00df82]"
+                            : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 group-hover:bg-[#00df82]/20 group-hover:text-[#00df82]"
                         )}
                       >
                         {isSelected ? "Selected" : "Select"}
@@ -479,12 +479,12 @@ export default function BuyNowPage() {
         <div className="lg:col-span-4 sticky top-20 space-y-4">
           <form
             onSubmit={handleBuyNow}
-            className="rounded-3xl border border-[#162740] bg-[#0b1322] p-6 shadow-2xl space-y-5"
+            className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 shadow-xl space-y-5"
           >
-            <div className="flex items-center justify-between pb-3 border-b border-[#162740]">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#162740]">
               <div className="flex items-center gap-2">
                 <Smartphone className="h-4 w-4 text-[#00df82]" />
-                <h2 className="text-sm font-black text-white uppercase tracking-wider">
+                <h2 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
                   Dispatch Command
                 </h2>
               </div>
@@ -496,7 +496,7 @@ export default function BuyNowPage() {
             {/* Recipient Phone Input with Carrier Auto-Detection */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-[11px] font-black uppercase tracking-wider text-slate-400">
+                <label className="text-[11px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   Recipient SIM Number
                 </label>
                 {detectedCarrier && (
@@ -507,7 +507,7 @@ export default function BuyNowPage() {
                 )}
               </div>
               <div className="relative">
-                <Phone className="h-4 w-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Phone className="h-4 w-4 text-slate-400 dark:text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   id="recipient-phone-input"
                   type="tel"
@@ -517,7 +517,7 @@ export default function BuyNowPage() {
                   placeholder="024 123 4567"
                   maxLength={13}
                   required
-                  className="w-full h-12 rounded-xl bg-[#070d18] border border-[#162740] pl-10 pr-4 text-sm font-mono font-bold text-white placeholder:text-slate-600 outline-none focus:border-[#00df82] focus:ring-1 focus:ring-[#00df82] transition-colors"
+                  className="w-full h-12 rounded-xl bg-slate-50 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740] pl-10 pr-4 text-sm font-mono font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 outline-none focus:border-[#00df82] focus:ring-1 focus:ring-[#00df82] transition-colors"
                 />
               </div>
               <p className="text-[10px] text-slate-500">
@@ -526,15 +526,15 @@ export default function BuyNowPage() {
             </div>
 
             {/* Selected Package Card HUD */}
-            <div className="p-4 rounded-2xl border border-[#162740] bg-[#070d18] space-y-3">
+            <div className="p-4 rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] space-y-3">
               {selectedPackage ? (
                 <>
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
                         Target Allocation
                       </span>
-                      <p className="text-base font-black text-white">
+                      <p className="text-base font-black text-slate-900 dark:text-white">
                         {selectedPackage.name}
                       </p>
                     </div>
@@ -543,10 +543,10 @@ export default function BuyNowPage() {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-[11px] pt-2 border-t border-white/5">
+                  <div className="grid grid-cols-2 gap-2 text-[11px] pt-2 border-t border-slate-200 dark:border-white/5">
                     <div>
                       <span className="text-slate-500 block">Carrier Network:</span>
-                      <span className="font-bold text-white">{selectedPackage.network}</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{selectedPackage.network}</span>
                     </div>
                     <div>
                       <span className="text-slate-500 block">Data Volume:</span>
@@ -555,25 +555,25 @@ export default function BuyNowPage() {
                   </div>
                 </>
               ) : (
-                <p className="text-xs text-slate-400 text-center py-3">
+                <p className="text-xs text-slate-500 dark:text-slate-400 text-center py-3">
                   Please click a package from the catalog matrix to proceed.
                 </p>
               )}
             </div>
 
             {/* Wallet Impact Ledger Calculation */}
-            <div className="rounded-xl border border-white/5 bg-white/[0.02] p-3 text-xs space-y-1.5 font-mono">
-              <div className="flex justify-between text-slate-400 text-[11px]">
+            <div className="rounded-xl border border-slate-200 dark:border-white/5 bg-slate-50/80 dark:bg-white/[0.02] p-3 text-xs space-y-1.5 font-mono">
+              <div className="flex justify-between text-slate-500 dark:text-slate-400 text-[11px]">
                 <span>Wallet Balance:</span>
                 <span>{formatGHS(balance)}</span>
               </div>
-              <div className="flex justify-between text-slate-400 text-[11px]">
+              <div className="flex justify-between text-slate-500 dark:text-slate-400 text-[11px]">
                 <span>Order Cost:</span>
                 <span className="text-[#00df82]">- {formatGHS(currentPrice)}</span>
               </div>
-              <div className="flex justify-between font-bold text-white pt-1.5 border-t border-white/5">
+              <div className="flex justify-between font-bold text-slate-900 dark:text-white pt-1.5 border-t border-slate-200 dark:border-white/5">
                 <span>Remaining:</span>
-                <span className={balance < currentPrice ? "text-rose-400" : "text-white"}>
+                <span className={balance < currentPrice ? "text-rose-500 font-bold" : "text-slate-900 dark:text-white"}>
                   {formatGHS(remainingBalance)}
                 </span>
               </div>
@@ -609,14 +609,14 @@ export default function BuyNowPage() {
 
       {/* ── STICKY MOBILE DISPATCH BAR ─────────────────────────────────────── */}
       {selectedPackage && (
-        <div className="lg:hidden fixed bottom-14 left-0 right-0 z-30 p-2.5 bg-[#0b1322]/95 backdrop-blur-xl border-t border-[#162740] shadow-2xl animate-in slide-in-from-bottom-2 duration-200">
+        <div className="lg:hidden fixed bottom-14 left-0 right-0 z-30 p-2.5 bg-white/95 dark:bg-[#0b1322]/95 backdrop-blur-xl border-t border-slate-200 dark:border-[#162740] shadow-2xl animate-in slide-in-from-bottom-2 duration-200">
           <div className="flex items-center justify-between gap-3 max-w-lg mx-auto">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-[10px] font-black uppercase text-[#00df82] font-mono">
                   {selectedPackage.network}
                 </span>
-                <span className="text-xs font-black text-white truncate">
+                <span className="text-xs font-black text-slate-900 dark:text-white truncate">
                   {selectedPackage.gbAmount} GB
                 </span>
               </div>

@@ -172,11 +172,11 @@ export function DeveloperWebhooksPanel() {
                   New Signing Secret Generated
                 </p>
               </div>
-              <p className="mt-1 text-xs text-slate-300">
+              <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
                 Verify inbound dispatches with the <code className="font-mono text-[#00df82]">X-BundlePortal-Signature</code> HMAC SHA-256 header:
               </p>
               <div className="mt-3 flex items-center gap-3">
-                <code className="rounded-xl border border-[#162740] bg-[#060b13] px-4 py-2.5 font-mono text-xs font-black text-[#00df82] select-all shadow-inner">
+                <code className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#060b13] px-4 py-2.5 font-mono text-xs font-black text-emerald-600 dark:text-[#00df82] select-all shadow-inner">
                   {newSecretAlert}
                 </code>
               </div>
@@ -185,7 +185,7 @@ export function DeveloperWebhooksPanel() {
               size="sm"
               variant="outline"
               onClick={() => setNewSecretAlert(null)}
-              className="border-[#162740] bg-[#070d18] text-xs font-bold text-slate-300 hover:text-white"
+              className="border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#070d18] text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
             >
               Dismiss
             </Button>
@@ -194,15 +194,15 @@ export function DeveloperWebhooksPanel() {
       )}
 
       {/* Configuration Card */}
-      <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-6 shadow-xl">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#162740] pb-5">
+      <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 shadow-xl">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-[#162740] pb-5">
           <div className="flex items-center gap-3">
             <div className="rounded-2xl border border-[#00df82]/30 bg-[#00df82]/10 p-2.5 text-[#00df82]">
               <Radio className="h-6 w-6" />
             </div>
             <div>
-              <h2 className="text-base font-black uppercase tracking-wider text-white">Webhook Telemetry Relay</h2>
-              <p className="text-xs text-slate-400">
+              <h2 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-white">Webhook Telemetry Relay</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Receive real-time signed HTTP POST payloads whenever order state mutations occur.
               </p>
             </div>
@@ -215,7 +215,7 @@ export function DeveloperWebhooksPanel() {
                 size="sm"
                 onClick={handleTest}
                 disabled={testing}
-                className="gap-1.5 border-[#162740] bg-[#070d18] text-xs font-bold text-slate-200 hover:border-[#00df82]/40 hover:text-[#00df82]"
+                className="gap-1.5 border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#070d18] text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-[#00df82]/40 hover:text-[#00df82]"
               >
                 {testing ? <Spinner className="h-3.5 w-3.5 text-[#00df82]" /> : <Play className="h-3.5 w-3.5 text-[#00df82]" />}
                 Ping Test Payload
@@ -233,18 +233,18 @@ export function DeveloperWebhooksPanel() {
         </div>
 
         <div className="mt-6 space-y-6">
-          <div className="rounded-2xl border border-[#162740] bg-[#070d18] p-5">
+          <div className="rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50/70 dark:bg-[#070d18] p-5">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2">
                 <Globe className="h-4 w-4 text-[#00df82]" />
                 Target Endpoint URL
               </label>
-              <label className="flex items-center gap-2 text-xs font-bold text-slate-300 cursor-pointer">
+              <label className="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={active}
                   onChange={(e) => setActive(e.target.checked)}
-                  className="rounded border-[#162740] bg-[#060b13] text-[#00df82] focus:ring-0 focus:ring-offset-0"
+                  className="rounded border-slate-300 dark:border-[#162740] bg-white dark:bg-[#060b13] text-[#00df82] focus:ring-0 focus:ring-offset-0"
                 />
                 <span className={active ? "text-[#00df82]" : "text-slate-500"}>
                   {active ? "RELAY ACTIVE" : "RELAY PAUSED"}
@@ -256,13 +256,13 @@ export function DeveloperWebhooksPanel() {
               placeholder="https://yourdomain.com/api/webhooks/telecom"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              className="w-full rounded-xl border border-[#162740] bg-[#060b13] px-4 py-3 font-mono text-xs text-white placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#060b13] px-4 py-3 font-mono text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none"
             />
           </div>
 
           {/* Subscribed events */}
           <div className="space-y-3">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Subscribed Event Triggers
             </label>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -275,18 +275,18 @@ export function DeveloperWebhooksPanel() {
                     className={`flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition-all duration-200 ${
                       checked
                         ? "border-[#00df82]/50 bg-[#00df82]/10 shadow-lg shadow-[#00df82]/5"
-                        : "border-[#162740] bg-[#070d18] hover:border-slate-700"
+                        : "border-slate-200 dark:border-[#162740] bg-white dark:bg-[#070d18] hover:border-slate-300 dark:hover:border-slate-700"
                     }`}
                   >
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => {}}
-                      className="mt-0.5 rounded border-[#162740] bg-[#060b13] text-[#00df82] focus:ring-0"
+                      className="mt-0.5 rounded border-slate-300 dark:border-[#162740] bg-slate-50 dark:bg-[#060b13] text-[#00df82] focus:ring-0"
                     />
                     <div>
-                      <p className="font-mono text-xs font-black text-white">{ev.label}</p>
-                      <p className="mt-1 text-[11px] text-slate-400 leading-relaxed">{ev.desc}</p>
+                      <p className="font-mono text-xs font-black text-slate-900 dark:text-white">{ev.label}</p>
+                      <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">{ev.desc}</p>
                     </div>
                   </label>
                 );
@@ -296,14 +296,14 @@ export function DeveloperWebhooksPanel() {
 
           {/* Secret & Rotation */}
           {webhook && (
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#162740] bg-[#070d18] p-5">
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50/70 dark:bg-[#070d18] p-5">
               <div className="flex items-center gap-3">
-                <div className="rounded-xl border border-[#162740] bg-[#060b13] p-2.5 text-[#00df82]">
+                <div className="rounded-xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#060b13] p-2.5 text-[#00df82]">
                   <Key className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-slate-300">Payload Signature Secret</p>
-                  <p className="mt-1 font-mono text-xs font-semibold text-cyan-400">
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Payload Signature Secret</p>
+                  <p className="mt-1 font-mono text-xs font-semibold text-cyan-600 dark:text-cyan-400">
                     {webhook.secretMasked || "whsec_••••••••••••••••••••••••"}
                   </p>
                 </div>
@@ -313,7 +313,7 @@ export function DeveloperWebhooksPanel() {
                 size="sm"
                 onClick={() => handleSave(true)}
                 disabled={saving}
-                className="border-[#162740] bg-[#060b13] text-xs font-bold text-slate-300 hover:border-red-500/50 hover:text-red-400"
+                className="border-slate-200 dark:border-[#162740] bg-white dark:bg-[#060b13] text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-red-500/50 hover:text-red-500 dark:hover:text-red-400"
               >
                 Rotate Secret
               </Button>
@@ -323,15 +323,15 @@ export function DeveloperWebhooksPanel() {
       </div>
 
       {/* Deliveries Table */}
-      <div className="rounded-3xl border border-[#162740] bg-[#0b1322] shadow-xl overflow-hidden">
-        <div className="flex items-center justify-between border-b border-[#162740] p-6">
+      <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] shadow-xl overflow-hidden">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#162740] p-6">
           <div className="flex items-center gap-3">
-            <div className="rounded-xl border border-[#162740] bg-[#070d18] p-2 text-[#00df82]">
+            <div className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#070d18] p-2 text-[#00df82]">
               <Terminal className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-sm font-black uppercase tracking-wider text-white">Recent Webhook Dispatch Log</h3>
-              <p className="text-xs text-slate-400">Live ledger of outgoing HTTP notification dispatches and carrier handshakes.</p>
+              <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">Recent Webhook Dispatch Log</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Live ledger of outgoing HTTP notification dispatches and carrier handshakes.</p>
             </div>
           </div>
         </div>
@@ -344,7 +344,7 @@ export function DeveloperWebhooksPanel() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-[#162740] bg-[#070d18]/50 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                <tr className="border-b border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18]/50 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   <th className="px-5 py-3.5">Trigger Event</th>
                   <th className="px-5 py-3.5">Delivery Status</th>
                   <th className="px-5 py-3.5">HTTP Response</th>
@@ -354,13 +354,13 @@ export function DeveloperWebhooksPanel() {
                   <th className="px-5 py-3.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#162740]/60 font-mono">
+              <tbody className="divide-y divide-slate-100 dark:divide-[#162740]/60 font-mono">
                 {webhook.deliveries.map((d: any) => (
-                  <tr key={d.id} className="hover:bg-[#0e192d]/50 transition-colors">
+                  <tr key={d.id} className="hover:bg-slate-50 dark:hover:bg-[#0e192d]/50 transition-colors">
                     <td className="px-5 py-3.5">
-                      <span className="font-bold text-white">{d.event}</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{d.event}</span>
                       {d.orderId && (
-                        <span className="ml-2 rounded bg-[#060b13] px-2 py-0.5 text-[10px] text-cyan-400 border border-[#162740]">
+                        <span className="ml-2 rounded bg-slate-100 dark:bg-[#060b13] px-2 py-0.5 text-[10px] text-cyan-600 dark:text-cyan-400 border border-slate-200 dark:border-[#162740]">
                           {d.orderId}
                         </span>
                       )}
@@ -369,30 +369,30 @@ export function DeveloperWebhooksPanel() {
                       <span
                         className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
                           d.status === "SUCCESS"
-                            ? "border border-[#00df82]/30 bg-[#00df82]/10 text-[#00df82]"
-                            : "border border-red-500/30 bg-red-500/10 text-red-400"
+                            ? "border border-[#00df82]/30 bg-[#00df82]/10 text-emerald-600 dark:text-[#00df82]"
+                            : "border border-red-500/30 bg-red-500/10 text-red-500 dark:text-red-400"
                         }`}
                       >
                         <span className={`h-1.5 w-1.5 rounded-full ${d.status === "SUCCESS" ? "bg-[#00df82]" : "bg-red-400"}`} />
                         {d.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-slate-300">
+                    <td className="px-5 py-3.5 text-slate-700 dark:text-slate-300">
                       {d.statusCode ? (
-                        <span className={d.statusCode >= 200 && d.statusCode < 300 ? "text-[#00df82]" : "text-amber-400"}>
+                        <span className={d.statusCode >= 200 && d.statusCode < 300 ? "text-emerald-600 dark:text-[#00df82]" : "text-amber-500 dark:text-amber-400"}>
                           HTTP {d.statusCode}
                         </span>
                       ) : (
-                        <span className="text-slate-600">—</span>
+                        <span className="text-slate-400 dark:text-slate-600">—</span>
                       )}
                     </td>
-                    <td className="px-5 py-3.5 text-slate-400">
+                    <td className="px-5 py-3.5 text-slate-500 dark:text-slate-400">
                       {d.responseTimeMs ? `${d.responseTimeMs}ms` : "—"}
                     </td>
-                    <td className="px-5 py-3.5 text-slate-400">
+                    <td className="px-5 py-3.5 text-slate-500 dark:text-slate-400">
                       {d.attempt} / {d.maxAttempts}
                     </td>
-                    <td className="px-5 py-3.5 text-[11px] text-slate-400 font-sans">
+                    <td className="px-5 py-3.5 text-[11px] text-slate-500 dark:text-slate-400 font-sans">
                       {formatDateTime(d.createdAt)}
                     </td>
                     <td className="px-5 py-3.5 text-right">
@@ -402,7 +402,7 @@ export function DeveloperWebhooksPanel() {
                           variant="outline"
                           onClick={() => handleRetry(d.id)}
                           disabled={retryingId === d.id}
-                          className="h-7 border-[#162740] bg-[#070d18] px-2.5 text-[11px] font-bold text-slate-300 hover:border-[#00df82]/40 hover:text-[#00df82] gap-1"
+                          className="h-7 border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#070d18] px-2.5 text-[11px] font-bold text-slate-700 dark:text-slate-300 hover:border-[#00df82]/40 hover:text-[#00df82] gap-1"
                         >
                           {retryingId === d.id ? <Spinner className="h-3 w-3 text-[#00df82]" /> : <RefreshCw className="h-3 w-3" />}
                           Re-dispatch

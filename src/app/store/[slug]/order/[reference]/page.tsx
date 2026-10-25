@@ -183,7 +183,7 @@ export default async function OrderReferencePage({
       <div className="mb-6 flex items-center justify-between font-mono text-xs">
         <Link
           href={storeHref(slug)}
-          className="inline-flex items-center gap-1.5 font-bold text-slate-400 hover:text-[#00df82] transition-colors"
+          className="inline-flex items-center gap-1.5 font-bold text-slate-500 dark:text-slate-400 hover:text-[#00df82] transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5 text-[#00df82]" />
           Back to {order.storefront.name}
@@ -195,13 +195,13 @@ export default async function OrderReferencePage({
       </div>
 
       {/* Main Elevated Receipt Container */}
-      <div className="relative overflow-hidden rounded-3xl border border-[#162740] bg-[#0b1322] shadow-2xl backdrop-blur-2xl">
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] shadow-2xl backdrop-blur-2xl">
         <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-[#00df82]/15 blur-3xl" />
 
         {/* Hero Status Banner */}
-        <div className={`border-b border-[#162740] p-6 sm:p-8 ${cfg.cardCls}`}>
+        <div className={`border-b border-slate-200 dark:border-[#162740] p-6 sm:p-8 ${cfg.cardCls}`}>
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#070d18] border border-[#162740] shadow-md">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740] shadow-md">
               <StatusIcon className={`h-6 w-6 ${cfg.iconCls}`} />
             </div>
             <div className="min-w-0 flex-1">
@@ -224,7 +224,7 @@ export default async function OrderReferencePage({
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#00df82] text-[#041d14]">
                   <CheckCircle2 className="h-3.5 w-3.5" />
                 </span>
-                <span className="text-white">1. MoMo Cleared</span>
+                <span className="text-slate-900 dark:text-white">1. MoMo Cleared</span>
               </div>
 
               {/* Step 2: Gateway */}
@@ -240,7 +240,7 @@ export default async function OrderReferencePage({
                 >
                   <Radio className="h-3 w-3" />
                 </span>
-                <span className="text-white">2. USSD Routing</span>
+                <span className="text-slate-900 dark:text-white">2. USSD Routing</span>
               </div>
 
               {/* Step 3: Credited */}
@@ -249,12 +249,12 @@ export default async function OrderReferencePage({
                   className={`flex h-6 w-6 items-center justify-center rounded-full ${
                     isDelivered
                       ? "bg-[#00df82] text-[#041d14]"
-                      : "bg-[#070d18] border border-[#162740] text-slate-500"
+                      : "bg-slate-100 dark:bg-[#070d18] border border-slate-300 dark:border-[#162740] text-slate-400 dark:text-slate-500"
                   }`}
                 >
                   <Smartphone className="h-3 w-3" />
                 </span>
-                <span className="text-white">3. SIM Credited</span>
+                <span className="text-slate-900 dark:text-white">3. SIM Credited</span>
               </div>
             </div>
           </div>
@@ -262,20 +262,20 @@ export default async function OrderReferencePage({
 
         {/* Order Details Body */}
         <div className="p-6 sm:p-8 space-y-6">
-          <div className="flex items-center justify-between border-b border-[#162740] pb-4">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#162740] pb-4">
             <div>
-              <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 font-mono">
+              <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 font-mono">
                 Dispatched Package
               </span>
               <div className="mt-1 flex items-center gap-2.5">
-                <div className={`h-9 w-9 rounded-xl flex items-center justify-center p-1.5 shadow-sm border border-[#162740] ${brand.tile}`}>
+                <div className={`h-9 w-9 rounded-xl flex items-center justify-center p-1.5 shadow-sm border border-slate-200 dark:border-[#162740] ${brand.tile}`}>
                   <NetworkLogo network={network} className="h-full w-full object-contain" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-black tracking-tight text-white">
+                  <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
                     {gbAmount} GB {brand.label}
                   </h2>
-                  <span className="text-[11px] font-mono text-[#00df82]">
+                  <span className="text-[11px] font-mono text-emerald-600 dark:text-[#00df82]">
                     Non-Expiry Telecom Data
                   </span>
                 </div>
@@ -283,10 +283,10 @@ export default async function OrderReferencePage({
             </div>
 
             <div className="text-right">
-              <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 font-mono">
+              <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 font-mono">
                 Amount Paid
               </span>
-              <p className="mt-0.5 text-2xl font-black font-mono text-[#00df82]">
+              <p className="mt-0.5 text-2xl font-black font-mono text-emerald-600 dark:text-[#00df82]">
                 ₵{totalPaid.toFixed(2)}
               </p>
               <span className="text-[10px] text-slate-500 font-mono block">incl. 2% MoMo fee</span>
@@ -295,40 +295,40 @@ export default async function OrderReferencePage({
 
           {/* Breakdown Rows */}
           <div className="space-y-3 text-xs">
-            <div className="flex items-center justify-between rounded-xl bg-[#070d18] p-3 border border-[#162740]">
-              <span className="font-semibold text-slate-400">Recipient Phone Line</span>
-              <span className="font-mono text-sm font-black text-white tracking-wide">
+            <div className="flex items-center justify-between rounded-xl bg-slate-50 dark:bg-[#070d18] p-3 border border-slate-200 dark:border-[#162740]">
+              <span className="font-semibold text-slate-500 dark:text-slate-400">Recipient Phone Line</span>
+              <span className="font-mono text-sm font-black text-slate-900 dark:text-white tracking-wide">
                 {order.customerPhone}
               </span>
             </div>
 
             {order.customerEmail && (
               <div className="flex items-center justify-between px-3">
-                <span className="text-slate-400">Receipt Email</span>
-                <span className="font-mono text-white">{order.customerEmail}</span>
+                <span className="text-slate-500 dark:text-slate-400">Receipt Email</span>
+                <span className="font-mono text-slate-900 dark:text-white">{order.customerEmail}</span>
               </div>
             )}
 
             <div className="flex items-center justify-between px-3">
-              <span className="text-slate-400">Bundle Price</span>
-              <span className="font-mono text-white">₵{amountGhs.toFixed(2)}</span>
+              <span className="text-slate-500 dark:text-slate-400">Bundle Price</span>
+              <span className="font-mono text-slate-900 dark:text-white">₵{amountGhs.toFixed(2)}</span>
             </div>
 
             <div className="flex items-center justify-between px-3">
-              <span className="text-slate-400">Paystack MoMo Processing Fee</span>
-              <span className="font-mono text-[#00df82]">+₵{paystackFee.toFixed(2)}</span>
+              <span className="text-slate-500 dark:text-slate-400">Paystack MoMo Processing Fee</span>
+              <span className="font-mono text-emerald-600 dark:text-[#00df82]">+₵{paystackFee.toFixed(2)}</span>
             </div>
 
-            <div className="flex items-center justify-between rounded-xl bg-[#070d18] p-3 border border-[#162740]">
-              <span className="font-semibold text-slate-400">Payment Reference</span>
-              <span className="font-mono text-[11px] font-bold text-slate-300 select-all">
+            <div className="flex items-center justify-between rounded-xl bg-slate-50 dark:bg-[#070d18] p-3 border border-slate-200 dark:border-[#162740]">
+              <span className="font-semibold text-slate-500 dark:text-slate-400">Payment Reference</span>
+              <span className="font-mono text-[11px] font-bold text-slate-700 dark:text-slate-300 select-all">
                 {reference}
               </span>
             </div>
 
             <div className="flex items-center justify-between px-3">
-              <span className="text-slate-400">Order Placed</span>
-              <span className="font-mono text-slate-400">
+              <span className="text-slate-500 dark:text-slate-400">Order Placed</span>
+              <span className="font-mono text-slate-500 dark:text-slate-400">
                 {new Date(order.createdAt).toLocaleString("en-GH", {
                   dateStyle: "medium",
                   timeStyle: "short",
@@ -341,7 +341,7 @@ export default async function OrderReferencePage({
           <div className="flex flex-col gap-2.5 sm:flex-row pt-2">
             <Link
               href={storeHref(slug, "track")}
-              className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-[#162740] bg-[#070d18] py-3 text-xs font-bold text-white transition hover:bg-[#111e33] cursor-pointer"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#070d18] py-3 text-xs font-bold text-slate-900 dark:text-white transition hover:bg-slate-200 dark:hover:bg-[#111e33] cursor-pointer"
             >
               <Search className="h-3.5 w-3.5 text-[#00df82]" />
               <span>Track SIM Status</span>

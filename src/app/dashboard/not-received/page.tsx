@@ -50,7 +50,7 @@ interface Stats {
 }
 
 const statusInputCls =
-  "h-9 rounded-xl border border-[#162740] bg-[#070d18] px-3 font-mono text-xs text-white outline-none transition focus:border-[#00df82] placeholder:text-slate-500 [&>option]:bg-[#070d18] [&>option]:text-white";
+  "h-9 rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3 font-mono text-xs text-slate-900 dark:text-white outline-none transition focus:border-[#00df82] placeholder:text-slate-400 dark:placeholder:text-slate-500 [&>option]:bg-white dark:[&>option]:bg-[#070d18] [&>option]:text-slate-900 dark:[&>option]:text-white";
 
 export default function NotReceivedPage() {
   const { toast } = useToast();
@@ -102,7 +102,7 @@ export default function NotReceivedPage() {
   return (
     <div className="space-y-6">
       {/* Hero Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl border border-[#162740] bg-[#0b1322] p-6 shadow-xl">
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
@@ -110,12 +110,12 @@ export default function NotReceivedPage() {
                 <span className="h-1.5 w-1.5 rounded-full bg-[#00df82] animate-pulse" />
                 Delivery Protection &amp; Resolution
               </span>
-              <span className="text-[11px] font-mono text-slate-400">· 24h Inquiry Window</span>
+              <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">· 24h Inquiry Window</span>
             </div>
-            <h1 className="text-2xl font-black text-white tracking-tight">
+            <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
               Order Dispute &amp; Delivery Reports
             </h1>
-            <p className="text-xs text-slate-400 max-w-2xl leading-relaxed">
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
               Track filed delivery inquiries, monitor carrier gateway investigation status, and review admin resolution proof or automatic wallet credit refunds.
             </p>
           </div>
@@ -127,26 +127,26 @@ export default function NotReceivedPage() {
         {tiles.map((t) => (
           <div
             key={t.label}
-            className="flex items-center gap-3 rounded-2xl border border-[#162740] bg-[#0b1322] p-4 shadow-xl transition hover:border-slate-700"
+            className="flex items-center gap-3 rounded-2xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-4 shadow-xl transition hover:border-slate-300 dark:hover:border-slate-700"
           >
             <span
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#162740] bg-[#070d18] ${t.cls}`}
+              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] ${t.cls}`}
             >
               <t.icon className="h-4.5 w-4.5" />
             </span>
             <div className="min-w-0">
-              <p className="font-mono text-lg font-black tracking-tight text-white">{t.value}</p>
-              <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400 truncate">{t.label}</p>
+              <p className="font-mono text-lg font-black tracking-tight text-slate-900 dark:text-white">{t.value}</p>
+              <p className="text-[10px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400 truncate">{t.label}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* Filters + table */}
-      <div className="rounded-3xl border border-[#162740] bg-[#0b1322] shadow-xl overflow-hidden">
-        <div className="flex flex-col gap-3 border-b border-[#162740] px-5 py-4 sm:flex-row sm:items-center">
+      <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] shadow-xl overflow-hidden">
+        <div className="flex flex-col gap-3 border-b border-slate-200 dark:border-[#162740] px-5 py-4 sm:flex-row sm:items-center">
           <div className="relative flex-1 sm:max-w-xs">
-            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               value={q}
               onChange={(e) => {
@@ -154,7 +154,7 @@ export default function NotReceivedPage() {
                 setPage(1);
               }}
               placeholder="Search by phone or inquiry reason..."
-              className="h-10 w-full rounded-xl border border-[#162740] bg-[#070d18] pl-10 pr-3 font-mono text-xs text-white placeholder:text-slate-600 outline-none transition focus:border-[#00df82]"
+              className="h-10 w-full rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] pl-10 pr-3 font-mono text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 outline-none transition focus:border-[#00df82]"
             />
           </div>
           <div className="flex flex-wrap items-center gap-2 sm:ml-auto">

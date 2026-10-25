@@ -226,7 +226,7 @@ export function NetworkBuyForm({
                 className={`rounded-xl px-4 py-2 text-xs font-black transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   active
                     ? "bg-[#00df82] text-[#041d14] shadow-[0_0_15px_rgba(0,223,130,0.3)]"
-                    : "border border-[#162740] bg-[#0b1322] text-slate-300 hover:text-white hover:bg-[#111e33]"
+                    : "border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#111e33]"
                 }`}
               >
                 {c.label}
@@ -237,7 +237,7 @@ export function NetworkBuyForm({
       )}
 
       {/* ── CAPACITY FILTER PILLS TOOLBAR ────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#162740] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 dark:border-[#162740] pb-4">
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none -mx-1 px-1 sm:mx-0 sm:px-0">
           <button
             type="button"
@@ -245,7 +245,7 @@ export function NetworkBuyForm({
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               filterTab === "all"
                 ? "bg-[#00df82] text-[#041d14] font-black shadow-[0_0_12px_rgba(0,223,130,0.3)]"
-                : "border border-[#162740] bg-[#0b1322] text-slate-300 hover:text-white hover:bg-[#111e33]"
+                : "border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#111e33]"
             }`}
           >
             All Sizes ({products.length})
@@ -256,10 +256,10 @@ export function NetworkBuyForm({
             className={`flex items-center gap-1 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               filterTab === "popular"
                 ? "bg-[#00df82] text-[#041d14] font-black shadow-[0_0_12px_rgba(0,223,130,0.3)]"
-                : "border border-[#162740] bg-[#0b1322] text-slate-300 hover:text-white hover:bg-[#111e33]"
+                : "border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#111e33]"
             }`}
           >
-            <Flame className="h-3.5 w-3.5 text-amber-400" />
+            <Flame className="h-3.5 w-3.5 text-amber-500 dark:text-amber-400" />
             <span>Popular (5GB–20GB)</span>
           </button>
           <button
@@ -268,7 +268,7 @@ export function NetworkBuyForm({
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               filterTab === "light"
                 ? "bg-[#00df82] text-[#041d14] font-black shadow-[0_0_12px_rgba(0,223,130,0.3)]"
-                : "border border-[#162740] bg-[#0b1322] text-slate-300 hover:text-white hover:bg-[#111e33]"
+                : "border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#111e33]"
             }`}
           >
             Starter (&lt; 5GB)
@@ -279,15 +279,15 @@ export function NetworkBuyForm({
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               filterTab === "heavy"
                 ? "bg-[#00df82] text-[#041d14] font-black shadow-[0_0_12px_rgba(0,223,130,0.3)]"
-                : "border border-[#162740] bg-[#0b1322] text-slate-300 hover:text-white hover:bg-[#111e33]"
+                : "border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#111e33]"
             }`}
           >
             Mega (25GB+)
           </button>
         </div>
 
-        <span className="text-xs font-mono text-[#00df82] flex items-center gap-1.5 self-start sm:self-auto">
-          <Zap className="h-3.5 w-3.5 fill-[#00df82]" /> Instant Automated SIM Crediting
+        <span className="text-xs font-mono text-emerald-600 dark:text-[#00df82] flex items-center gap-1.5 self-start sm:self-auto">
+          <Zap className="h-3.5 w-3.5 fill-emerald-600 dark:fill-[#00df82]" /> Instant Automated SIM Crediting
         </span>
       </div>
 
@@ -302,24 +302,24 @@ export function NetworkBuyForm({
             <div
               key={p.packageId}
               onClick={() => openCheckout(p)}
-              className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl sm:rounded-3xl border bg-[#0b1322] p-4 sm:p-5 transition-all duration-200 hover:-translate-y-1 hover:border-[#00df82]/50 hover:shadow-[0_0_25px_rgba(0,223,130,0.15)] active:scale-[0.98] cursor-pointer ${
+              className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl sm:rounded-3xl border bg-white dark:bg-[#0b1322] p-4 sm:p-5 transition-all duration-200 hover:-translate-y-1 hover:border-[#00df82]/50 hover:shadow-[0_0_25px_rgba(0,223,130,0.15)] active:scale-[0.98] cursor-pointer ${
                 isPopular
                   ? "border-[#00df82]/40 shadow-[0_0_15px_rgba(0,223,130,0.08)]"
-                  : "border-[#162740]"
+                  : "border-slate-200 dark:border-[#162740]"
               }`}
             >
               {/* Top Row: Network Pill + Non-Expiry Badge */}
               <div className="flex items-center justify-between gap-1">
-                <span className="inline-flex items-center gap-1 rounded-md bg-[#070d18] border border-[#162740] px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-slate-300">
+                <span className="inline-flex items-center gap-1 rounded-md bg-slate-50 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740] px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-slate-700 dark:text-slate-300">
                   <Check className="h-2.5 w-2.5 text-[#00df82]" />
                   Never Expires
                 </span>
                 {isPopular ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#00df82]/15 border border-[#00df82]/30 px-2 py-0.5 text-[10px] font-black text-[#00df82]">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#00df82]/15 border border-[#00df82]/30 px-2 py-0.5 text-[10px] font-black text-emerald-600 dark:text-[#00df82]">
                     <Sparkles className="h-2.5 w-2.5" /> Popular
                   </span>
                 ) : (
-                  <span className="text-[10px] font-mono text-slate-400">
+                  <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
                     {pkgBrand?.label || pkgNetwork}
                   </span>
                 )}
@@ -328,21 +328,21 @@ export function NetworkBuyForm({
               {/* Data Size Display */}
               <div className="my-4 text-center sm:text-left">
                 <div className="flex items-baseline justify-center sm:justify-start gap-1">
-                  <span className="text-3xl sm:text-4xl font-black font-mono tracking-tight text-white group-hover:text-[#00df82] transition-colors">
+                  <span className="text-3xl sm:text-4xl font-black font-mono tracking-tight text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-[#00df82] transition-colors">
                     {p.gbAmount}
                   </span>
-                  <span className="text-sm font-black text-[#00df82]">GB</span>
+                  <span className="text-sm font-black text-emerald-600 dark:text-[#00df82]">GB</span>
                 </div>
-                <p className="text-[11px] text-slate-400 font-medium mt-1 truncate">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-1 truncate">
                   {p.name || `${pkgBrand?.label || pkgNetwork} ${p.gbAmount}GB`}
                 </p>
               </div>
 
               {/* Price & Action Button */}
-              <div className="pt-3 border-t border-[#162740] flex items-center justify-between">
+              <div className="pt-3 border-t border-slate-100 dark:border-[#162740] flex items-center justify-between">
                 <div>
-                  <span className="text-[9px] font-bold uppercase text-slate-400 block leading-tight">Price</span>
-                  <span className="text-base sm:text-lg font-black font-mono text-white">
+                  <span className="text-[9px] font-bold uppercase text-slate-500 dark:text-slate-400 block leading-tight">Price</span>
+                  <span className="text-base sm:text-lg font-black font-mono text-slate-900 dark:text-white">
                     ₵{p.price.toFixed(2)}
                   </span>
                 </div>
@@ -360,7 +360,7 @@ export function NetworkBuyForm({
       </div>
 
       {filteredProducts.length === 0 && (
-        <div className="rounded-3xl border border-dashed border-[#162740] bg-[#0b1322] p-12 text-center text-sm text-slate-400">
+        <div className="rounded-3xl border border-dashed border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-12 text-center text-sm text-slate-500 dark:text-slate-400">
           No bundle packages match the selected criteria.
         </div>
       )}
@@ -378,22 +378,22 @@ export function NetworkBuyForm({
           <div
             role="dialog"
             aria-modal="true"
-            className="relative z-10 w-full max-w-lg overflow-hidden rounded-3xl border border-[#162740] bg-[#0b1322] shadow-[0_0_50px_rgba(0,0,0,0.8)] animate-in zoom-in-95 duration-200"
+            className="relative z-10 w-full max-w-lg overflow-hidden rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] shadow-[0_0_50px_rgba(0,0,0,0.8)] animate-in zoom-in-95 duration-200"
           >
             {/* Ambient Cyber Light */}
             <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[#00df82]/15 blur-3xl" />
 
             {/* Modal Header */}
-            <div className="relative flex items-center justify-between border-b border-[#162740] p-5 sm:p-6 bg-[#070d18]">
+            <div className="relative flex items-center justify-between border-b border-slate-200 dark:border-[#162740] p-5 sm:p-6 bg-slate-50 dark:bg-[#070d18]">
               <div className="flex items-center gap-3">
-                <div className={`flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl ${targetBrand?.tile ?? "bg-[#00df82] text-[#041d14]"} shadow-md border border-[#162740]`}>
+                <div className={`flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl ${targetBrand?.tile ?? "bg-[#00df82] text-[#041d14]"} shadow-md border border-slate-200 dark:border-[#162740]`}>
                   <NetworkLogo network={targetNetwork} className="h-full w-full object-contain" />
                 </div>
                 <div>
-                  <h3 className="text-lg sm:text-xl font-black text-white">
+                  <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
                     Checkout &amp; SIM Dispatch
                   </h3>
-                  <p className="text-xs text-slate-400 font-mono">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                     {storeName ? `${storeName} · ` : ""}Instant Mobile Money fulfillment
                   </p>
                 </div>
@@ -403,7 +403,7 @@ export function NetworkBuyForm({
                 type="button"
                 onClick={closeCheckout}
                 disabled={busy}
-                className="rounded-full p-2 text-slate-400 transition-colors hover:bg-[#111e33] hover:text-white disabled:opacity-50 cursor-pointer"
+                className="rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-200 dark:hover:bg-[#111e33] hover:text-slate-900 dark:hover:text-white disabled:opacity-50 cursor-pointer"
                 aria-label="Close"
               >
                 <X className="h-5 w-5" />
@@ -419,14 +419,14 @@ export function NetworkBuyForm({
                     <span className="text-[10px] font-black uppercase tracking-wider text-[#00df82] flex items-center gap-1.5">
                       <Signal className="h-3 w-3" /> Selected Package
                     </span>
-                    <p className="text-lg font-black text-white mt-0.5">
+                    <p className="text-lg font-black text-slate-900 dark:text-white mt-0.5">
                       {targetBrand?.label ? `${targetBrand.label} ` : ""}{selected.gbAmount}GB Non-Expiry
                     </p>
-                    <p className="text-[11px] text-slate-400 font-mono mt-0.5">Automated USSD clearance</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">Automated USSD clearance</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] font-bold text-slate-400 block uppercase">Subtotal</span>
-                    <span className="text-2xl font-black font-mono text-[#00df82]">
+                    <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 block uppercase">Subtotal</span>
+                    <span className="text-2xl font-black font-mono text-emerald-600 dark:text-[#00df82]">
                       ₵{selected.price.toFixed(2)}
                     </span>
                   </div>
@@ -435,7 +435,7 @@ export function NetworkBuyForm({
 
               {/* Recipient Phone Input with Live Carrier Prefix Detection */}
               <div className="space-y-1.5">
-                <label htmlFor="customerPhone" className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                <label htmlFor="customerPhone" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
                     <Smartphone className="h-3.5 w-3.5 text-[#00df82]" /> Target Recipient SIM Number
                   </span>
@@ -463,11 +463,11 @@ export function NetworkBuyForm({
                   maxLength={10}
                   required
                   disabled={busy}
-                  className="w-full h-12 rounded-xl border border-[#162740] bg-[#070d18] px-3.5 text-base font-black font-mono text-white placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none transition-colors"
+                  className="w-full h-12 rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3.5 text-base font-black font-mono text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none transition-colors"
                 />
 
                 {carrierMismatch && (
-                  <p className="text-[11px] text-amber-400 flex items-center gap-1 mt-1 font-mono">
+                  <p className="text-[11px] text-amber-600 dark:text-amber-400 flex items-center gap-1 mt-1 font-mono">
                     <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                     Notice: Number looks like {detectedCarrier?.label}, but package is {targetBrand?.label}. Double-check before paying.
                   </p>
@@ -476,9 +476,9 @@ export function NetworkBuyForm({
 
               {/* Paystack Receipt Email Input */}
               <div className="space-y-1.5">
-                <label htmlFor="customerEmail" className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                <label htmlFor="customerEmail" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
-                    <Mail className="h-3.5 w-3.5 text-sky-400" /> Digital Receipt Email
+                    <Mail className="h-3.5 w-3.5 text-sky-500 dark:text-sky-400" /> Digital Receipt Email
                   </span>
                   <span className="text-[10px] text-slate-500 font-mono">For Paystack payment confirmation</span>
                 </label>
@@ -490,29 +490,29 @@ export function NetworkBuyForm({
                   placeholder="yourname@gmail.com"
                   required
                   disabled={busy}
-                  className="w-full h-11 rounded-xl border border-[#162740] bg-[#070d18] px-3.5 text-xs font-medium text-white placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none transition-colors"
+                  className="w-full h-11 rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3.5 text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none transition-colors"
                 />
               </div>
 
               {/* Price Breakdown Telemetry */}
-              <div className="rounded-xl border border-[#162740] bg-[#070d18] p-3 text-xs space-y-1.5 font-mono">
-                <div className="flex justify-between text-slate-400">
+              <div className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] p-3 text-xs space-y-1.5 font-mono">
+                <div className="flex justify-between text-slate-500 dark:text-slate-400">
                   <span>Bundle Value</span>
-                  <span className="text-white">₵{selected.price.toFixed(2)}</span>
+                  <span className="text-slate-900 dark:text-white">₵{selected.price.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-slate-500 dark:text-slate-400">
                   <span>MoMo Gateway Clearance (2%)</span>
-                  <span className="text-white">₵{fee.toFixed(2)}</span>
+                  <span className="text-slate-900 dark:text-white">₵{fee.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between font-black text-white pt-1.5 border-t border-[#162740] text-sm">
-                  <span className="uppercase text-[11px] text-slate-400">Total Settlement Due</span>
-                  <span className="text-[#00df82] text-base">₵{total.toFixed(2)}</span>
+                <div className="flex justify-between font-black text-slate-900 dark:text-white pt-1.5 border-t border-slate-200 dark:border-[#162740] text-sm">
+                  <span className="uppercase text-[11px] text-slate-500 dark:text-slate-400">Total Settlement Due</span>
+                  <span className="text-emerald-600 dark:text-[#00df82] text-base">₵{total.toFixed(2)}</span>
                 </div>
               </div>
 
               {/* Error Banner */}
               {error && (
-                <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-400 flex items-center gap-2">
+                <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-500 dark:text-red-400 flex items-center gap-2">
                   <AlertCircle className="h-4 w-4 shrink-0" />
                   <span>{error}</span>
                 </div>

@@ -89,29 +89,29 @@ export function StoreStatusToggle({
   }
 
   return (
-    <div className="rounded-3xl border border-[#162740] bg-[#0b1322] p-6 shadow-xl">
+    <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 shadow-xl">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="rounded-2xl border border-[#162740] bg-[#070d18] p-3">
-            <Radio className={`h-6 w-6 ${isActive ? "text-[#00df82]" : "text-amber-400"}`} />
+          <div className="rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] p-3">
+            <Radio className={`h-6 w-6 ${isActive ? "text-[#00df82]" : "text-amber-500 dark:text-amber-400"}`} />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span
                 className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider ${
                   isSuspended
-                    ? "border border-red-500/30 bg-red-500/10 text-red-400"
+                    ? "border border-red-500/30 bg-red-500/10 text-red-500 dark:text-red-400"
                     : isActive
                     ? "border border-[#00df82]/30 bg-[#00df82]/10 text-[#00df82]"
-                    : "border border-amber-500/30 bg-amber-500/10 text-amber-300"
+                    : "border border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300"
                 }`}
               >
                 <span className={`h-1.5 w-1.5 rounded-full ${isActive ? "bg-[#00df82] animate-pulse" : "bg-amber-400"}`} />
                 {isSuspended ? "ADMIN SUSPENDED" : isActive ? "ACCEPTING ORDERS" : "TEMPORARILY PAUSED"}
               </span>
             </div>
-            <h2 className="mt-1 text-sm font-black uppercase tracking-wider text-white">Storefront Availability Radar</h2>
-            <p className="text-xs text-slate-400">
+            <h2 className="mt-1 text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">Storefront Availability Radar</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               {isActive
                 ? "Your public storefront is live. Customers can browse packages and check out via MoMo."
                 : "Your storefront is paused. Visitors see an informative maintenance notice."}
@@ -125,7 +125,7 @@ export function StoreStatusToggle({
           disabled={!canToggle || busy}
           className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-xs font-black uppercase tracking-wider transition ${
             isActive
-              ? "border border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20"
+              ? "border border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300 hover:bg-amber-500/20"
               : "bg-[#00df82] text-[#060b13] hover:bg-[#00df82]/90 shadow-md shadow-[#00df82]/20"
           } disabled:opacity-40 disabled:cursor-not-allowed`}
         >

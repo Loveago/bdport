@@ -401,21 +401,21 @@ export function TrackForm({ slug }: { slug: string }) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="024 XXX XXXX · you@example.com · CDI-ST-... · STF-..."
-              className="h-12 w-full rounded-2xl border border-[#162740] bg-[#070d18] px-4 text-sm font-medium text-white outline-none transition-all placeholder:text-slate-600 focus:border-[#00df82]"
+              className="h-12 w-full rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-4 text-sm font-medium text-slate-900 dark:text-white outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-[#00df82]"
             />
           </div>
 
-          <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-400">
-            <span className="font-semibold text-slate-300">Supported:</span>
-            <span className="rounded-lg bg-[#070d18] border border-[#162740] px-2 py-0.5 text-slate-300 font-mono">📱 10-digit Phone</span>
-            <span className="rounded-lg bg-[#070d18] border border-[#162740] px-2 py-0.5 text-slate-300 font-mono">✉️ Receipt Email</span>
-            <span className="rounded-lg bg-[#070d18] border border-[#162740] px-2 py-0.5 text-slate-300 font-mono">🔖 Order Ref</span>
+          <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+            <span className="font-semibold text-slate-700 dark:text-slate-300">Supported:</span>
+            <span className="rounded-lg bg-slate-100 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740] px-2 py-0.5 text-slate-700 dark:text-slate-300 font-mono">📱 10-digit Phone</span>
+            <span className="rounded-lg bg-slate-100 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740] px-2 py-0.5 text-slate-700 dark:text-slate-300 font-mono">✉️ Receipt Email</span>
+            <span className="rounded-lg bg-slate-100 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740] px-2 py-0.5 text-slate-700 dark:text-slate-300 font-mono">🔖 Order Ref</span>
           </div>
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-xs font-bold text-slate-300">
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
               Filter by Order Date
             </label>
             <span className="text-[11px] font-normal text-slate-500 font-mono">
@@ -438,7 +438,7 @@ export function TrackForm({ slug }: { slug: string }) {
                 className={`rounded-lg px-2.5 py-1 text-xs font-bold transition cursor-pointer ${
                   datePreset === p.id
                     ? "bg-[#00df82] text-[#041d14] shadow-sm"
-                    : "bg-[#162740] text-slate-300 hover:bg-[#1f3554] hover:text-white"
+                    : "bg-slate-100 dark:bg-[#162740] text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#1f3554] hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 {p.label}
@@ -453,27 +453,27 @@ export function TrackForm({ slug }: { slug: string }) {
               value={date}
               max={maxDate}
               onChange={(e) => setDate(e.target.value)}
-              className="h-11 w-full rounded-2xl border border-[#162740] bg-[#070d18] px-3.5 text-xs font-mono text-white outline-none transition-all focus:border-[#00df82]"
+              className="h-11 w-full rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3.5 text-xs font-mono text-slate-900 dark:text-white outline-none transition-all focus:border-[#00df82]"
             />
           )}
 
           {datePreset === "today" && (
-            <p className="text-[11px] text-slate-400 font-mono">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
               Filtering for orders placed today ({date}).
             </p>
           )}
           {datePreset === "yesterday" && (
-            <p className="text-[11px] text-slate-400 font-mono">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
               Filtering for orders placed yesterday ({date}).
             </p>
           )}
           {datePreset === "past7" && (
-            <p className="text-[11px] text-slate-400 font-mono">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
               Filtering orders placed between {startDate} and {endDate}.
             </p>
           )}
           {datePreset === "all" && (
-            <p className="text-[11px] text-amber-400/80 font-mono">
+            <p className="text-[11px] text-amber-500 dark:text-amber-400/80 font-mono">
               Showing all historical orders for this lookup.
             </p>
           )}
@@ -487,7 +487,7 @@ export function TrackForm({ slug }: { slug: string }) {
           {busy ? "Querying Carrier Switch…" : "Track Delivery Status"}
         </button>
         {error && (
-          <p className="mt-3 rounded-xl border border-red-500/30 bg-red-500/10 px-3.5 py-2 text-xs text-red-400">
+          <p className="mt-3 rounded-xl border border-red-500/30 bg-red-500/10 px-3.5 py-2 text-xs text-red-500 dark:text-red-400">
             {error}
           </p>
         )}
@@ -501,15 +501,15 @@ export function TrackForm({ slug }: { slug: string }) {
       )}
 
       {reportErrorMessage && (
-        <div className="mt-4 flex items-start gap-2 rounded-xl bg-red-500/10 p-3 text-xs text-red-400 border border-red-500/30">
-          <FileWarning className="h-4 w-4 shrink-0 text-red-400 mt-0.5" />
+        <div className="mt-4 flex items-start gap-2 rounded-xl bg-red-500/10 p-3 text-xs text-red-500 dark:text-red-400 border border-red-500/30">
+          <FileWarning className="h-4 w-4 shrink-0 text-red-500 dark:text-red-400 mt-0.5" />
           <span>{reportErrorMessage}</span>
         </div>
       )}
 
       {results && (
         <div className="mt-6 space-y-3">
-          <p className="text-xs font-black uppercase tracking-wider text-slate-400">
+          <p className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
             {results.length === 0
               ? "No orders found for that query."
               : `${results.length} order${results.length === 1 ? "" : "s"} found`}
@@ -517,20 +517,20 @@ export function TrackForm({ slug }: { slug: string }) {
           {results.map((o) => (
             <div
               key={o.reference}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-[#162740] bg-[#070d18] p-4"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50/70 dark:bg-[#070d18] p-4"
             >
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-sm font-black text-white">
+                  <p className="text-sm font-black text-slate-900 dark:text-white">
                     {o.network} {o.size} — ₵{o.amount.toFixed(2)}
                   </p>
                   {o.phone && (
-                    <span className="font-mono text-xs font-bold text-[#00df82]">
+                    <span className="font-mono text-xs font-bold text-emerald-600 dark:text-[#00df82]">
                       ({o.phone})
                     </span>
                   )}
                   {o.email && (
-                    <span className="text-xs text-slate-400 truncate max-w-[180px] font-mono" title={o.email}>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[180px] font-mono" title={o.email}>
                       · {o.email}
                     </span>
                   )}
