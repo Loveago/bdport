@@ -158,9 +158,11 @@ export function WithdrawalForm({
           </label>
           <input
             type="tel"
+            inputMode="tel"
             value={momoNumber}
-            onChange={(e) => setMomoNumber(e.target.value)}
+            onChange={(e) => setMomoNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
             placeholder="0241234567"
+            maxLength={10}
             disabled={isFormLocked}
             required
             className="h-10 w-full rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-3 font-mono text-xs font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-[#00df82] focus:outline-none disabled:opacity-40"

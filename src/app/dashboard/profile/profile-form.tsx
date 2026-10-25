@@ -121,11 +121,12 @@ export function ProfileForms({ initial }: { initial: Initial }) {
             <Input
               id="phone"
               type="tel"
-              placeholder="e.g. 0244123456"
+              inputMode="tel"
+              placeholder="0241234567"
               className={inputCls}
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              maxLength={20}
+              onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+              maxLength={10}
             />
             <p className="text-[11px] text-slate-500 dark:text-slate-400">
               Used for account verification, urgent delivery alerts, and billing receipts.

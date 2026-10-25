@@ -81,7 +81,7 @@ export function StoreApplyForm({
 
   const isValid =
     storeName.trim().length >= 2 &&
-    contactNumber.trim().length >= 9 &&
+    contactNumber.trim().length === 10 &&
     whatsappGroupLink.trim().length >= 5;
 
   return (
@@ -122,12 +122,12 @@ export function StoreApplyForm({
         <input
           id="contactNumber"
           type="tel"
+          inputMode="tel"
           value={contactNumber}
-          onChange={(e) => setContactNumber(e.target.value)}
-          placeholder="e.g. 0241234567"
+          onChange={(e) => setContactNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
+          placeholder="0241234567"
           required
-          minLength={9}
-          maxLength={20}
+          maxLength={10}
           className={inputCls}
         />
       </div>

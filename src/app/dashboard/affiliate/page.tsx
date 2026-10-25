@@ -307,8 +307,9 @@ export default function AffiliateDashboardPage() {
     }
 
     if (withdrawalMethod === "MOMO") {
-      if (!momoNumber.trim() || !accountName.trim()) {
-        toast("Please provide both Mobile Money phone number and account name.", "error");
+      const cleanMomo = momoNumber.replace(/\D/g, "");
+      if (cleanMomo.length !== 10 || !cleanMomo.startsWith("0") || !accountName.trim()) {
+        toast("Please provide a valid 10-digit Mobile Money phone number (e.g. 0241234567) and account name.", "error");
         return;
       }
     }
@@ -818,9 +819,12 @@ export default function AffiliateDashboardPage() {
                             MoMo Phone Number
                           </label>
                           <Input
-                            placeholder="e.g. 0244123456"
+                            type="tel"
+                            inputMode="tel"
+                            placeholder="0241234567"
+                            maxLength={10}
                             value={momoNumber}
-                            onChange={(e) => setMomoNumber(e.target.value)}
+                            onChange={(e) => setMomoNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
                             className="h-11 rounded-xl font-mono text-sm"
                           />
                         </div>

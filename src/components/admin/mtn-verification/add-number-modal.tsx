@@ -73,9 +73,12 @@ export function AddNumberModal({
           <Label htmlFor="acceptedPhone">Phone Number</Label>
           <Input
             id="acceptedPhone"
+            type="tel"
+            inputMode="tel"
+            maxLength={10}
             value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            placeholder="e.g. 0241234567 or 0201234567"
+            onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
+            placeholder="0241234567"
             className="font-mono text-sm"
             disabled={submitting}
           />

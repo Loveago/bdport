@@ -107,8 +107,9 @@ export default function UserMtnVerificationPage() {
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (!phoneNumber.trim()) {
-      return toast("Please enter an MTN phone number", "error");
+    const cleanNumber = phoneNumber.trim().replace(/\D/g, "").slice(0, 10);
+    if (!cleanNumber || cleanNumber.length !== 10 || !cleanNumber.startsWith("0")) {
+      return toast("Please enter a valid 10-digit MTN phone number (e.g. 0241234567)", "error");
     }
 
     setSubmitting(true);
@@ -117,7 +118,7 @@ export default function UserMtnVerificationPage() {
       const res = await fetch("/api/mtn-verification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneNumber: phoneNumber.trim() }),
+        body: JSON.stringify({ phoneNumber: cleanNumber }),
       });
       const data = await res.json();
 
@@ -319,11 +320,12 @@ export default function UserMtnVerificationPage() {
                 <div className="flex flex-col sm:flex-row gap-2.5">
                   <Input
                     id="phoneNumber"
-                    type="text"
+                    type="tel"
                     inputMode="tel"
+                    maxLength={10}
                     value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    placeholder="e.g. 0241234567"
+                    onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                    placeholder="0241234567"
                     className="font-mono text-sm h-11 rounded-xl border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] text-slate-900 dark:text-white focus:border-[#00df82] focus:ring-0 w-full"
                     disabled={submitting}
                   />

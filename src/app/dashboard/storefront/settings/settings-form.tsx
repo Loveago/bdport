@@ -45,8 +45,13 @@ export function StorefrontSettingsForm({
   const liveStoreUrl = buildStorefrontUrl(currentSlug, cleanDomainStr);
   const previewStoreUrl = buildStorefrontUrl(slugInput.trim() || currentSlug, cleanDomainStr);
 
-  const set = (k: keyof Initial) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
-    setForm((f) => ({ ...f, [k]: e.target.value }));
+  const set = (k: keyof Initial) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    let val = e.target.value;
+    if (k === "phone" || k === "whatsapp" || k === "payoutNumber") {
+      val = val.replace(/\D/g, "").slice(0, 10);
+    }
+    setForm((f) => ({ ...f, [k]: val }));
+  };
 
   function handleSlugChange(e: React.ChangeEvent<HTMLInputElement>) {
     const val = e.target.value
@@ -314,7 +319,7 @@ export function StorefrontSettingsForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Primary Contact Phone</label>
-            <input value={form.phone} onChange={set("phone")} placeholder="0241234567" inputMode="tel" className={inputCls} />
+            <input value={form.phone} onChange={set("phone")} placeholder="0241234567" inputMode="tel" maxLength={10} className={inputCls} />
           </div>
           <div>
             <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">WhatsApp Community Group Link</label>
@@ -325,7 +330,7 @@ export function StorefrontSettingsForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Customer Support WhatsApp</label>
-            <input value={form.whatsapp} onChange={set("whatsapp")} placeholder="0241234567" inputMode="tel" className={inputCls} />
+            <input value={form.whatsapp} onChange={set("whatsapp")} placeholder="0241234567" inputMode="tel" maxLength={10} className={inputCls} />
           </div>
           <div>
             <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Location Tag (Optional)</label>
@@ -527,7 +532,7 @@ export function StorefrontSettingsForm({
           </div>
           <div>
             <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Subscriber MoMo Number</label>
-            <input value={form.payoutNumber} onChange={set("payoutNumber")} placeholder="0241234567" inputMode="tel" className={inputCls} />
+            <input value={form.payoutNumber} onChange={set("payoutNumber")} placeholder="0241234567" inputMode="tel" maxLength={10} className={inputCls} />
           </div>
         </div>
 

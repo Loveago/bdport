@@ -163,9 +163,9 @@ export default function BuyNowPage() {
       return toast("Please select a data bundle first", "error");
     }
 
-    const cleanPhone = phone.trim().replace(/\s+/g, "");
-    if (!cleanPhone || cleanPhone.length < 9) {
-      return toast("Please enter a valid Ghanaian phone number", "error");
+    const cleanPhone = phone.trim().replace(/\D/g, "").slice(0, 10);
+    if (!cleanPhone || cleanPhone.length !== 10 || !cleanPhone.startsWith("0")) {
+      return toast("Please enter a valid 10-digit Ghanaian phone number (e.g. 0241234567)", "error");
     }
 
     const cost = selectedPackage.price ?? selectedPackage.retailPriceGHS ?? 0;
@@ -511,11 +511,11 @@ export default function BuyNowPage() {
                 <input
                   id="recipient-phone-input"
                   type="tel"
-                  inputMode="numeric"
+                  inputMode="tel"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="024 123 4567"
-                  maxLength={13}
+                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                  placeholder="0241234567"
+                  maxLength={10}
                   required
                   className="w-full h-12 rounded-xl bg-slate-50 dark:bg-[#070d18] border border-slate-200 dark:border-[#162740] pl-10 pr-4 text-sm font-mono font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 outline-none focus:border-[#00df82] focus:ring-1 focus:ring-[#00df82] transition-colors"
                 />

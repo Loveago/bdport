@@ -165,8 +165,8 @@ export function StorefrontPortal({
     e.preventDefault();
     if (!selectedProduct) return;
 
-    const cleanPhone = phone.replace(/\D/g, "");
-    if (cleanPhone.length < 10) {
+    const cleanPhone = phone.replace(/\D/g, "").slice(0, 10);
+    if (cleanPhone.length !== 10 || !cleanPhone.startsWith("0")) {
       setCheckoutError("Please enter a valid 10-digit Ghana mobile number (e.g. 0244123456).");
       return;
     }
@@ -966,11 +966,13 @@ export function StorefrontPortal({
                 </label>
                 <input
                   type="tel"
+                  inputMode="tel"
+                  maxLength={10}
                   required
                   autoFocus
-                  placeholder="e.g. 0244123456"
+                  placeholder="0241234567"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
                   className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm font-mono text-slate-900 placeholder:text-slate-400 focus:border-[#1a56db] focus:ring-2 focus:ring-[#1a56db]/20 outline-none transition"
                 />
 

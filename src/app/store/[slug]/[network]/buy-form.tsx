@@ -92,7 +92,7 @@ export function NetworkBuyForm({
       const savedEmail = localStorage.getItem("storefront_customer_email");
       if (savedEmail) setEmail(savedEmail);
       const savedPhone = localStorage.getItem("storefront_customer_phone");
-      if (savedPhone) setPhone(savedPhone);
+      if (savedPhone) setPhone(savedPhone.replace(/\D/g, "").slice(0, 10));
     } catch {
       // Ignore localStorage read errors
     }
@@ -458,8 +458,8 @@ export function NetworkBuyForm({
                   type="tel"
                   inputMode="tel"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value.replace(/\s+/g, ""))}
-                  placeholder="024 XXX XXXX"
+                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                  placeholder="0241234567"
                   maxLength={10}
                   required
                   disabled={busy}
