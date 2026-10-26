@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { syncClickyfiedOrder } from "@/lib/provider-apis/router";
+import { syncClickyfiedOrder, syncTskconnectOrder } from "@/lib/provider-apis/router";
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,15 +17,18 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Strict 120-second threshold for orders ready to poll
-    const twoMinutesAgo = new Date(Date.now() - 120 * 1000);
+    // Strict 60-second threshold for orders ready to poll
+    const cutoffTime = new Date(Date.now() - 60 * 1000);
     const inFlightOrders = await prisma.order.findMany({
       where: {
         status: { in: ["PENDING", "PROCESSING"] },
-        providerReference: { startsWith: "CLICKYFIED:" },
-        updatedAt: { lte: twoMinutesAgo },
+        OR: [
+          { providerReference: { startsWith: "TSKCONNECT:" } },
+          { providerReference: { startsWith: "CLICKYFIED:" } },
+        ],
+        updatedAt: { lte: cutoffTime },
       },
-      take: 20,
+      take: 40,
       orderBy: { updatedAt: "asc" },
     });
 
@@ -45,14 +48,19 @@ export async function GET(request: NextRequest) {
     const seenProviderIds = new Set<string>();
 
     for (const order of inFlightOrders) {
-      const rawRef = order.providerReference?.replace("CLICKYFIED:", "").trim();
+      const isTsk = order.providerReference?.startsWith("TSKCONNECT:");
+      const prefix = isTsk ? "TSKCONNECT:" : "CLICKYFIED:";
+      const rawRef = order.providerReference?.replace(prefix, "").trim();
       const [providerId] = (rawRef || "").split(":");
       if (providerId) {
         if (seenProviderIds.has(providerId)) continue;
         seenProviderIds.add(providerId);
       }
       checked++;
-      const res = await syncClickyfiedOrder(order, "Provider Sync Cron");
+      const res = isTsk
+        ? await syncTskconnectOrder(order, "Provider Sync Cron")
+        : await syncClickyfiedOrder(order, "Provider Sync Cron");
+
       if (res.changed) {
         updated++;
       } else if (res.error) {

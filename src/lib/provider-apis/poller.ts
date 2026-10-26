@@ -1,5 +1,5 @@
 import { prisma } from "../prisma";
-import { syncClickyfiedOrder, syncClickyfiedDeliveryReport } from "./router";
+import { syncClickyfiedOrder, syncClickyfiedDeliveryReport, syncTskconnectOrder } from "./router";
 
 let isPolling = false;
 
@@ -60,7 +60,7 @@ export function startProviderSyncPoller() {
 
       const { getProviderRoutingConfig } = await import("./router");
       const config = await getProviderRoutingConfig();
-      if (!config.enabled || !config.clickyfied.enabled) {
+      if (!config.enabled || (!config.clickyfied.enabled && !config.tskconnect.enabled)) {
         return;
       }
 
@@ -176,6 +176,34 @@ export function startProviderSyncPoller() {
           }
         } catch {
           // Ignore background transient errors
+        }
+      }
+
+      // Find in-flight Tskconnect orders (PENDING or PROCESSING) and sync their status
+      if (config.tskconnect.enabled && config.tskconnect.apiKey) {
+        try {
+          const inFlightTskOrders = await prisma.order.findMany({
+            where: {
+              status: { in: ["PENDING", "PROCESSING"] },
+              providerReference: { startsWith: "TSKCONNECT:" },
+              updatedAt: { lte: cutoffTime },
+            },
+            take: 100,
+            orderBy: { updatedAt: "asc" },
+          });
+
+          if (inFlightTskOrders.length > 0) {
+            console.log(`[ProviderSyncPoller] Syncing ${inFlightTskOrders.length} in-flight Tskconnect order(s)...`);
+            for (const order of inFlightTskOrders) {
+              try {
+                await syncTskconnectOrder(order, "Automatic Background Poller");
+              } catch (err: any) {
+                console.error(`[ProviderSyncPoller] Error syncing Tskconnect order #${order.id}:`, err?.message || err);
+              }
+            }
+          }
+        } catch (tskPollErr) {
+          console.error("[ProviderSyncPoller] Tskconnect poll error:", tskPollErr);
         }
       }
 

@@ -351,6 +351,13 @@ export const settingsSchema = z.object({
   clickyfied_mtn_verification_enabled: z.enum(["true", "false"]).optional(),
   clickyfied_not_received_enabled: z.enum(["true", "false"]).optional(),
 
+  // Tskconnect Settings
+  tskconnect_enabled: z.enum(["true", "false"]).optional(),
+  tskconnect_api_key: z.string().max(255).optional(),
+  tskconnect_base_url: z.string().max(255).optional(),
+  tskconnect_webhook_secret: z.string().max(255).optional(),
+  tskconnect_number_verification_enabled: z.enum(["true", "false"]).optional(),
+
   // GHConnect Settings
   ghconnect_enabled: z.enum(["true", "false"]).optional(),
   ghconnect_api_key: z.string().max(255).optional(),

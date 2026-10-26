@@ -54,6 +54,14 @@ export async function PATCH(request: NextRequest) {
         ? "********"
         : `${auditSafeInput.clickyfied_api_key.slice(0, 4)}...${auditSafeInput.clickyfied_api_key.slice(-4)}`;
     }
+    if (typeof auditSafeInput.tskconnect_api_key === "string" && auditSafeInput.tskconnect_api_key) {
+      auditSafeInput.tskconnect_api_key = auditSafeInput.tskconnect_api_key.length <= 8
+        ? "********"
+        : `${auditSafeInput.tskconnect_api_key.slice(0, 4)}...${auditSafeInput.tskconnect_api_key.slice(-4)}`;
+    }
+    if (typeof auditSafeInput.tskconnect_webhook_secret === "string" && auditSafeInput.tskconnect_webhook_secret) {
+      auditSafeInput.tskconnect_webhook_secret = "********";
+    }
 
     await recordAudit({
       userId: actor.id,

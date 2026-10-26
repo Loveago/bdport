@@ -4,7 +4,8 @@ import { sanitizeCustomerRefundNote, sanitizeCustomerFacingText } from "../types
 import { normalizeGhanaPhoneNumber } from "@/lib/phone-utils";
 import { recordOrderApiLog } from "../order-api-logs";
 import { ClickyfiedClient, DEFAULT_CLICKYFIED_API_KEY, DEFAULT_CLICKYFIED_CLIENT_ID, DEFAULT_CLICKYFIED_SANDBOX_URL, generateClickyfiedReference } from "./clickyfied";
-import type { ProviderRoutingConfig, ProviderType, ProviderDispatchResult, ClickyfiedConfig } from "./types";
+import { TskconnectClient, DEFAULT_TSKCONNECT_BASE_URL, normalizeTskconnectNetwork, resolveTskconnectPackageId, generateTskconnectReference, mapTskconnectStatus } from "./tskconnect";
+import type { ProviderRoutingConfig, ProviderType, ProviderDispatchResult, ClickyfiedConfig, TskconnectConfig } from "./types";
 
 /**
  * Standard Ghanaian network keys supported in routing
@@ -71,7 +72,21 @@ export async function getProviderRoutingConfig(): Promise<ProviderRoutingConfig>
       mtnVerificationEnabled: getVal("clickyfied_mtn_verification_enabled", "false") === "true",
       notReceivedEnabled: getVal("clickyfied_not_received_enabled", "true") === "true",
     },
+    tskconnect: {
+      enabled: getVal("tskconnect_enabled", "true") === "true",
+      apiKey: getVal("tskconnect_api_key", process.env.TSKCONNECT_API_KEY || ""),
+      baseUrl: getVal("tskconnect_base_url", DEFAULT_TSKCONNECT_BASE_URL),
+      webhookSecret: getVal("tskconnect_webhook_secret", process.env.TSKCONNECT_WEBHOOK_SECRET || ""),
+      numberVerificationEnabled: getVal("tskconnect_number_verification_enabled", "true") === "true",
+    },
   };
+}
+
+/**
+ * Check if Tskconnect integration is configured with an active API key
+ */
+export function isTskconnectActive(tskconnect: TskconnectConfig): boolean {
+  return tskconnect.enabled && Boolean(tskconnect.apiKey && tskconnect.apiKey.trim().length > 0);
 }
 
 /**
@@ -103,6 +118,10 @@ export function shouldAutoDispatch(config: ProviderRoutingConfig): boolean {
   // If master automated order processing switch is turned OFF, NEVER auto-dispatch any orders
   if (!config.enabled) {
     return false;
+  }
+  // When Tskconnect is active and enabled
+  if (isTskconnectActive(config.tskconnect)) {
+    return true;
   }
   // When master routing is enabled, if Clickyfied is in Sandbox mode, auto-dispatch to sandbox
   if (config.clickyfied.enabled && isClickyfiedSandbox(config.clickyfied)) {
@@ -165,6 +184,7 @@ export async function getProviderForNetwork(
 
   // If network is AIRTELTIGO or AT without explicit sub-identifier, default to ISHARE then BIGTIME
   if (net === "AIRTELTIGO" || net === "AT") {
+    if (config.networkRoutes["AIRTELTIGO"]) return config.networkRoutes["AIRTELTIGO"];
     if (config.networkRoutes["AIRTELTIGO_ISHARE"]) return config.networkRoutes["AIRTELTIGO_ISHARE"];
     if (config.networkRoutes["AIRTELTIGO_BIGTIME"]) return config.networkRoutes["AIRTELTIGO_BIGTIME"];
   }
@@ -186,7 +206,10 @@ export async function getProviderForNetwork(
     return config.defaultProvider;
   }
 
-  // 5. If Clickyfied is enabled, default route is CLICKYFIED
+  // 5. Fallback: If Tskconnect is configured and active, prefer TSKCONNECT; otherwise CLICKYFIED
+  if (isTskconnectActive(config.tskconnect)) {
+    return "TSKCONNECT";
+  }
   if (config.clickyfied.enabled) {
     return "CLICKYFIED";
   }
@@ -241,7 +264,9 @@ export async function dispatchOrder(
   if (order.providerReference && !options.force) {
     return {
       success: true,
-      provider: order.providerReference.startsWith("CLICKYFIED:")
+      provider: order.providerReference.startsWith("TSKCONNECT:")
+        ? "TSKCONNECT"
+        : order.providerReference.startsWith("CLICKYFIED:")
         ? "CLICKYFIED"
         : "MANUAL",
       status: order.status,
@@ -274,6 +299,173 @@ export async function dispatchOrder(
   }
 
   const appBaseUrl = await getAppBaseUrl();
+
+  // -------------------------------------------------------------------------
+  // Dispatched to TSKCONNECT
+  // -------------------------------------------------------------------------
+  if (provider === "TSKCONNECT") {
+    if (!config.tskconnect.enabled || !config.tskconnect.apiKey) {
+      return {
+        success: false,
+        provider: "TSKCONNECT",
+        error: "Tskconnect integration is disabled or missing API key in settings.",
+      };
+    }
+
+    const client = new TskconnectClient(config.tskconnect);
+    const tskStartTime = Date.now();
+    const carrier = normalizeTskconnectNetwork(order.network);
+    const packageId = resolveTskconnectPackageId(
+      order.network,
+      order.gbAmount,
+      order.dataPackage?.providerProductId
+    );
+    const reference = order.externalReference || generateTskconnectReference(order.id);
+    const idempotencyKey = reference;
+
+    let cleanRecipient = order.phoneNumber.trim();
+    if (cleanRecipient.startsWith("+233")) cleanRecipient = "0" + cleanRecipient.slice(4);
+    else if (cleanRecipient.startsWith("233")) cleanRecipient = "0" + cleanRecipient.slice(3);
+
+    const submitPayload = {
+      network: carrier,
+      packageId,
+      recipient: cleanRecipient,
+      reference,
+      idempotencyKey,
+    };
+
+    try {
+      const submitRes = await client.submitOrder(submitPayload);
+      const durationMs = Date.now() - tskStartTime;
+
+      const tskOrderId = submitRes.data?.orderId || reference;
+      const providerRef = `TSKCONNECT:${tskOrderId}`;
+      const rawStatus = submitRes.data?.status || "PENDING";
+      const mappedStatus = mapTskconnectStatus(rawStatus);
+
+      await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          provider: "TSKCONNECT",
+          providerReference: providerRef,
+          externalReference: submitRes.data?.reference || reference,
+          failureReason: null,
+        },
+      });
+
+      // Record Order API Log
+      await recordOrderApiLog({
+        orderId: order.id,
+        provider: "TSKCONNECT",
+        action: "SUBMIT_ORDER",
+        endpoint: `${config.tskconnect.baseUrl || DEFAULT_TSKCONNECT_BASE_URL}/orders`,
+        method: "POST",
+        requestPayload: submitPayload,
+        responsePayload: submitRes,
+        statusCode: 201,
+        success: true,
+        providerReference: providerRef,
+        durationMs,
+      });
+
+      const targetStatus: "PENDING" | "PROCESSING" | "SUCCESS" | "FAILED" | "CANCELLED" =
+        ["SUCCESS", "FAILED", "CANCELLED"].includes(mappedStatus)
+          ? mappedStatus
+          : "PROCESSING";
+
+      if (targetStatus !== order.status) {
+        await changeOrderStatus(
+          order.id,
+          targetStatus,
+          `Dispatched to Tskconnect (${carrier} ${packageId}, Order ID: ${tskOrderId})`,
+          { id: "system", label: "Tskconnect Gateway" },
+          { force: true }
+        );
+      } else {
+        await prisma.orderStatusHistory.create({
+          data: {
+            orderId: order.id,
+            status: order.status,
+            previousStatus: order.status,
+            note: `Dispatched to Tskconnect (${carrier} ${packageId}, Order ID: ${tskOrderId})`,
+            changedBy: "Tskconnect Gateway",
+          },
+        });
+      }
+
+      return {
+        success: true,
+        provider: "TSKCONNECT",
+        providerReference: providerRef,
+        status: targetStatus,
+        raw: submitRes,
+      };
+    } catch (err: any) {
+      const durationMs = Date.now() - tskStartTime;
+      const rawErrMsg = err?.message || "Failed to dispatch order to Tskconnect";
+      const isUnverified =
+        err?.code === "UNVERIFIED_NUMBER" ||
+        (typeof rawErrMsg === "string" && rawErrMsg.toLowerCase().includes("unverified"));
+      const errMsg = isUnverified
+        ? `Unverified number: ${rawErrMsg}`
+        : sanitizeCustomerFacingText(rawErrMsg) || "Delivery processing failed";
+
+      if (isUnverified && carrier === "MTN") {
+        try {
+          const { recordUnverifiedMtnNumber } = await import("../mtn-verification");
+          await recordUnverifiedMtnNumber({ number: order.phoneNumber });
+          const canonical = normalizeGhanaPhoneNumber(order.phoneNumber);
+          await prisma.blockedMtnNumber.updateMany({
+            where: { normalizedNumber: canonical },
+            data: { status: "REJECTED" },
+          });
+          await prisma.acceptedMtnNumber.deleteMany({
+            where: { normalizedNumber: canonical },
+          });
+        } catch {}
+      }
+
+      await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          failureReason: errMsg,
+          ...(isUnverified ? { status: "FAILED" } : {}),
+        },
+      });
+
+      await recordOrderApiLog({
+        orderId: order.id,
+        provider: "TSKCONNECT",
+        action: "SUBMIT_ORDER",
+        endpoint: `${config.tskconnect.baseUrl || DEFAULT_TSKCONNECT_BASE_URL}/orders`,
+        method: "POST",
+        requestPayload: submitPayload,
+        responsePayload: err?.rawResponse || { error: errMsg, code: err?.code },
+        statusCode: err?.status || 500,
+        success: false,
+        errorMessage: errMsg,
+        providerReference: `TSKCONNECT:${reference}`,
+        durationMs,
+      });
+
+      await prisma.orderStatusHistory.create({
+        data: {
+          orderId: order.id,
+          status: isUnverified ? "FAILED" : order.status,
+          previousStatus: order.status,
+          note: `Dispatch failed: ${errMsg}`,
+          changedBy: "Tskconnect Gateway",
+        },
+      });
+
+      return {
+        success: false,
+        provider: "TSKCONNECT",
+        error: errMsg,
+      };
+    }
+  }
 
   // -------------------------------------------------------------------------
   // Dispatched to CLICKYFIED
@@ -1201,6 +1393,115 @@ export async function syncClickyfiedOrder(
     return { changed: false, error: err?.message || "Sync failed" };
   } finally {
     syncingOrders.delete(orderId);
+  }
+}
+
+/**
+ * Synchronizes an order dispatched to Tskconnect by polling its status endpoint.
+ */
+export async function syncTskconnectOrder(
+  orderIdOrRecord: number | {
+    id: number;
+    status: string;
+    providerReference: string | null;
+    updatedAt: Date;
+    externalReference?: string | null;
+  },
+  actorLabel = "Automatic Status Poller",
+  options: { forceCheck?: boolean } = {}
+): Promise<{ changed: boolean; previousStatus?: string; newStatus?: string; error?: string }> {
+  const orderId = typeof orderIdOrRecord === "number" ? orderIdOrRecord : orderIdOrRecord.id;
+
+  const order = typeof orderIdOrRecord === "number"
+    ? await prisma.order.findUnique({ where: { id: orderId } })
+    : orderIdOrRecord;
+
+  if (!order) {
+    return { changed: false, error: "Order not found" };
+  }
+
+  const config = await getProviderRoutingConfig();
+  if (!config.tskconnect.enabled || !config.tskconnect.apiKey) {
+    return { changed: false, error: "Tskconnect integration is not enabled or missing API key." };
+  }
+
+  const rawRef = order.providerReference?.replace(/^TSKCONNECT:/, "").trim();
+  const queryKey = rawRef || order.externalReference;
+  if (!queryKey) {
+    return { changed: false, error: "No providerReference or externalReference on order." };
+  }
+
+  const client = new TskconnectClient(config.tskconnect);
+  const startTime = Date.now();
+
+  try {
+    let orderRes: any = null;
+    try {
+      if (rawRef) {
+        orderRes = await client.getOrderById(rawRef);
+      } else if (order.externalReference) {
+        orderRes = await client.getOrderByReference(order.externalReference);
+      }
+    } catch (e: any) {
+      if (order.externalReference && rawRef) {
+        try {
+          orderRes = await client.getOrderByReference(order.externalReference);
+        } catch {}
+      }
+      if (!orderRes) throw e;
+    }
+
+    const durationMs = Date.now() - startTime;
+    const orderData = orderRes?.data || orderRes;
+    const rawStatus = orderData?.status;
+    const mapped = mapTskconnectStatus(rawStatus);
+
+    await recordOrderApiLog({
+      orderId: order.id,
+      provider: "TSKCONNECT",
+      action: "SYNC_ORDER",
+      endpoint: `${config.tskconnect.baseUrl || DEFAULT_TSKCONNECT_BASE_URL}/orders/${queryKey}`,
+      method: "GET",
+      responsePayload: orderRes,
+      statusCode: 200,
+      success: true,
+      providerReference: order.providerReference || `TSKCONNECT:${queryKey}`,
+      durationMs,
+    });
+
+    if (mapped !== order.status && ["SUCCESS", "FAILED", "PROCESSING", "CANCELLED"].includes(mapped)) {
+      const reason =
+        mapped === "FAILED"
+          ? orderData?.failureReason || `Order failed upstream on Tskconnect (${rawStatus})`
+          : `Status updated to ${mapped} from Tskconnect`;
+
+      await changeOrderStatus(
+        order.id,
+        mapped,
+        reason,
+        { id: "system", label: actorLabel },
+        { force: true }
+      );
+      return { changed: true, previousStatus: order.status, newStatus: mapped };
+    }
+
+    return { changed: false, previousStatus: order.status, newStatus: order.status };
+  } catch (err: any) {
+    const durationMs = Date.now() - startTime;
+    await recordOrderApiLog({
+      orderId: order.id,
+      provider: "TSKCONNECT",
+      action: "SYNC_ORDER",
+      endpoint: `${config.tskconnect.baseUrl || DEFAULT_TSKCONNECT_BASE_URL}/orders/${queryKey}`,
+      method: "GET",
+      responsePayload: err?.rawResponse || { error: err?.message },
+      statusCode: err?.status || 500,
+      success: false,
+      errorMessage: err?.message,
+      providerReference: order.providerReference || `TSKCONNECT:${queryKey}`,
+      durationMs,
+    });
+    return { changed: false, error: err?.message || "Sync failed" };
   }
 }
 
