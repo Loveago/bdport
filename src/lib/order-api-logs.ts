@@ -2,7 +2,7 @@ import { prisma } from "./prisma";
 
 export interface RecordOrderApiLogParams {
   orderId?: number | null;
-  provider: "CLICKYFIED" | "BIGWINDATA" | string;
+  provider: "TSKCONNECT" | "MANUAL" | string;
   action:
     | "SUBMIT_ORDER"
     | "SYNC_ORDER"

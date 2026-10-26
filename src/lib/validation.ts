@@ -342,15 +342,6 @@ export const settingsSchema = z.object({
   bigwindata_base_url: z.string().max(255).optional(),
   bigwindata_webhook_secret: z.string().max(255).optional(),
 
-  // Clickyfied Settings
-  clickyfied_enabled: z.enum(["true", "false"]).optional(),
-  clickyfied_api_key: z.string().max(255).optional(),
-  clickyfied_base_url: z.string().max(255).optional(),
-  clickyfied_client_id: z.string().max(255).optional(),
-  clickyfied_callback_signing_secret: z.string().max(255).optional(),
-  clickyfied_mtn_verification_enabled: z.enum(["true", "false"]).optional(),
-  clickyfied_not_received_enabled: z.enum(["true", "false"]).optional(),
-
   // Tskconnect Settings
   tskconnect_enabled: z.enum(["true", "false"]).optional(),
   tskconnect_api_key: z.string().max(255).optional(),

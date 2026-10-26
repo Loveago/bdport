@@ -160,12 +160,12 @@ async function handleTracking(
         } else if (o.underlyingOrder) {
           if (
             (o.underlyingOrder.status === "PENDING" || o.underlyingOrder.status === "PROCESSING") &&
-            o.underlyingOrder.providerReference?.startsWith("CLICKYFIED:") &&
+            o.underlyingOrder.providerReference?.startsWith("TSKCONNECT:") &&
             Date.now() - new Date(o.underlyingOrder.updatedAt).getTime() > 120000
           ) {
             try {
-              const { syncClickyfiedOrder } = await import("@/lib/provider-apis/router");
-              const syncRes = await syncClickyfiedOrder(o.underlyingOrder, "Storefront Track Sync");
+              const { syncTskconnectOrder } = await import("@/lib/provider-apis/router");
+              const syncRes = await syncTskconnectOrder(o.underlyingOrder, "Storefront Track Sync");
               if (syncRes.changed && syncRes.newStatus) {
                 o.underlyingOrder.status = syncRes.newStatus;
               }

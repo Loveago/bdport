@@ -71,18 +71,18 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const inFlightClickyfied = orders.filter(
+    const inFlightTsk = orders.filter(
       (o) =>
         (o.status === "PENDING" || o.status === "PROCESSING") &&
-        o.providerReference?.startsWith("CLICKYFIED:")
+        o.providerReference?.startsWith("TSKCONNECT:")
     );
 
-    if (inFlightClickyfied.length > 0) {
+    if (inFlightTsk.length > 0) {
       try {
-        const { syncClickyfiedOrder } = await import("@/lib/provider-apis/router");
+        const { syncTskconnectOrder } = await import("@/lib/provider-apis/router");
         await Promise.allSettled(
-          inFlightClickyfied.slice(0, 10).map(async (o) => {
-            const syncRes = await syncClickyfiedOrder(o, "Developer API Bulk Status Query");
+          inFlightTsk.slice(0, 10).map(async (o) => {
+            const syncRes = await syncTskconnectOrder(o, "Developer API Bulk Status Query");
             if (syncRes.changed && syncRes.newStatus) {
               o.status = syncRes.newStatus;
             }

@@ -24,7 +24,7 @@ async function main() {
     console.log(`Order #${o.id} | Phone: ${o.phoneNumber} | ${o.gbAmount}GB | Status: ${o.status}`);
     console.log(`ProviderRef: ${o.providerReference}`);
     console.log(`ExternalRef: ${o.externalReference}`);
-    console.log(`BatchId    : ${o.batchId} | ClickyfiedBatchId: ${o.clickyfiedBatchId}`);
+    console.log(`BatchId    : ${o.batchId}`);
     console.log(`CreatedAt  : ${o.createdAt?.toISOString()}`);
     console.log(`UpdatedAt  : ${o.updatedAt?.toISOString()}`);
     console.log(`History (${o.history.length} entries):`);

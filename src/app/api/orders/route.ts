@@ -221,26 +221,24 @@ export async function POST(request: NextRequest) {
           (o) => !acceptedSet.has(normalizeGhanaPhoneNumber(o.phoneNumber))
         );
 
-        // Fallback: If Clickyfied verification is enabled, check unverified numbers against Clickyfied
+        // Fallback: If Tskconnect verification is enabled, check unverified numbers against Tskconnect
         if (unverified.length > 0) {
-          const clickyfiedSetting = await prisma.systemSetting.findUnique({
-            where: { key: "clickyfied_mtn_verification_enabled" },
+          const tskSetting = await prisma.systemSetting.findUnique({
+            where: { key: "tskconnect_mtn_verification_enabled" },
           });
-          if (clickyfiedSetting?.value === "true") {
+          if (tskSetting?.value !== "false") {
             try {
-              const { getProviderRoutingConfig } = await import("@/lib/provider-apis/router");
-              const { ClickyfiedClient } = await import("@/lib/provider-apis/clickyfied");
+              const { getTskconnectClient } = await import("@/lib/provider-apis/router");
               const { addAcceptedMtnNumber } = await import("@/lib/mtn-verification");
-              const config = await getProviderRoutingConfig();
-              const client = new ClickyfiedClient(config.clickyfied);
+              const client = await getTskconnectClient();
               const unverifiedPhones = Array.from(
                 new Set(unverified.map((o) => normalizeGhanaPhoneNumber(o.phoneNumber)))
               );
               const res = await client.verifyNumbers(unverifiedPhones);
-              const validNorms = new Set(res.validNumbers.map((n) => normalizeGhanaPhoneNumber(n)));
+              const validNorms = new Set(res.validNumbers.map((n: string) => normalizeGhanaPhoneNumber(n)));
               for (const phone of unverifiedPhones) {
                 if (validNorms.has(phone)) {
-                  await addAcceptedMtnNumber(phone, "CLICKYFIED_API", "Automated Verification API").catch(() => {});
+                  await addAcceptedMtnNumber(phone, "TSKCONNECT_API", "Automated Verification API").catch(() => {});
                   acceptedSet.add(phone);
                 }
               }
@@ -249,7 +247,7 @@ export async function POST(request: NextRequest) {
                 (o) => !acceptedSet.has(normalizeGhanaPhoneNumber(o.phoneNumber))
               );
             } catch (err) {
-              console.error("Clickyfied verification check in /api/orders error:", err);
+              console.error("Tskconnect verification check in /api/orders error:", err);
             }
           }
         }
@@ -536,26 +534,26 @@ export async function GET(request: NextRequest) {
       prisma.order.count({ where }),
     ]);
 
-    // On-demand sync for in-flight Clickyfied orders on this page (throttled to 120s and poller enabled)
+    // On-demand sync for in-flight Tskconnect orders on this page (throttled to 120s and poller enabled)
     const pollerSetting = await prisma.systemSetting.findUnique({
       where: { key: "provider_sync_poller_enabled" },
     });
     const pollerEnabled = pollerSetting?.value !== "false";
 
     if (pollerEnabled) {
-      const inFlightClickyfied = data.filter(
+      const inFlightTskconnect = data.filter(
         (o) =>
           (o.status === "PENDING" || o.status === "PROCESSING") &&
-          o.providerReference?.startsWith("CLICKYFIED:") &&
+          o.providerReference?.startsWith("TSKCONNECT:") &&
           Date.now() - new Date(o.updatedAt).getTime() > 120000
       );
 
-      if (inFlightClickyfied.length > 0) {
+      if (inFlightTskconnect.length > 0) {
         try {
-          const { syncClickyfiedOrder } = await import("@/lib/provider-apis/router");
+          const { syncTskconnectOrder } = await import("@/lib/provider-apis/router");
           await Promise.allSettled(
-            inFlightClickyfied.slice(0, 5).map(async (o) => {
-              const res = await syncClickyfiedOrder(o, "User Dashboard Sync");
+            inFlightTskconnect.slice(0, 5).map(async (o) => {
+              const res = await syncTskconnectOrder(o, "User Dashboard Sync");
               if (res.changed && res.newStatus) {
                 o.status = res.newStatus;
               }
@@ -565,51 +563,7 @@ export async function GET(request: NextRequest) {
           console.error("On-demand orders sync error:", syncErr);
         }
       }
-
-      // On-demand sync for open delivery reports on this page (throttled to 120s)
-      const ordersWithOpenReports = data.filter(
-        (o: any) =>
-          o.deliveryReports?.some((r: any) => ["OPEN", "UNDER_REVIEW", "INVESTIGATING"].includes(r.status)) &&
-          (o.providerReference?.startsWith("CLICKYFIED:") || o.externalReference) &&
-          Date.now() - new Date(o.updatedAt).getTime() > 120000
-      );
-
-      if (ordersWithOpenReports.length > 0) {
-        try {
-          const { syncClickyfiedDeliveryReport } = await import("@/lib/provider-apis/router");
-          await Promise.allSettled(
-            ordersWithOpenReports.slice(0, 5).map(async (o: any) => {
-              const rep = o.deliveryReports?.find((r: any) =>
-                ["OPEN", "UNDER_REVIEW", "INVESTIGATING"].includes(r.status)
-              );
-            if (rep) {
-              const res = await syncClickyfiedDeliveryReport(rep.id, "Orders Page View Sync");
-              if (res.changed) {
-                const refreshed = await prisma.deliveryReport.findUnique({
-                  where: { id: rep.id },
-                  select: { id: true, seq: true, status: true, proofImageMime: true },
-                });
-                if (refreshed) {
-                  rep.status = refreshed.status;
-                  rep.proofImageMime = refreshed.proofImageMime;
-                }
-                const refreshedOrder = await prisma.order.findUnique({
-                  where: { id: o.id },
-                  select: { status: true, failureReason: true },
-                });
-                if (refreshedOrder) {
-                  o.status = refreshedOrder.status;
-                  o.failureReason = refreshedOrder.failureReason;
-                }
-              }
-            }
-          })
-        );
-      } catch (repSyncErr) {
-        console.error("On-demand orders delivery report sync error:", repSyncErr);
-      }
     }
-  }
 
     // Queue positions across the user's pending/processing orders
     const queueRows = await prisma.order.findMany({

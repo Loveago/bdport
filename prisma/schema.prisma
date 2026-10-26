@@ -331,7 +331,7 @@ model OrderApiLog {
   id                Int      @id @default(autoincrement())
   orderId           Int?
   order             Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
-  provider          String   // CLICKYFIED | BIGWINDATA
+  provider          String   // TSKCONNECT | MANUAL
   action            String   // SUBMIT_ORDER | SYNC_ORDER | CHECK_STATUS | NOT_RECEIVED | TEST
   endpoint          String
   method            String   @default("POST")

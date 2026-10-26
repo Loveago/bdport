@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireStaff } from "@/lib/auth";
-import { syncClickyfiedOrder, syncTskconnectOrder, syncBigwindataOrder, syncGhconnectOrder, syncBigwinTelecelOrder } from "@/lib/provider-apis/router";
+import { syncTskconnectOrder, syncBigwindataOrder, syncGhconnectOrder, syncBigwinTelecelOrder } from "@/lib/provider-apis/router";
 import { handleRouteError } from "@/lib/api-helpers";
 
 export async function POST(request: NextRequest) {
@@ -13,7 +13,6 @@ export async function POST(request: NextRequest) {
         status: { in: ["PENDING", "PROCESSING"] },
         OR: [
           { providerReference: { startsWith: "TSKCONNECT:" } },
-          { providerReference: { startsWith: "CLICKYFIED:" } },
           { providerReference: { startsWith: "BIGWIN:" } },
           { providerReference: { startsWith: "GHC:" } },
           { providerReference: { startsWith: "BWTEL:" } },
@@ -39,7 +38,7 @@ export async function POST(request: NextRequest) {
       } else if (order.providerReference?.startsWith("BIGWIN:")) {
         res = await syncBigwindataOrder(order, `Manual sync by ${actor.email}`, { forceCheck: true });
       } else {
-        res = await syncClickyfiedOrder(order, `Manual sync by ${actor.email}`, { forceCheck: true });
+        res = { changed: false };
       }
       if (res.changed) updated++;
       results.push({

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
-import { ClickyfiedClient, generateClickyfiedReference } from "@/lib/provider-apis/clickyfied";
 import { TskconnectClient, resolveTskconnectPackageId, generateTskconnectReference } from "@/lib/provider-apis/tskconnect";
 import { getProviderRoutingConfig } from "@/lib/provider-apis/router";
 import { handleRouteError, apiError } from "@/lib/api-helpers";
@@ -43,18 +42,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, packages: res.data });
     }
 
-    if (action === "test_clickyfied_billing") {
-      const client = new ClickyfiedClient(config.clickyfied);
-      const billing = await client.getCurrentBilling(body.date);
-      return NextResponse.json({ success: true, billing });
-    }
-
-    if (action === "test_clickyfied_verify") {
-      const client = new ClickyfiedClient(config.clickyfied);
-      const res = await client.verifyNumbers([recipient]);
-      return NextResponse.json({ success: true, verification: res });
-    }
-
     if (action === "test_order") {
       if (provider === "TSKCONNECT") {
         const client = new TskconnectClient({
@@ -72,17 +59,6 @@ export async function POST(request: NextRequest) {
           idempotencyKey: reference,
         });
         return NextResponse.json({ success: true, provider: "TSKCONNECT", order });
-      }
-
-      if (provider === "CLICKYFIED") {
-        const client = new ClickyfiedClient(config.clickyfied);
-        const externalReference = generateClickyfiedReference();
-        const order = await client.submitOrder({
-          externalReference,
-          entries: [{ number: recipient, allocationGB: gbAmount }],
-          idempotencyKey: externalReference,
-        });
-        return NextResponse.json({ success: true, provider: "CLICKYFIED", order });
       }
 
       return apiError(400, "Unsupported provider for test order");

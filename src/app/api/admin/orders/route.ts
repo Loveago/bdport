@@ -12,12 +12,6 @@ export async function GET(request: NextRequest) {
   try {
     await requireStaff();
 
-    // Auto-heal: ensure any stranded processing MTN orders are safely returned to pending
-    try {
-      const { recoverStrandedMtnOrders } = await import("@/lib/provider-apis/router");
-      await recoverStrandedMtnOrders();
-    } catch {}
-
     const { searchParams } = new URL(request.url);
     const page = Math.max(1, Number(searchParams.get("page") ?? 1));
     const pageSize = Math.min(250, Math.max(1, Number(searchParams.get("pageSize") ?? 20)));
@@ -78,26 +72,26 @@ export async function GET(request: NextRequest) {
       prisma.order.count({ where }),
     ]);
 
-    // On-demand sync for in-flight Clickyfied orders on this page (throttled to 120s and poller enabled)
+    // On-demand sync for in-flight Tskconnect orders on this page (throttled to 120s and poller enabled)
     const pollerSetting = await prisma.systemSetting.findUnique({
       where: { key: "provider_sync_poller_enabled" },
     });
     const pollerEnabled = pollerSetting?.value !== "false";
 
     if (pollerEnabled) {
-      const inFlightClickyfied = data.filter(
+      const inFlightTskconnect = data.filter(
         (o) =>
           (o.status === "PENDING" || o.status === "PROCESSING") &&
-          o.providerReference?.startsWith("CLICKYFIED:") &&
+          o.providerReference?.startsWith("TSKCONNECT:") &&
           Date.now() - new Date(o.updatedAt).getTime() > 120000
       );
 
-      if (inFlightClickyfied.length > 0) {
+      if (inFlightTskconnect.length > 0) {
         try {
-          const { syncClickyfiedOrder } = await import("@/lib/provider-apis/router");
+          const { syncTskconnectOrder } = await import("@/lib/provider-apis/router");
           await Promise.allSettled(
-            inFlightClickyfied.slice(0, 5).map(async (o) => {
-              const res = await syncClickyfiedOrder(o, "Admin Orders View Sync");
+            inFlightTskconnect.slice(0, 5).map(async (o) => {
+              const res = await syncTskconnectOrder(o, "Admin Orders View Sync");
               if (res.changed && res.newStatus) {
                 o.status = res.newStatus;
               }

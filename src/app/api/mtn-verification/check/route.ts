@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
         const { addAcceptedMtnNumber } = await import("@/lib/mtn-verification");
         const config = await getProviderRoutingConfig();
 
-        // 1. Tskconnect verification endpoint
+        // Tskconnect verification endpoint
         if (config.tskconnect.enabled && config.tskconnect.numberVerificationEnabled && config.tskconnect.apiKey) {
           try {
             const { TskconnectClient } = await import("@/lib/provider-apis/tskconnect");
@@ -83,31 +83,6 @@ export async function POST(request: NextRequest) {
             );
           } catch (tskErr) {
             console.error("Tskconnect number verification error:", tskErr);
-          }
-        }
-
-        // 2. Clickyfied verification fallback
-        if (pendingVerification.length > 0 && config.clickyfied.enabled && config.clickyfied.mtnVerificationEnabled) {
-          try {
-            const { ClickyfiedClient } = await import("@/lib/provider-apis/clickyfied");
-            const client = new ClickyfiedClient(config.clickyfied);
-
-            const verifyRes = await client.verifyNumbers(pendingVerification);
-            const validSet = new Set(verifyRes.validNumbers.map((n) => normalizeGhanaPhoneNumber(n)));
-
-            for (const raw of pendingVerification) {
-              const canon = normalizeGhanaPhoneNumber(raw);
-              if (validSet.has(canon)) {
-                await addAcceptedMtnNumber(canon, "CLICKYFIED_API", "Automated Verification API").catch(() => {});
-                acceptedSet.add(canon);
-              }
-            }
-
-            pendingVerification = pendingVerification.filter(
-              (raw) => !acceptedSet.has(normalizeGhanaPhoneNumber(raw))
-            );
-          } catch (err) {
-            console.error("Clickyfied number verification error:", err);
           }
         }
       } catch (err) {

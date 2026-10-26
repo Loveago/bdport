@@ -59,7 +59,7 @@ interface Stats {
   total: number;
   failed: number;
   success: number;
-  clickyfiedErrors: number;
+  tskconnectErrors: number;
   bigwindataErrors: number;
 }
 
@@ -70,7 +70,7 @@ export default function OrderApiLogsPage() {
     total: 0,
     failed: 0,
     success: 0,
-    clickyfiedErrors: 0,
+    tskconnectErrors: 0,
     bigwindataErrors: 0,
   });
   const [loading, setLoading] = React.useState(true);
@@ -272,8 +272,8 @@ export default function OrderApiLogsPage() {
           </div>
           <div className="mt-2 flex items-center gap-4 text-xs font-bold">
             <div className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400">
-              <span>Gateway API:</span>
-              <span className="font-mono text-base">{stats.clickyfiedErrors}</span>
+              <span>TSKCONNECT:</span>
+              <span className="font-mono text-base">{stats.tskconnectErrors}</span>
             </div>
             <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400">
               <span>Bigwindata:</span>
@@ -313,7 +313,7 @@ export default function OrderApiLogsPage() {
               className="h-9 rounded-xl border border-slate-200 bg-white px-3 text-xs text-slate-900 outline-none transition focus:border-brand-500 dark:border-white/10 dark:bg-[#0d1526] dark:text-slate-100"
             >
               <option value="ALL">All Providers</option>
-              <option value="CLICKYFIED">Gateway API</option>
+              <option value="TSKCONNECT">TSKCONNECT API</option>
               <option value="BIGWINDATA">Bigwindata</option>
             </select>
 
@@ -396,7 +396,7 @@ export default function OrderApiLogsPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                 {logs.map((log) => {
-                  const isClickyfied = log.provider === "CLICKYFIED";
+                  const isTskconnect = log.provider === "TSKCONNECT";
                   const isBigwin = log.provider === "BIGWINDATA";
                   return (
                     <tr
@@ -435,9 +435,9 @@ export default function OrderApiLogsPage() {
 
                       {/* Provider */}
                       <td className="px-4 py-3">
-                        {isClickyfied ? (
+                        {isTskconnect ? (
                           <span className="inline-flex items-center gap-1 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-[11px] font-bold text-indigo-600 dark:text-indigo-400">
-                            🚀 Gateway API
+                            🚀 TSKCONNECT
                           </span>
                         ) : isBigwin ? (
                           <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-bold text-amber-600 dark:text-amber-400">

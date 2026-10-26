@@ -340,15 +340,15 @@ async function runNumberVerificationE2E() {
     const testMtnVerified = "0249999001";
     const testMtnUnverified = "0249999002";
 
-    // Ensure system setting is enabled for test, with Clickyfied off to isolate local DB check
+    // Ensure system setting is enabled for test
     await prisma.systemSetting.upsert({
       where: { key: "mtn_number_verification_enabled" },
       create: { key: "mtn_number_verification_enabled", value: "true" },
       update: { value: "true" },
     });
     await prisma.systemSetting.upsert({
-      where: { key: "clickyfied_mtn_verification_enabled" },
-      create: { key: "clickyfied_mtn_verification_enabled", value: "false" },
+      where: { key: "tskconnect_mtn_verification_enabled" },
+      create: { key: "tskconnect_mtn_verification_enabled", value: "false" },
       update: { value: "false" },
     });
 

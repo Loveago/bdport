@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { syncClickyfiedOrder, syncTskconnectOrder } from "@/lib/provider-apis/router";
+import { syncTskconnectOrder } from "@/lib/provider-apis/router";
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,10 +22,7 @@ export async function GET(request: NextRequest) {
     const inFlightOrders = await prisma.order.findMany({
       where: {
         status: { in: ["PENDING", "PROCESSING"] },
-        OR: [
-          { providerReference: { startsWith: "TSKCONNECT:" } },
-          { providerReference: { startsWith: "CLICKYFIED:" } },
-        ],
+        providerReference: { startsWith: "TSKCONNECT:" },
         updatedAt: { lte: cutoffTime },
       },
       take: 40,
@@ -48,18 +45,14 @@ export async function GET(request: NextRequest) {
     const seenProviderIds = new Set<string>();
 
     for (const order of inFlightOrders) {
-      const isTsk = order.providerReference?.startsWith("TSKCONNECT:");
-      const prefix = isTsk ? "TSKCONNECT:" : "CLICKYFIED:";
-      const rawRef = order.providerReference?.replace(prefix, "").trim();
+      const rawRef = order.providerReference?.replace("TSKCONNECT:", "").trim();
       const [providerId] = (rawRef || "").split(":");
       if (providerId) {
         if (seenProviderIds.has(providerId)) continue;
         seenProviderIds.add(providerId);
       }
       checked++;
-      const res = isTsk
-        ? await syncTskconnectOrder(order, "Provider Sync Cron")
-        : await syncClickyfiedOrder(order, "Provider Sync Cron");
+      const res = await syncTskconnectOrder(order, "Provider Sync Cron");
 
       if (res.changed) {
         updated++;

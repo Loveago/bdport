@@ -575,7 +575,7 @@ export async function verifyAndSettleStorefrontOrder(reference: string): Promise
         select: { underlyingOrderId: true },
       });
       if (updated?.underlyingOrderId) {
-        // Automatically dispatch storefront order to assigned API provider (Clickyfied / Bigwindata / GHConnect)
+        // Automatically dispatch storefront order to assigned API provider (TSKCONNECT / Bigwindata / GHConnect)
         try {
           const { getProviderRoutingConfig, dispatchOrder, shouldAutoDispatch } = await import("./provider-apis/router");
           const config = await getProviderRoutingConfig();

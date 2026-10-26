@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { handleRouteError, apiError } from "@/lib/api-helpers";
 import { getEnabledStorefrontBySlug, fromPesewas } from "@/lib/storefront";
 import { deliveryReportCode, sanitizeCustomerRefundNote, sanitizeCustomerFacingText } from "@/lib/types";
-import { syncClickyfiedDeliveryReport } from "@/lib/provider-apis/router";
 
 /**
  * Public storefront report detail endpoint.
@@ -38,13 +37,6 @@ export async function GET(
 
     if (!storefrontOrder || !storefrontOrder.underlyingOrderId) {
       return apiError(404, "Order not found");
-    }
-
-    // Trigger on-demand sync with Clickyfied if needed
-    try {
-      await syncClickyfiedDeliveryReport(reportId, "Storefront On-Demand Sync");
-    } catch {
-      // Non-blocking fallback
     }
 
     const report = await prisma.deliveryReport.findFirst({
@@ -101,9 +93,7 @@ export async function GET(
           id: e.id,
           type: e.type,
           message: sanitizeCustomerFacingText(e.message),
-          actorLabel: e.actorLabel?.toLowerCase().includes("clickyfied")
-            ? "System"
-            : (sanitizeCustomerFacingText(e.actorLabel) || "System"),
+          actorLabel: sanitizeCustomerFacingText(e.actorLabel) || "System",
           createdAt: e.createdAt.toISOString(),
         })),
       },

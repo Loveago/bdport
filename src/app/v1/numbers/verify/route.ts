@@ -127,7 +127,7 @@ async function executeVerification(
         const { addAcceptedMtnNumber } = await import("@/lib/mtn-verification");
         const config = await getProviderRoutingConfig();
 
-        // 1. Tskconnect verification endpoint
+        // Tskconnect verification endpoint
         if (config.tskconnect.enabled && config.tskconnect.numberVerificationEnabled && config.tskconnect.apiKey) {
           try {
             const { TskconnectClient } = await import("@/lib/provider-apis/tskconnect");
@@ -137,27 +137,8 @@ async function executeVerification(
               await addAcceptedMtnNumber(num, "TSKCONNECT_API", "Automated Tskconnect Verification").catch(() => {});
               acceptedSet.add(num);
             }
-            missingFromLocal = missingFromLocal.filter((num) => !acceptedSet.has(num));
           } catch (tskErr) {
             console.error("Tskconnect verification error in /v1/numbers/verify:", tskErr);
-          }
-        }
-
-        // 2. Clickyfied verification fallback
-        if (missingFromLocal.length > 0 && config.clickyfied.enabled && config.clickyfied.mtnVerificationEnabled) {
-          try {
-            const { ClickyfiedClient } = await import("@/lib/provider-apis/clickyfied");
-            const client = new ClickyfiedClient(config.clickyfied);
-            const res = await client.verifyNumbers(missingFromLocal);
-            const validNorms = new Set(res.validNumbers.map((n) => normalizeGhanaPhoneNumber(n)));
-            for (const num of missingFromLocal) {
-              if (validNorms.has(num)) {
-                await addAcceptedMtnNumber(num, "CLICKYFIED_API", "Automated Verification API").catch(() => {});
-                acceptedSet.add(num);
-              }
-            }
-          } catch (clickErr) {
-            console.error("Clickyfied verification error in /v1/numbers/verify:", clickErr);
           }
         }
       } catch (err) {

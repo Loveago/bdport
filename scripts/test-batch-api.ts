@@ -43,7 +43,7 @@ function createRequest(
 
 async function run() {
   console.log("\n========================================================");
-  console.log("   MYCEDINET BATCH ORDER & CLICKYFIED INTEGRATION TEST");
+  console.log("   MYCEDINET BATCH ORDER & TSKCONNECT INTEGRATION TEST");
   console.log("========================================================\n");
 
   const testEmail = `test_batch_${Date.now()}@mycedinet.com`;

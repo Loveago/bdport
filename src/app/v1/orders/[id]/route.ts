@@ -56,18 +56,18 @@ export async function GET(
     });
 
     if (batch && batch.orders.length > 0) {
-      // Sync any in-flight Clickyfied orders in batch
-      const inFlightClickyfied = batch.orders.filter(
+      // Sync any in-flight Tskconnect orders in batch
+      const inFlightTsk = batch.orders.filter(
         (o) =>
           (o.status === "PENDING" || o.status === "PROCESSING") &&
-          o.providerReference?.startsWith("CLICKYFIED:")
+          o.providerReference?.startsWith("TSKCONNECT:")
       );
-      if (inFlightClickyfied.length > 0) {
+      if (inFlightTsk.length > 0) {
         try {
-          const { syncClickyfiedOrder } = await import("@/lib/provider-apis/router");
+          const { syncTskconnectOrder } = await import("@/lib/provider-apis/router");
           await Promise.allSettled(
-            inFlightClickyfied.slice(0, 10).map(async (o) => {
-              const syncRes = await syncClickyfiedOrder(o, "Developer API Batch Query");
+            inFlightTsk.slice(0, 10).map(async (o) => {
+              const syncRes = await syncTskconnectOrder(o, "Developer API Batch Query");
               if (syncRes.changed && syncRes.newStatus) {
                 o.status = syncRes.newStatus;
               }
@@ -143,11 +143,11 @@ export async function GET(
 
     if (
       (order.status === "PENDING" || order.status === "PROCESSING") &&
-      order.providerReference?.startsWith("CLICKYFIED:")
+      order.providerReference?.startsWith("TSKCONNECT:")
     ) {
       try {
-        const { syncClickyfiedOrder } = await import("@/lib/provider-apis/router");
-        const syncRes = await syncClickyfiedOrder(order, "Developer API Query");
+        const { syncTskconnectOrder } = await import("@/lib/provider-apis/router");
+        const syncRes = await syncTskconnectOrder(order, "Developer API Query");
         if (syncRes.changed && syncRes.newStatus) {
           order.status = syncRes.newStatus;
         }

@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       to,
     });
 
-    // Split any batches that contain orders across multiple distinct Clickyfied dispatches
+    // Reconcile batch aggregates
     try {
       const { splitMultiDispatchBatches } = await import("@/lib/provider-apis/router");
       await splitMultiDispatchBatches();
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
       prisma.orderBatch.count({ where }),
     ]);
 
-    // On-demand sync for in-flight Clickyfied orders belonging to these batches
+    // On-demand sync for in-flight Tskconnect orders belonging to these batches
     const inFlightBatchIds = data
       .filter((b) => b.status === "PROCESSING" || b.status === "PENDING")
       .map((b) => b.id);
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
           where: {
             batchId: { in: inFlightBatchIds },
             status: { in: ["PENDING", "PROCESSING"] },
-            providerReference: { startsWith: "CLICKYFIED:" },
+            providerReference: { startsWith: "TSKCONNECT:" },
             updatedAt: { lte: twoMinutesAgo },
           },
           take: 20,
@@ -74,9 +74,9 @@ export async function GET(request: NextRequest) {
         });
 
         if (inFlightOrders.length > 0) {
-          const { syncClickyfiedOrder } = await import("@/lib/provider-apis/router");
+          const { syncTskconnectOrder } = await import("@/lib/provider-apis/router");
           await Promise.allSettled(
-            inFlightOrders.map((o) => syncClickyfiedOrder(o, "Admin Batches View Sync"))
+            inFlightOrders.map((o) => syncTskconnectOrder(o, "Admin Batches View Sync"))
           );
           // Refresh batch status if any orders transitioned
           const refreshedBatches = await prisma.orderBatch.findMany({

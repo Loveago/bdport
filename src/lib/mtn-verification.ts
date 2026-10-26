@@ -111,7 +111,7 @@ export async function validateMtnOrderRecipient(
       const { getProviderRoutingConfig } = await import("./provider-apis/router");
       const config = await getProviderRoutingConfig();
 
-      // 1. Query Tskconnect verification endpoint if enabled and configured
+      // Query Tskconnect verification endpoint if enabled and configured
       if (config.tskconnect.enabled && config.tskconnect.numberVerificationEnabled && config.tskconnect.apiKey) {
         try {
           const { TskconnectClient } = await import("./provider-apis/tskconnect");
@@ -123,27 +123,6 @@ export async function validateMtnOrderRecipient(
           }
         } catch (tskErr) {
           console.error("Tskconnect single number verification error:", tskErr);
-        }
-      }
-
-      // 2. Query Clickyfied verification endpoint if enabled and not yet verified
-      if (!isAccepted) {
-        const clickyfiedSetting = await prisma.systemSetting.findUnique({
-          where: { key: "clickyfied_mtn_verification_enabled" },
-        });
-        if (clickyfiedSetting?.value === "true") {
-          try {
-            const { ClickyfiedClient } = await import("./provider-apis/clickyfied");
-            const client = new ClickyfiedClient(config.clickyfied);
-            const res = await client.verifyNumbers([normalized]);
-            const validNorms = new Set(res.validNumbers.map((n) => normalizeGhanaPhoneNumber(n)));
-            if (validNorms.has(normalized)) {
-              await addAcceptedMtnNumber(normalized, "CLICKYFIED_API", "Automated Verification API").catch(() => {});
-              isAccepted = true;
-            }
-          } catch (err) {
-            console.error("Clickyfied single number verification error:", err);
-          }
         }
       }
     } catch (err) {

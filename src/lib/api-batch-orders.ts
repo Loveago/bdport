@@ -213,7 +213,7 @@ export async function validateAndFilterBatchEntries(
 }
 
 /**
- * Maps DB statuses to Clickyfied public API statuses
+ * Maps DB statuses to public API statuses
  */
 export function mapApiOrderStatus(status: string, isSandbox = false): string {
   const upper = (status || "").toUpperCase();
@@ -708,17 +708,10 @@ export async function handleBatchOrderSubmission({
       const { getProviderRoutingConfig, dispatchOrder, shouldAutoDispatch } = await import("@/lib/provider-apis/router");
       const config = await getProviderRoutingConfig();
       if (shouldAutoDispatch(config)) {
-        if (batchNetwork.toUpperCase().startsWith("MTN")) {
-          const { checkAndTriggerMtnBatch } = await import("@/lib/provider-apis/clickyfied-batch");
-          checkAndTriggerMtnBatch("THRESHOLD").catch((err) => {
-            console.error("Batch auto-dispatch MTN trigger error:", err);
+        for (const ord of result.createdOrders) {
+          dispatchOrder(ord.id).catch((err) => {
+            console.error(`Batch auto-dispatch failed for order #${ord.id}:`, err);
           });
-        } else {
-          for (const ord of result.createdOrders) {
-            dispatchOrder(ord.id).catch((err) => {
-              console.error(`Batch auto-dispatch failed for order #${ord.id}:`, err);
-            });
-          }
         }
       }
     } catch (err) {

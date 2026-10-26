@@ -49,11 +49,6 @@ export async function PATCH(request: NextRequest) {
         ? "********"
         : `${auditSafeInput.bigwindata_api_key.slice(0, 4)}...${auditSafeInput.bigwindata_api_key.slice(-4)}`;
     }
-    if (typeof auditSafeInput.clickyfied_api_key === "string" && auditSafeInput.clickyfied_api_key) {
-      auditSafeInput.clickyfied_api_key = auditSafeInput.clickyfied_api_key.length <= 8
-        ? "********"
-        : `${auditSafeInput.clickyfied_api_key.slice(0, 4)}...${auditSafeInput.clickyfied_api_key.slice(-4)}`;
-    }
     if (typeof auditSafeInput.tskconnect_api_key === "string" && auditSafeInput.tskconnect_api_key) {
       auditSafeInput.tskconnect_api_key = auditSafeInput.tskconnect_api_key.length <= 8
         ? "********"

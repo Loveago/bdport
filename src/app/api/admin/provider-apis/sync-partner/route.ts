@@ -10,7 +10,7 @@ export async function POST() {
       checked: 0,
       updated: 0,
       results: [],
-      message: "Partner sync is deprecated. Clickyfied is currently the only active provider.",
+      message: "Partner sync is deprecated. TSKCONNECT is currently the active provider.",
     });
   } catch (err) {
     return handleRouteError(err);

@@ -4,8 +4,6 @@ import { requireUser } from "@/lib/auth";
 import { deliveryReportCode, sanitizeCustomerRefundNote, sanitizeCustomerFacingText } from "@/lib/types";
 import { handleRouteError, apiError } from "@/lib/api-helpers";
 
-import { syncClickyfiedDeliveryReport } from "@/lib/provider-apis/router";
-
 /**
  * User report detail (§15): report information, order information, admin
  * response, evidence metadata and the report timeline. Ownership is enforced —
@@ -18,13 +16,6 @@ export async function GET(
   try {
     const user = await requireUser();
     const { id } = await params;
-
-    // Trigger on-demand sync if this report is from a Clickyfied order
-    try {
-      await syncClickyfiedDeliveryReport(id, "On-Demand View Sync");
-    } catch {
-      // Non-blocking fallback
-    }
 
     const report = await prisma.deliveryReport.findUnique({
       where: { id },
@@ -70,9 +61,6 @@ export async function GET(
 
     const sanitizeActor = (label: string | null | undefined) => {
       if (!label) return null;
-      if (label.toLowerCase().includes("clickyfied") || label.toLowerCase().includes("bigwin")) {
-        return "Support Team";
-      }
       return sanitizeCustomerFacingText(label) || "Support Team";
     };
 
@@ -91,8 +79,6 @@ export async function GET(
           message: isStaff ? e.message : sanitizeCustomerFacingText(e.message),
           actorLabel: isStaff
             ? e.actorLabel
-            : e.actorLabel?.toLowerCase().includes("clickyfied")
-            ? "System"
             : (sanitizeCustomerFacingText(e.actorLabel) || "System"),
         })),
       },

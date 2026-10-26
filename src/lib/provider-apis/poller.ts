@@ -1,5 +1,5 @@
 import { prisma } from "../prisma";
-import { syncClickyfiedOrder, syncClickyfiedDeliveryReport, syncTskconnectOrder } from "./router";
+import { syncTskconnectOrder } from "./router";
 
 let isPolling = false;
 
@@ -20,13 +20,13 @@ export async function getPollerIntervalSeconds(): Promise<number> {
     if (!isNaN(val) && val >= 10) return val;
   }
 
-  return 60; // Default: 60 seconds (1 minute per Clickyfied requirement)
+  return 30; // Default: 30 seconds
 }
 
 /**
- * Self-scheduling background poller for in-flight Clickyfied orders and open delivery reports.
- * Automatically synchronizes pending/processing orders and reports (default every 60 seconds, configurable).
- * If there is nothing to poll, it completely skips any provider communication.
+ * Self-scheduling background poller for in-flight Tskconnect orders.
+ * Automatically synchronizes pending/processing orders (default every 30 seconds, configurable).
+ * If there is nothing to poll, it skips provider communication.
  */
 export function startProviderSyncPoller() {
   if (typeof window !== "undefined") return;
@@ -44,7 +44,7 @@ export function startProviderSyncPoller() {
   }
   g.__providerSyncPollerStarted = true;
 
-  console.log("[ProviderSyncPoller] Automated background status poller initialized (60s default interval).");
+  console.log("[ProviderSyncPoller] Automated background status poller initialized for Tskconnect.");
 
   const poll = async () => {
     if (isPolling) return;
@@ -60,7 +60,7 @@ export function startProviderSyncPoller() {
 
       const { getProviderRoutingConfig } = await import("./router");
       const config = await getProviderRoutingConfig();
-      if (!config.enabled || (!config.clickyfied.enabled && !config.tskconnect.enabled)) {
+      if (!config.enabled || !config.tskconnect.enabled || !config.tskconnect.apiKey) {
         return;
       }
 
@@ -75,7 +75,6 @@ export function startProviderSyncPoller() {
         if (existingLock && existingLock.value) {
           const lockExpiresAt = parseInt(existingLock.value, 10);
           if (!isNaN(lockExpiresAt) && now < lockExpiresAt) {
-            // Another cluster worker or instance is actively handling this cycle
             return;
           }
         }
@@ -91,122 +90,27 @@ export function startProviderSyncPoller() {
       // 2. Configurable rate limit cutoff
       const cutoffTime = new Date(Date.now() - intervalSeconds * 1000);
 
-      // Find in-flight Clickyfied orders (PENDING or PROCESSING)
-      if (config.clickyfied.enabled) {
-        const inFlightOrders = await prisma.order.findMany({
-          where: {
-            status: { in: ["PENDING", "PROCESSING"] },
-            OR: [
-              { providerReference: { startsWith: "CLICKYFIED" } },
-              { externalReference: { startsWith: "CF-BATCH-" } },
-            ],
-            updatedAt: { lte: cutoffTime },
-          },
-          take: 200,
-          orderBy: { updatedAt: "asc" },
-        });
-
-        // Find active open delivery reports on Clickify orders (only truly unresolved Clickyfied reports)
-        const openReports = await prisma.deliveryReport.findMany({
-          where: {
-            status: { in: ["OPEN", "INVESTIGATING", "UNDER_REVIEW"] },
-            order: {
-              OR: [
-                { providerReference: { startsWith: "CLICKYFIED" } },
-                { externalReference: { startsWith: "CF-BATCH-" } },
-              ],
-            },
-            updatedAt: { lte: cutoffTime },
-          },
-          take: 20,
-          orderBy: { updatedAt: "asc" },
-        });
-
-        // Deduplicate by provider reference or batch code so we don't query the same batch multiple times
-        const seenProviderIds = new Set<string>();
-        if (inFlightOrders.length > 0) {
-          console.log(`[ProviderSyncPoller] Syncing ${inFlightOrders.length} in-flight Clickyfied order(s)...`);
-        }
-        for (const order of inFlightOrders) {
-          try {
-            const rawRef = order.providerReference?.replace(/^CLICKYFIED(_CLAIMED)?:/, "").trim();
-            const [providerId] = (rawRef || "").split(":");
-            const queryKey = providerId || order.externalReference;
-            if (queryKey) {
-              if (seenProviderIds.has(queryKey)) {
-                continue;
-              }
-              seenProviderIds.add(queryKey);
-            }
-            await syncClickyfiedOrder(order, "Automatic Background Poller");
-          } catch (err: any) {
-            console.error(`[ProviderSyncPoller] Error syncing order #${order.id} (ref=${order.providerReference}):`, err?.message || err);
-          }
-        }
-
-        for (const rep of openReports) {
-          try {
-            await syncClickyfiedDeliveryReport(rep.id, "Automatic Background Poller");
-          } catch {
-            // continue
-          }
-        }
-
-        // Check Clickyfied MTN Batch timer window trigger
-        try {
-          const { checkAndTriggerMtnBatch } = await import("./clickyfied-batch");
-          await checkAndTriggerMtnBatch("TIMER");
-        } catch (batchErr) {
-          // Ignore background transient errors
-        }
-
-        // Auto-heal any FAILED MTN orders that Clickyfied fulfilled when provider resumed
-        try {
-          const hasFailed = await prisma.order.findFirst({
-            where: {
-              network: "MTN",
-              status: "FAILED",
-              createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-            },
-            select: { id: true },
-          });
-          if (hasFailed) {
-            const { reconcileFailedClickyfiedOrders } = await import("./clickyfied-batch");
-            await reconcileFailedClickyfiedOrders("Automatic Background Poller", { lookbackHours: 24 });
-          }
-        } catch {
-          // Ignore background transient errors
-        }
-      }
-
       // Find in-flight Tskconnect orders (PENDING or PROCESSING) and sync their status
-      if (config.tskconnect.enabled && config.tskconnect.apiKey) {
-        try {
-          const inFlightTskOrders = await prisma.order.findMany({
-            where: {
-              status: { in: ["PENDING", "PROCESSING"] },
-              providerReference: { startsWith: "TSKCONNECT:" },
-              updatedAt: { lte: cutoffTime },
-            },
-            take: 100,
-            orderBy: { updatedAt: "asc" },
-          });
+      const inFlightTskOrders = await prisma.order.findMany({
+        where: {
+          status: { in: ["PENDING", "PROCESSING"] },
+          providerReference: { startsWith: "TSKCONNECT:" },
+          updatedAt: { lte: cutoffTime },
+        },
+        take: 100,
+        orderBy: { updatedAt: "asc" },
+      });
 
-          if (inFlightTskOrders.length > 0) {
-            console.log(`[ProviderSyncPoller] Syncing ${inFlightTskOrders.length} in-flight Tskconnect order(s)...`);
-            for (const order of inFlightTskOrders) {
-              try {
-                await syncTskconnectOrder(order, "Automatic Background Poller");
-              } catch (err: any) {
-                console.error(`[ProviderSyncPoller] Error syncing Tskconnect order #${order.id}:`, err?.message || err);
-              }
-            }
+      if (inFlightTskOrders.length > 0) {
+        console.log(`[ProviderSyncPoller] Syncing ${inFlightTskOrders.length} in-flight Tskconnect order(s)...`);
+        for (const order of inFlightTskOrders) {
+          try {
+            await syncTskconnectOrder(order, "Automatic Background Poller");
+          } catch (err: any) {
+            console.error(`[ProviderSyncPoller] Error syncing Tskconnect order #${order.id}:`, err?.message || err);
           }
-        } catch (tskPollErr) {
-          console.error("[ProviderSyncPoller] Tskconnect poll error:", tskPollErr);
         }
       }
-
 
       // Auto-reconcile any pending Paystack wallet top-ups
       try {
@@ -230,7 +134,7 @@ export function startProviderSyncPoller() {
     }
   };
 
-  // Self-scheduling loop respecting the dynamic interval
+  // Self-scheduling loop respecting dynamic interval
   const scheduleNext = async (delayMs?: number) => {
     try {
       const intervalSec = await getPollerIntervalSeconds();

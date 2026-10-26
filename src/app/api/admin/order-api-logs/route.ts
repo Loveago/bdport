@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Run parallel query for logs and quick aggregate counts
-    const [logs, total, totalFailed, totalSuccess, clickyfiedErrors, bigwindataErrors] =
+    const [logs, total, totalFailed, totalSuccess, tskconnectErrors, bigwindataErrors] =
       await Promise.all([
         prisma.orderApiLog.findMany({
           where,
@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
         prisma.orderApiLog.count({ where }),
         prisma.orderApiLog.count({ where: { ...where, success: false } }),
         prisma.orderApiLog.count({ where: { ...where, success: true } }),
-        prisma.orderApiLog.count({ where: { provider: "CLICKYFIED", success: false } }),
+        prisma.orderApiLog.count({ where: { provider: "TSKCONNECT", success: false } }),
         prisma.orderApiLog.count({ where: { provider: "BIGWINDATA", success: false } }),
       ]);
 
@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
         total,
         failed: totalFailed,
         success: totalSuccess,
-        clickyfiedErrors,
+        tskconnectErrors,
         bigwindataErrors,
       },
     });

@@ -45,44 +45,6 @@ export async function GET(
       return apiError(403, "Not allowed");
     }
 
-    // On-demand sync if this order has an active Clickyfied delivery report
-    const initialActiveReport = order.deliveryReports.find((r) =>
-      (ACTIVE_DELIVERY_REPORT_STATUSES as string[]).includes(r.status)
-    );
-    if (initialActiveReport && (order.providerReference?.startsWith("CLICKYFIED:") || order.externalReference)) {
-      try {
-        const { syncClickyfiedDeliveryReport } = await import("@/lib/provider-apis/router");
-        const res = await syncClickyfiedDeliveryReport(initialActiveReport.id, "Order Detail View Sync");
-        if (res.changed) {
-          const refreshed = await prisma.order.findUnique({
-            where: { id: orderId },
-            include: {
-              history: { orderBy: { createdAt: "asc" } },
-              batch: { select: { id: true, batchCode: true, network: true, status: true } },
-              deliveryReports: {
-                orderBy: { createdAt: "desc" },
-                select: {
-                  id: true,
-                  seq: true,
-                  status: true,
-                  reason: true,
-                  message: true,
-                  adminNote: true,
-                  adminResponse: true,
-                  respondedAt: true,
-                  proofImageMime: true,
-                  proofImageUploadedAt: true,
-                  resolvedAt: true,
-                  createdAt: true,
-                },
-              },
-            },
-          });
-          if (refreshed) order = refreshed;
-        }
-      } catch {}
-    }
-
     const isStaff = user.role === "ADMIN" || user.role === "MANAGER";
     const { deliveryReports, ...safeOrder } = order;
     const activeReport = deliveryReports.find((r) =>
@@ -100,9 +62,7 @@ export async function GET(
       : (safeOrder.history || []).map((h) => ({
           ...h,
           note: sanitizeCustomerFacingText(h.note),
-          changedBy: h.changedBy?.toLowerCase().includes("clickyfied")
-            ? "System"
-            : (sanitizeCustomerFacingText(h.changedBy) || "System"),
+          changedBy: sanitizeCustomerFacingText(h.changedBy) || "System",
         }));
 
     return NextResponse.json({

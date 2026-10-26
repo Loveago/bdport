@@ -85,7 +85,7 @@ export async function GET(
       }),
     ]);
 
-    // On-demand sync for in-flight Clickyfied orders in this batch (throttled to 120s and poller enabled)
+    // On-demand sync for in-flight Tskconnect orders in this batch (throttled to 120s and poller enabled)
     const pollerSetting = await prisma.systemSetting.findUnique({
       where: { key: "provider_sync_poller_enabled" },
     });
@@ -95,18 +95,18 @@ export async function GET(
       ? orders.filter(
           (o) =>
             (o.status === "PENDING" || o.status === "PROCESSING") &&
-            o.providerReference?.startsWith("CLICKYFIED:") &&
+            o.providerReference?.startsWith("TSKCONNECT:") &&
             Date.now() - new Date(o.updatedAt).getTime() > 120000
         )
       : [];
 
     if (inFlight.length > 0) {
       try {
-        const { syncClickyfiedOrder } = await import("@/lib/provider-apis/router");
+        const { syncTskconnectOrder } = await import("@/lib/provider-apis/router");
         let anyChanged = false;
         await Promise.allSettled(
           inFlight.map(async (o) => {
-            const res = await syncClickyfiedOrder(o, "Admin Batch Detail View Sync");
+            const res = await syncTskconnectOrder(o, "Admin Batch Detail View Sync");
             if (res.changed && res.newStatus) {
               o.status = res.newStatus;
               anyChanged = true;

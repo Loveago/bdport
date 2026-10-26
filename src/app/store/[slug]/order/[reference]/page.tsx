@@ -150,8 +150,8 @@ export default async function OrderReferencePage({
 
   if (order.underlyingOrder && (order.underlyingOrder.status === "PENDING" || order.underlyingOrder.status === "PROCESSING")) {
     try {
-      const { syncClickyfiedOrder } = await import("@/lib/provider-apis/router");
-      const syncRes = await syncClickyfiedOrder(order.underlyingOrder, "Storefront Order Page Sync");
+      const { syncTskconnectOrder } = await import("@/lib/provider-apis/router");
+      const syncRes = await syncTskconnectOrder(order.underlyingOrder, "Storefront Order Page Sync");
       if (syncRes.changed && syncRes.newStatus) {
         order.underlyingOrder.status = syncRes.newStatus;
       }
