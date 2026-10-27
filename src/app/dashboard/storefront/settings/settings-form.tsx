@@ -24,7 +24,7 @@ interface Initial {
 
 export function StorefrontSettingsForm({
   initial,
-  storefrontDomain = "bundleportalstore.com",
+  storefrontDomain = "commontechstore.com",
 }: {
   initial: Initial;
   storefrontDomain?: string;

@@ -329,7 +329,7 @@ export function LegalPageShell({
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-wrap items-center justify-center gap-2">
             <span className="font-semibold text-slate-700 dark:text-slate-300">
-              BundlePortal.com © 2026
+              CommonTech.com © 2026
             </span>
             <span>·</span>
             <span>All Rights Reserved</span>

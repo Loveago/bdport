@@ -19,7 +19,7 @@ export async function signSession(payload: SessionPayload): Promise<string> {
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setIssuer("mycedinet")
+    .setIssuer("commontech")
     .setExpirationTime(`${SESSION_MAX_AGE}s`)
     .sign(secret);
 }
@@ -29,7 +29,7 @@ export async function verifySessionToken(
 ): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(token, secret, {
-      issuer: ["mycedinet", "tskconnect"],
+      issuer: ["commontech", "mycedinet", "tskconnect"],
     });
     if (!payload.sub || typeof payload.role !== "string") return null;
     return {

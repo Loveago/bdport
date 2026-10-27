@@ -83,7 +83,7 @@ export function DeveloperCredentials({
       setCreateName("");
       setNewKeyModal(json.apiKey);
       try {
-        localStorage.setItem("bundleportal_playground_api_key", json.apiKey);
+        localStorage.setItem("commontech_playground_api_key", json.apiKey);
       } catch {}
       toast("Credential created successfully", "success");
       load();
@@ -114,7 +114,7 @@ export function DeveloperCredentials({
       if (action === "ROTATE" && json.newApiKey) {
         setNewKeyModal(json.newApiKey);
         try {
-          localStorage.setItem("bundleportal_playground_api_key", json.newApiKey);
+          localStorage.setItem("commontech_playground_api_key", json.newApiKey);
         } catch {}
         toast("Key rotated successfully. Save your new key.", "success");
       } else {
@@ -163,7 +163,7 @@ export function DeveloperCredentials({
             </div>
             <p className="text-base font-bold text-slate-900 dark:text-white">No API credentials generated yet</p>
             <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-              Create your first credential to authorize REST requests against the Bundle Portal gateway.
+              Create your first credential to authorize REST requests against the CommonTech gateway.
             </p>
             <button
               onClick={() => setShowCreateModal(true)}

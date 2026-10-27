@@ -173,7 +173,7 @@ export function DeveloperWebhooksPanel() {
                 </p>
               </div>
               <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
-                Verify inbound dispatches with the <code className="font-mono text-[#00df82]">X-BundlePortal-Signature</code> HMAC SHA-256 header:
+                Verify inbound dispatches with the <code className="font-mono text-[#00df82]">X-CommonTech-Signature</code> HMAC SHA-256 header:
               </p>
               <div className="mt-3 flex items-center gap-3">
                 <code className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-100 dark:bg-[#060b13] px-4 py-2.5 font-mono text-xs font-black text-emerald-600 dark:text-[#00df82] select-all shadow-inner">

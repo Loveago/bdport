@@ -85,7 +85,7 @@ export async function generateLoginOtp(
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setIssuer("mycedinet")
+    .setIssuer("commontech")
     .setExpirationTime("10m")
     .sign(secret);
 
@@ -103,7 +103,7 @@ export async function verifyOtpTicket(
   }
 
   try {
-    const verified = await jwtVerify(ticket, secret, { issuer: ["mycedinet", "tskconnect"] });
+    const verified = await jwtVerify(ticket, secret, { issuer: ["commontech", "mycedinet", "tskconnect"] });
     const payload = verified.payload as Partial<OtpTicketPayload>;
 
     if (

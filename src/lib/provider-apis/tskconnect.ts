@@ -90,11 +90,11 @@ export function resolveTskconnectPackageId(
  * Generates an idempotent order reference string for Tskconnect orders
  */
 export function generateTskconnectReference(orderId: number | string): string {
-  return `ORD-TSK-${orderId}`;
+  return `CT-TSK-${orderId}`;
 }
 
 /**
- * Maps Tskconnect order statuses to internal MyCediNet statuses:
+ * Maps Tskconnect order statuses to internal CommonTech statuses:
  * - PENDING, pending, order.accepted -> "PENDING"
  * - PROCESSING, processing, order.processing -> "PROCESSING"
  * - COMPLETED, completed, success, order.completed -> "SUCCESS"
@@ -382,7 +382,7 @@ export class TskconnectClient {
     if (recipient.startsWith("+233")) recipient = "0" + recipient.slice(4);
     else if (recipient.startsWith("233")) recipient = "0" + recipient.slice(3);
 
-    const idempotencyKey = params.idempotencyKey || params.reference || `ORD-TXN-${Date.now()}`;
+    const idempotencyKey = params.idempotencyKey || params.reference || `CT-TXN-${Date.now()}`;
 
     const body: Record<string, string> = {
       network: carrier,

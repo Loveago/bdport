@@ -114,13 +114,13 @@ export default function DeveloperDashboardPage() {
   const isApproved = appData?.status === "APPROVED";
 
   const copyBaseUrl = () => {
-    navigator.clipboard.writeText("https://api.bundleportalstore.com/v1");
+    navigator.clipboard.writeText("https://api.commontechstore.com/v1");
     setCopiedUrl(true);
     setTimeout(() => setCopiedUrl(false), 2000);
   };
 
   const sampleSnippets = {
-    curl: `curl -X POST https://api.bundleportalstore.com/v1/orders \\
+    curl: `curl -X POST https://api.commontechstore.com/v1/orders \\
   -H "Authorization: Bearer bp_live_sk_..." \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -128,7 +128,7 @@ export default function DeveloperDashboardPage() {
     "packageId": "pkg_mtn_5gb",
     "recipientPhone": "0241234567"
   }'`,
-    js: `const response = await fetch("https://api.bundleportalstore.com/v1/orders", {
+    js: `const response = await fetch("https://api.commontechstore.com/v1/orders", {
   method: "POST",
   headers: {
     "Authorization": "Bearer bp_live_sk_...",
@@ -144,7 +144,7 @@ const data = await response.json();
 console.log(data.orderId, data.status);`,
     python: `import requests
 
-url = "https://api.bundleportalstore.com/v1/orders"
+url = "https://api.commontechstore.com/v1/orders"
 headers = {
     "Authorization": "Bearer bp_live_sk_...",
     "Content-Type": "application/json"
@@ -190,7 +190,7 @@ print(response.json())`,
               title="Click to copy endpoint"
             >
               <Globe className="h-3.5 w-3.5 text-[#00df82]" />
-              <span>https://api.bundleportalstore.com/v1</span>
+              <span>https://api.commontechstore.com/v1</span>
               {copiedUrl ? (
                 <Check className="h-3 w-3 text-[#00df82]" />
               ) : (

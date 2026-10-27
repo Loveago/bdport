@@ -400,7 +400,7 @@ export function TrackForm({ slug }: { slug: string }) {
               id="track-query"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="024 XXX XXXX · you@example.com · CDI-ST-... · STF-..."
+              placeholder="024 XXX XXXX · you@example.com · CT-ST-... · STF-..."
               className="h-12 w-full rounded-2xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] px-4 text-sm font-medium text-slate-900 dark:text-white outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-[#00df82]"
             />
           </div>

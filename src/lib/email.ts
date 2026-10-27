@@ -30,7 +30,7 @@ export async function getBrevoConfig(): Promise<BrevoConfig> {
   const dbSenderName = (await getSetting("brevo_sender_name")).trim();
   const envSenderName = process.env.BREVO_SENDER_NAME?.trim();
   const siteName = (await getSetting("site_name")).trim();
-  const senderName = dbSenderName || envSenderName || siteName || "Bundle Portal";
+  const senderName = dbSenderName || envSenderName || siteName || "CommonTech";
 
   return { apiKey, senderEmail, senderName };
 }
@@ -126,7 +126,7 @@ export async function sendPasswordResetEmail(
   resetUrl: string,
   expiryMinutes = 60
 ): Promise<{ success: boolean; messageId?: string; error?: string }> {
-  const brandName = (await getSetting("site_name", "Bundle Portal")).trim() || "Bundle Portal";
+  const brandName = (await getSetting("site_name", "CommonTech")).trim() || "CommonTech";
   const subject = `Reset your ${brandName} password`;
 
   const html = `
@@ -211,7 +211,7 @@ export async function sendLoginOtpEmail(
   otpCode: string,
   expiryMinutes = 10
 ): Promise<{ success: boolean; messageId?: string; error?: string }> {
-  const brandName = (await getSetting("site_name", "Bundle Portal")).trim() || "Bundle Portal";
+  const brandName = (await getSetting("site_name", "CommonTech")).trim() || "CommonTech";
   const subject = `${otpCode} is your ${brandName} verification code`;
   const formattedOtp = otpCode.split("").join(" ");
 
@@ -292,53 +292,53 @@ export async function sendApiApprovalEmail(userEmail: string, userName: string, 
   const appUrl = (
     process.env.APP_URL ||
     process.env.NEXTAUTH_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://bundleportal.com")
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://commontech.com")
   ).replace(/\/$/, "");
 
   await sendEmail({
     to: userEmail,
-    subject: "Your Bundle Portal API Access Has Been Approved!",
-    text: `Hello ${userName},\n\nCongratulations! Your developer API access application for "${businessName}" has been approved by the Bundle Portal admin team.\n\nYou can now log in to your developer dashboard, generate production API credentials (ck_live_...), configure your webhooks, and start submitting live automated data orders.\n\nDashboard: ${appUrl}/dashboard/api?tab=credentials\nDocs: ${appUrl}/dashboard/api?tab=docs\n\nBest regards,\nThe Bundle Portal Team`,
+    subject: "Your CommonTech API Access Has Been Approved!",
+    text: `Hello ${userName},\n\nCongratulations! Your developer API access application for "${businessName}" has been approved by the CommonTech admin team.\n\nYou can now log in to your developer dashboard, generate production API credentials (ck_live_...), configure your webhooks, and start submitting live automated data orders.\n\nDashboard: ${appUrl}/dashboard/api?tab=credentials\nDocs: ${appUrl}/dashboard/api?tab=docs\n\nBest regards,\nThe CommonTech Team`,
   });
 }
 
 export async function sendApiRejectionEmail(userEmail: string, userName: string, businessName: string, reason?: string): Promise<void> {
   await sendEmail({
     to: userEmail,
-    subject: "Bundle Portal API Application Update",
-    text: `Hello ${userName},\n\nThank you for your interest in the Bundle Portal Developer API. After reviewing your application for "${businessName}", we are unable to approve production access at this time.\n\n${reason ? `Reason: ${reason}\n\n` : ""}You may update your business details and re-apply from your dashboard.\n\nBest regards,\nThe Bundle Portal Team`,
+    subject: "CommonTech API Application Update",
+    text: `Hello ${userName},\n\nThank you for your interest in the CommonTech Developer API. After reviewing your application for "${businessName}", we are unable to approve production access at this time.\n\n${reason ? `Reason: ${reason}\n\n` : ""}You may update your business details and re-apply from your dashboard.\n\nBest regards,\nThe CommonTech Team`,
   });
 }
 
 export async function sendApiSuspensionEmail(userEmail: string, userName: string, businessName: string, reason?: string): Promise<void> {
   await sendEmail({
     to: userEmail,
-    subject: "Notice: Bundle Portal API Access Suspended",
-    text: `Hello ${userName},\n\nPlease be advised that API access for "${businessName}" has been temporarily suspended.\n\n${reason ? `Details: ${reason}\n\n` : ""}If you believe this was in error, please reach out to our support team.\n\nBest regards,\nThe Bundle Portal Team`,
+    subject: "Notice: CommonTech API Access Suspended",
+    text: `Hello ${userName},\n\nPlease be advised that API access for "${businessName}" has been temporarily suspended.\n\n${reason ? `Details: ${reason}\n\n` : ""}If you believe this was in error, please reach out to our support team.\n\nBest regards,\nThe CommonTech Team`,
   });
 }
 
 export async function sendCredentialCreatedEmail(userEmail: string, userName: string, credentialName: string, keyPrefix: string, env: string): Promise<void> {
   await sendEmail({
     to: userEmail,
-    subject: `New Bundle Portal API Key Generated: ${credentialName}`,
-    text: `Hello ${userName},\n\nA new ${env} API credential "${credentialName}" (${keyPrefix}...) was generated on your account.\n\nIf you did not perform this action, please revoke the key immediately from your Developer Dashboard.\n\nBest regards,\nThe Bundle Portal Team`,
+    subject: `New CommonTech API Key Generated: ${credentialName}`,
+    text: `Hello ${userName},\n\nA new ${env} API credential "${credentialName}" (${keyPrefix}...) was generated on your account.\n\nIf you did not perform this action, please revoke the key immediately from your Developer Dashboard.\n\nBest regards,\nThe CommonTech Team`,
   });
 }
 
 export async function sendCredentialRevokedEmail(userEmail: string, userName: string, credentialName: string, keyPrefix: string): Promise<void> {
   await sendEmail({
     to: userEmail,
-    subject: `Bundle Portal API Key Revoked: ${credentialName}`,
-    text: `Hello ${userName},\n\nThe API key "${credentialName}" (${keyPrefix}...) on your account has been revoked and can no longer make API requests.\n\nBest regards,\nThe Bundle Portal Team`,
+    subject: `CommonTech API Key Revoked: ${credentialName}`,
+    text: `Hello ${userName},\n\nThe API key "${credentialName}" (${keyPrefix}...) on your account has been revoked and can no longer make API requests.\n\nBest regards,\nThe CommonTech Team`,
   });
 }
 
 export async function sendWebhookFailureEmail(userEmail: string, webhookUrl: string, errorDetail: string): Promise<void> {
   await sendEmail({
     to: userEmail,
-    subject: "Alert: Bundle Portal Webhook Delivery Failures",
-    text: `Hello,\n\nWe detected multiple consecutive delivery failures when dispatching order status webhooks to your endpoint:\n\n${webhookUrl}\n\nLast error: ${errorDetail}\n\nPlease check that your server is online, reachable, and responds with an HTTP 2xx status within 10 seconds.\n\nBest regards,\nThe Bundle Portal Team`,
+    subject: "Alert: CommonTech Webhook Delivery Failures",
+    text: `Hello,\n\nWe detected multiple consecutive delivery failures when dispatching order status webhooks to your endpoint:\n\n${webhookUrl}\n\nLast error: ${errorDetail}\n\nPlease check that your server is online, reachable, and responds with an HTTP 2xx status within 10 seconds.\n\nBest regards,\nThe CommonTech Team`,
   });
 }
 
@@ -351,8 +351,8 @@ export async function sendClaimSuccessEmail(
 ): Promise<void> {
   await sendEmail({
     to: userEmail,
-    subject: "Your Bundle Portal Wallet Top-Up Was Successful",
-    text: `Hello ${userName},\n\nYour GHS ${amount.toFixed(2)} Mobile Money payment has been successfully added to your Bundle Portal wallet.\n\nTransaction Reference: ${reference}\nNetwork: ${network}\n\nBest regards,\nThe Bundle Portal Team`,
+    subject: "Your CommonTech Wallet Top-Up Was Successful",
+    text: `Hello ${userName},\n\nYour GHS ${amount.toFixed(2)} Mobile Money payment has been successfully added to your CommonTech wallet.\n\nTransaction Reference: ${reference}\nNetwork: ${network}\n\nBest regards,\nThe CommonTech Team`,
   });
 }
 
@@ -364,7 +364,7 @@ export async function sendClaimRejectedEmail(
 ): Promise<void> {
   await sendEmail({
     to: userEmail,
-    subject: "Bundle Portal Mobile Money Claim Update",
-    text: `Hello ${userName},\n\nYour claim for Mobile Money transaction ${reference} could not be processed.\n\nReason: ${reason}\n\nIf you need assistance, please verify your transaction details or contact Bundle Portal support.\n\nBest regards,\nThe Bundle Portal Team`,
+    subject: "CommonTech Mobile Money Claim Update",
+    text: `Hello ${userName},\n\nYour claim for Mobile Money transaction ${reference} could not be processed.\n\nReason: ${reason}\n\nIf you need assistance, please verify your transaction details or contact CommonTech support.\n\nBest regards,\nThe CommonTech Team`,
   });
 }

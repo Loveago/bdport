@@ -1,12 +1,12 @@
 export const openApiSpec = {
   openapi: "3.1.0",
   info: {
-    title: "Bundle Portal Developer API Platform",
+    title: "CommonTech Developer API Platform",
     version: "1.0.0",
     description:
-      "Production-ready developer API for Bundle Portal. Automate Ghanaian mobile data bundles (MTN, Telecel, AirtelTigo) directly from your applications, reseller stores, websites, and platforms.",
+      "Production-ready developer API for CommonTech. Automate Ghanaian mobile data bundles (MTN, Telecel, AirtelTigo) directly from your applications, reseller stores, websites, and platforms.",
     contact: {
-      name: "Bundle Portal Developer Support",
+      name: "CommonTech Developer Support",
       url: "/",
     },
   },
@@ -79,7 +79,7 @@ export const openApiSpec = {
           network: { type: "string", enum: ["MTN", "TELECEL", "AIRTELTIGO"], example: "MTN" },
           packageId: { type: "string", example: "mtn-1gb" },
           recipient: { type: "string", example: "0241234567" },
-          reference: { type: "string", example: "SHOP-ORD-10001" },
+          reference: { type: "string", example: "SHOP-CT-10001" },
         },
       },
       BatchOrderEntry: {
@@ -166,7 +166,7 @@ export const openApiSpec = {
         type: "object",
         properties: {
           orderId: { type: "string", example: "API-839201" },
-          reference: { type: "string", example: "SHOP-ORD-10001" },
+          reference: { type: "string", example: "SHOP-CT-10001" },
           network: { type: "string", example: "MTN" },
           package: { type: "string", example: "1GB" },
           recipient: { type: "string", example: "0241234567" },
@@ -582,7 +582,7 @@ export const openApiSpec = {
             in: "path",
             required: true,
             schema: { type: "string" },
-            description: "The Bundle Portal order ID, e.g. API-839201 or 839201",
+            description: "The CommonTech order ID, e.g. API-839201 or 839201",
           },
         ],
         responses: {
@@ -635,7 +635,7 @@ export const openApiSpec = {
     "/balance": {
       get: {
         summary: "Check Account Wallet Balance",
-        description: "Returns your current Bundle Portal wallet balance in GHS.",
+        description: "Returns your current CommonTech wallet balance in GHS.",
         responses: {
           "200": {
             description: "Wallet balance amount",

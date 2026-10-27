@@ -1257,7 +1257,7 @@ export default function AdminSettingsPage() {
                 <Input
                   value={settings.site_name ?? ""}
                   onChange={(e) => setSettings((s) => ({ ...s, site_name: e.target.value }))}
-                  placeholder="Bundle Portal"
+                  placeholder="CommonTech"
                 />
               </div>
               <div className="space-y-1.5">
@@ -1442,7 +1442,7 @@ export default function AdminSettingsPage() {
                     <Input
                       value={settings.brevo_sender_name ?? ""}
                       onChange={(e) => setSettings((s) => ({ ...s, brevo_sender_name: e.target.value }))}
-                      placeholder="Bundle Portal"
+                      placeholder="CommonTech"
                     />
                     <p className="text-[11px] text-slate-500 dark:text-slate-400">
                       Friendly display name shown on outgoing emails.
@@ -1874,7 +1874,7 @@ export default function AdminSettingsPage() {
                 <Input
                   value={settings.support_telegram ?? ""}
                   onChange={(e) => setSettings((s) => ({ ...s, support_telegram: e.target.value }))}
-                  placeholder="@bundleportal"
+                  placeholder="@commontech"
                 />
               </div>
               <div className="space-y-1.5">
@@ -1890,7 +1890,7 @@ export default function AdminSettingsPage() {
                 <Input
                   value={settings.footer_text ?? ""}
                   onChange={(e) => setSettings((s) => ({ ...s, footer_text: e.target.value }))}
-                  placeholder="Powered by Bundle Portal"
+                  placeholder="Powered by CommonTech"
                 />
               </div>
             </div>

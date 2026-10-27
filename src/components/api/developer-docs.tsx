@@ -78,27 +78,27 @@ print(response.json())`;
 
   const curlOrderExample = `curl -X POST "${ordersEndpoint}" \\
   -H "Authorization: Bearer ck_live_xxxxxxxxxxxxxxxxxxxxxxxx" \\
-  -H "Idempotency-Key: SHOP-ORD-10001" \\
+  -H "Idempotency-Key: SHOP-CT-10001" \\
   -H "Content-Type: application/json" \\
   -d '{
     "network": "MTN",
     "packageId": "mtn-1gb",
     "recipient": "0241234567",
-    "reference": "SHOP-ORD-10001"
+    "reference": "SHOP-CT-10001"
   }'`;
 
   const jsOrderExample = `const response = await fetch("${ordersEndpoint}", {
   method: "POST",
   headers: {
     "Authorization": "Bearer ck_live_xxxxxxxxxxxxxxxxxxxxxxxx",
-    "Idempotency-Key": "SHOP-ORD-10001",
+    "Idempotency-Key": "SHOP-CT-10001",
     "Content-Type": "application/json"
   },
   body: JSON.stringify({
     network: "MTN",
     packageId: "mtn-1gb",
     recipient: "0241234567",
-    reference: "SHOP-ORD-10001"
+    reference: "SHOP-CT-10001"
   })
 });
 
@@ -114,12 +114,12 @@ async function placeOrder() {
       network: "MTN",
       packageId: "mtn-1gb",
       recipient: "0241234567",
-      reference: "SHOP-ORD-10001"
+      reference: "SHOP-CT-10001"
     },
     {
       headers: {
         Authorization: "Bearer ck_live_xxxxxxxxxxxxxxxxxxxxxxxx",
-        "Idempotency-Key": "SHOP-ORD-10001",
+        "Idempotency-Key": "SHOP-CT-10001",
         "Content-Type": "application/json"
       }
     }
@@ -134,14 +134,14 @@ placeOrder();`;
 url = "${ordersEndpoint}"
 headers = {
     "Authorization": "Bearer ck_live_xxxxxxxxxxxxxxxxxxxxxxxx",
-    "Idempotency-Key": "SHOP-ORD-10001",
+    "Idempotency-Key": "SHOP-CT-10001",
     "Content-Type": "application/json"
 }
 payload = {
     "network": "MTN",
     "packageId": "mtn-1gb",
     "recipient": "0241234567",
-    "reference": "SHOP-ORD-10001"
+    "reference": "SHOP-CT-10001"
 }
 
 response = requests.post(url, json=payload, headers=headers)
@@ -153,7 +153,7 @@ $payload = json_encode([
     "network" => "MTN",
     "packageId" => "mtn-1gb",
     "recipient" => "0241234567",
-    "reference" => "SHOP-ORD-10001"
+    "reference" => "SHOP-CT-10001"
 ]);
 
 curl_setopt_array($ch, [
@@ -162,7 +162,7 @@ curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_HTTPHEADER => [
         "Authorization: Bearer ck_live_xxxxxxxxxxxxxxxxxxxxxxxx",
-        "Idempotency-Key: SHOP-ORD-10001",
+        "Idempotency-Key: SHOP-CT-10001",
         "Content-Type: application/json"
     ]
 ]);
@@ -283,7 +283,7 @@ echo $response;`;
 
   const webhookVerifyNode = `import crypto from "crypto";
 
-function verifyBundlePortalWebhook(rawBody, signatureHeader, timestampHeader, secret) {
+function verifyCommonTechWebhook(rawBody, signatureHeader, timestampHeader, secret) {
   const payloadToSign = \`\${timestampHeader}.\${rawBody}\`;
   const expectedSignature = crypto
     .createHmac("sha256", secret)
@@ -303,7 +303,7 @@ function verifyBundlePortalWebhook(rawBody, signatureHeader, timestampHeader, se
       <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="text-xl font-bold tracking-tight">Bundle Portal Developer API Reference</h2>
+            <h2 className="text-xl font-bold tracking-tight">CommonTech Developer API Reference</h2>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               Complete reference for integrating automated mobile data fulfillment into your apps.
             </p>
@@ -381,7 +381,7 @@ function verifyBundlePortalWebhook(rawBody, signatureHeader, timestampHeader, se
             header on order creation:
           </p>
           <pre className="mt-3 overflow-x-auto rounded-xl bg-slate-950 p-3.5 font-mono text-xs text-slate-200">
-            Idempotency-Key: SHOP-ORD-10001
+            Idempotency-Key: SHOP-CT-10001
           </pre>
           <p className="mt-3 text-xs text-slate-500">
             If the same key is submitted again, the server returns the existing order safely without double-charging your account.
@@ -448,7 +448,7 @@ function verifyBundlePortalWebhook(rawBody, signatureHeader, timestampHeader, se
   "success": true,
   "data": {
     "orderId": "API-839201",
-    "reference": "SHOP-ORD-10001",
+    "reference": "SHOP-CT-10001",
     "network": "MTN",
     "package": "1GB",
     "recipient": "0241234567",
@@ -827,9 +827,9 @@ function verifyBundlePortalWebhook(rawBody, signatureHeader, timestampHeader, se
         <h3 className="text-base font-bold">Webhook Security & Signature Verification</h3>
         <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
           Every webhook delivery includes an HMAC SHA-256 signature in the{" "}
-          <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs dark:bg-slate-800">X-BundlePortal-Signature</code>{" "}
+          <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs dark:bg-slate-800">X-CommonTech-Signature</code>{" "}
           header and a timestamp in{" "}
-          <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs dark:bg-slate-800">X-BundlePortal-Timestamp</code>.
+          <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs dark:bg-slate-800">X-CommonTech-Timestamp</code>.
           Compute the HMAC of <code className="font-mono text-xs">{`\${timestamp}.\${rawBody}`}</code> using your webhook secret to verify authenticity.
         </p>
 

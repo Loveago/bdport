@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
 
     if (type === "users") {
       columns = userColumns;
-      title = "Bundle Portal — Users";
+      title = "CommonTech — Users";
       const users = await prisma.user.findMany({
         orderBy: { createdAt: "desc" },
         include: { _count: { select: { orders: true } } },
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
       }));
     } else if (type === "transactions") {
       columns = txColumns;
-      title = "Bundle Portal — Wallet Transactions";
+      title = "CommonTech — Wallet Transactions";
       const where: Record<string, unknown> = {};
       if (userId) where.userId = userId;
       if (status) where.status = status;
@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
       }));
     } else {
       columns = orderColumns;
-      title = "Bundle Portal — Orders";
+      title = "CommonTech — Orders";
       const where: Record<string, unknown> = {};
       if (userId) where.userId = userId;
       if (status) where.status = status;
@@ -117,7 +117,7 @@ export async function GET(request: NextRequest) {
 
     if (rows.length > 5000) rows = rows.slice(0, 5000);
     const stamp = new Date().toISOString().slice(0, 10);
-    const filename = `bundleportal-${type}-${stamp}`;
+    const filename = `commontech-${type}-${stamp}`;
 
     if (format === "csv") return exportResponse(toCsv(rows, columns), "csv", filename);
     if (format === "pdf") return exportResponse(await toPdf(title, rows, columns), "pdf", filename);

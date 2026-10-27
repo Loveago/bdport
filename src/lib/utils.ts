@@ -6,13 +6,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function orderCode(id: number): string {
-  return `CDI-${10000 + id}`;
+  return `CT-${10000 + id}`;
 }
 
 export function parseOrderCode(code: string | null | undefined): number | null {
   if (!code || typeof code !== "string") return null;
   const trimmed = code.trim();
-  const match = /^(?:CDI|CF|TSK|MCD)?(?:-?ORD)?-(\d+)$/i.exec(trimmed);
+  const match = /^(?:CT|CDI|CF|TSK|MCD)?(?:-?ORD)?-(\d+)$/i.exec(trimmed);
   if (match) {
     const rawNum = parseInt(match[1], 10);
     if (rawNum > 10000) {

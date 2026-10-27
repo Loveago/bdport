@@ -250,13 +250,13 @@ export function UserWalkthrough({ userName }: { userName?: string }) {
 
             <div>
               <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-500/10 px-3 py-1 text-xs font-bold text-brand-600 dark:text-brand-400">
-                <Zap className="h-3.5 w-3.5" /> Welcome to Bundle Portal
+                <Zap className="h-3.5 w-3.5" /> Welcome to CommonTech
               </div>
               <h2 id="tour-heading" className="mt-2 text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {userName ? `Hi, ${userName}!` : "Welcome Aboard!"} 👋
               </h2>
               <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                We’re excited to have you! Bundle Portal makes it fast and reliable to send bulk data bundles, top up your wallet, and manage deliveries.
+                We’re excited to have you! CommonTech makes it fast and reliable to send bulk data bundles, top up your wallet, and manage deliveries.
               </p>
             </div>
 

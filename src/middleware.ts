@@ -19,11 +19,11 @@ import { cleanDomain } from "@/lib/storefront-utils";
 
 const STOREFRONT_DOMAIN = cleanDomain(
   process.env.STOREFRONT_DOMAIN || process.env.NEXT_PUBLIC_STOREFRONT_DOMAIN,
-  "mycedishop.com"
+  "commontechstore.com"
 );
 const MAIN_DOMAIN = cleanDomain(
   process.env.MAIN_DOMAIN || process.env.NEXT_PUBLIC_MAIN_DOMAIN,
-  "mycedinet.com"
+  "commontech.com"
 );
 
 export async function middleware(request: NextRequest) {
@@ -164,13 +164,14 @@ export async function middleware(request: NextRequest) {
   }
 
   const token =
+    request.cookies.get("commontech_session")?.value ||
     request.cookies.get(SESSION_COOKIE)?.value ||
     request.cookies.get("tskconnect_session")?.value;
   let payload: { role?: unknown; tv?: unknown } | null = null;
   if (token) {
     try {
       const { payload: verified } = await jwtVerify(token, secret, {
-        issuer: ["mycedinet", "tskconnect"],
+        issuer: ["commontech", "mycedinet", "tskconnect"],
       });
       payload = verified as { role?: unknown; tv?: unknown };
     } catch {

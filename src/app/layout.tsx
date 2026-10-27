@@ -5,12 +5,13 @@ import { ToastProvider } from "@/components/toast";
 import { NavigationProgress } from "@/components/navigation-progress";
 
 export const metadata: Metadata = {
-  title: "Bundle Portal — Stay Connected · Stay Ahead",
+  title: "CommonTech — Stay Connected · Stay Ahead",
   description:
-    "Ghana's high-performance data bundle distribution portal for MTN, Telecel, and AirtelTigo.",
+    "Ghana's high-performance data bundle distribution platform for MTN, Telecel, and AirtelTigo.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
       { url: "/icon.svg", type: "image/svg+xml" },
       { url: "/icon.png", type: "image/png", sizes: "32x32" },
     ],

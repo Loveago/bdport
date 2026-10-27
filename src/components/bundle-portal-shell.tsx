@@ -428,3 +428,6 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
     </div>
   );
 }
+
+export { BundlePortalShell as CommonTechShell };
+export type { BundlePortalShellProps as CommonTechShellProps };

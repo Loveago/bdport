@@ -107,9 +107,9 @@ export default function LoginPage() {
         <div className="flex flex-col items-center text-center space-y-2">
           <BrandMark size="lg" className="shadow-2xl shadow-[#00df82]/30 mb-2" />
           <div className="flex items-center gap-2">
-            <span className="text-xl font-black text-slate-900 dark:text-white tracking-tight">BUNDLE PORTAL</span>
+            <span className="text-xl font-black text-slate-900 dark:text-white tracking-tight">COMMONTECH</span>
             <span className="rounded bg-[#00df82]/15 text-[#00df82] border border-[#00df82]/40 px-1.5 py-0.5 text-[10px] font-black uppercase tracking-wider">
-              PORTAL
+              TELECOM
             </span>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400">Telecom Wholesale &amp; Reseller Engine</p>

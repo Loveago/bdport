@@ -1267,7 +1267,7 @@ export default function AffiliateDashboardPage() {
               How the Multi-Tier Cascading Affiliate Model Works
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-              Bundle Portal provides a true wholesale cascading system. As an agent, you have the power to recruit other agents and set the exact wholesale prices they pay.
+              CommonTech provides a true wholesale cascading system. As an agent, you have the power to recruit other agents and set the exact wholesale prices they pay.
             </p>
 
             <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -15,9 +15,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Bundle Portal",
+  title: "Privacy Policy — CommonTech",
   description:
-    "Privacy Policy and data governance compliance under the Data Protection Act, 2012 (Act 843) of Ghana for BundlePortal.com users, agents, and buyers.",
+    "Privacy Policy and data governance compliance under the Data Protection Act, 2012 (Act 843) of Ghana for CommonTech.com users, agents, and buyers.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -27,13 +27,13 @@ export default function PrivacyPolicyPage() {
       title="Privacy Policy"
       badge="Data Protection Act (Act 843)"
       lastUpdated="Last Updated: 1st October, 2026"
-      description="BundlePortal.com is committed to safeguarding your personal data in full compliance with the Data Protection Act, 2012 (Act 843) of the Republic of Ghana."
+      description="CommonTech.com is committed to safeguarding your personal data in full compliance with the Data Protection Act, 2012 (Act 843) of the Republic of Ghana."
     >
       <div className="space-y-10 text-slate-700 dark:text-slate-300">
         {/* Preamble */}
         <section className="space-y-3">
           <p className="text-base leading-relaxed">
-            <strong className="text-slate-900 dark:text-white">BundlePortal.com</strong> (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is dedicated to protecting your personal information. This Privacy Policy outlines our data handling practices in compliance with the <strong className="text-slate-900 dark:text-white">Data Protection Act, 2012 (Act 843) of Ghana</strong>.
+            <strong className="text-slate-900 dark:text-white">CommonTech.com</strong> (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is dedicated to protecting your personal information. This Privacy Policy outlines our data handling practices in compliance with the <strong className="text-slate-900 dark:text-white">Data Protection Act, 2012 (Act 843) of Ghana</strong>.
           </p>
         </section>
 
@@ -123,7 +123,7 @@ export default function PrivacyPolicyPage() {
                 <strong className="text-slate-900 dark:text-white">Mobile Network Operators (MTN Ghana, Telecel Ghana, AirtelTigo):</strong> Recipient phone numbers and purchase specifications are shared to provision data bundles.
               </li>
               <li>
-                <strong className="text-slate-900 dark:text-white">Payment Processors (Paystack):</strong> Payment card details and Mobile Money details are handled directly by Paystack via encrypted, PCI-DSS compliant interfaces. Bundle Portal does not store your payment PINs or card credentials.
+                <strong className="text-slate-900 dark:text-white">Payment Processors (Paystack):</strong> Payment card details and Mobile Money details are handled directly by Paystack via encrypted, PCI-DSS compliant interfaces. CommonTech does not store your payment PINs or card credentials.
               </li>
               <li>
                 <strong className="text-slate-900 dark:text-white">Regulatory &amp; Law Enforcement Authorities:</strong> Only when mandated by Ghanaian law, court order, or an official regulatory directive.
@@ -200,7 +200,7 @@ export default function PrivacyPolicyPage() {
               <div className="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-4 dark:border-white/5 dark:bg-slate-950/40 space-y-1">
                 <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Designated Entity</span>
                 <p className="font-bold text-slate-900 dark:text-white text-sm">
-                  Bundle Portal
+                  CommonTech
                 </p>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">Republic of Ghana</p>
               </div>

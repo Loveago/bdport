@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (search) {
-      const searchNum = parseOrderCode(search) ?? parseInt(search.replace(/^(?:CDI|CF|MCD|TSK)(?:-ORD)?-/i, "").replace(/^ORD-/i, ""), 10);
+      const searchNum = parseOrderCode(search) ?? parseInt(search.replace(/^(?:CT|CDI|CF|MCD|TSK)(?:-ORD)?-/i, "").replace(/^ORD-/i, ""), 10);
       const orConditions: Prisma.OrderApiLogWhereInput[] = [
         { errorMessage: { contains: search } },
         { providerReference: { contains: search } },

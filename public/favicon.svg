@@ -1,94 +1,92 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
   <defs>
-    <!-- Background Gradient: Deep Obsidian Emerald -->
-    <linearGradient id="favBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#021b14" />
-      <stop offset="45%" stop-color="#062f25" />
-      <stop offset="100%" stop-color="#01120e" />
+    <!-- Background Gradient: Deep Obsidian Slate -->
+    <linearGradient id="ctFavBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#060c18" />
+      <stop offset="50%" stop-color="#0a1628" />
+      <stop offset="100%" stop-color="#040812" />
     </linearGradient>
 
     <!-- Outer Chamfer Rim Gradient -->
-    <linearGradient id="favRim" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#34D399" stop-opacity="0.6" />
-      <stop offset="50%" stop-color="#06B6D4" stop-opacity="0.35" />
-      <stop offset="100%" stop-color="#10B981" stop-opacity="0.55" />
+    <linearGradient id="ctFavRim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00df82" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.7" />
     </linearGradient>
 
-    <!-- Luminous Emerald Arc Gradient -->
-    <linearGradient id="favEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#4ADE80" />
-      <stop offset="40%" stop-color="#10B981" />
-      <stop offset="100%" stop-color="#059669" />
+    <!-- Neon Emerald Gradient for "C" Arc -->
+    <linearGradient id="ctEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00df82" />
+      <stop offset="50%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#06b6d4" />
     </linearGradient>
 
-    <!-- High-Speed Telecom Cyan Stream Gradient -->
-    <linearGradient id="favCyan" x1="100%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#38BDF8" />
-      <stop offset="50%" stop-color="#06B6D4" />
-      <stop offset="100%" stop-color="#10B981" />
+    <!-- Electric Cyan Gradient for "T" Element -->
+    <linearGradient id="ctCyan" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="50%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#00df82" />
     </linearGradient>
 
-    <!-- Ambient Core Radiance -->
-    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#10B981" stop-opacity="0.35" />
-      <stop offset="70%" stop-color="#059669" stop-opacity="0.12" />
+    <!-- Radial Core Glow -->
+    <radialGradient id="ctCoreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00df82" stop-opacity="0.35" />
+      <stop offset="60%" stop-color="#06b6d4" stop-opacity="0.12" />
       <stop offset="100%" stop-color="#047857" stop-opacity="0" />
     </radialGradient>
 
-    <!-- Spherical 3D Node Shines -->
-    <radialGradient id="nodeEmerald" cx="35%" cy="35%" r="65%">
-      <stop offset="0%" stop-color="#FFFFFF" />
-      <stop offset="30%" stop-color="#6EE7B7" />
-      <stop offset="75%" stop-color="#10B981" />
-      <stop offset="100%" stop-color="#047857" />
-    </radialGradient>
-
-    <radialGradient id="nodeCyan" cx="35%" cy="35%" r="65%">
-      <stop offset="0%" stop-color="#FFFFFF" />
-      <stop offset="35%" stop-color="#67E8F9" />
-      <stop offset="75%" stop-color="#06B6D4" />
-      <stop offset="100%" stop-color="#0284C7" />
+    <!-- Spherical Node Shines -->
+    <radialGradient id="ctNodeShine" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="35%" stop-color="#a7f3d0" />
+      <stop offset="75%" stop-color="#00df82" />
+      <stop offset="100%" stop-color="#059669" />
     </radialGradient>
   </defs>
 
   <!-- Container Squircle Badge -->
-  <rect width="128" height="128" rx="28" fill="url(#favBg)" />
-  <rect x="1.5" y="1.5" width="125" height="125" rx="26.5" stroke="url(#favRim)" stroke-width="1.75" />
+  <rect width="128" height="128" rx="28" fill="url(#ctFavBg)" />
+  <rect x="1.5" y="1.5" width="125" height="125" rx="26.5" stroke="url(#ctFavRim)" stroke-width="1.75" />
 
   <!-- Ambient Light Core -->
-  <circle cx="64" cy="64" r="42" fill="url(#coreGlow)" />
+  <circle cx="64" cy="64" r="44" fill="url(#ctCoreGlow)" />
 
-  <!-- Outer Orbital Cedi Arc (₵ Curve) -->
+  <!-- "C" Outer Hex/Arc Stream (Common) -->
   <path
-    d="M 95 33 A 44 44 0 1 0 95 95"
-    stroke="url(#favEmerald)"
+    d="M 96 36 L 68 20 C 44 20 24 38 24 64 C 24 90 44 108 68 108 L 96 92"
+    stroke="url(#ctEmerald)"
     stroke-width="10.5"
     stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
   />
 
-  <!-- Inner High-Speed Data Arc -->
+  <!-- "T" Tech Element: Crossbar & Central Stem -->
+  <!-- Top Horizontal Bar of T -->
   <path
-    d="M 82 46 A 26 26 0 1 0 82 82"
-    stroke="url(#favCyan)"
-    stroke-width="7.5"
+    d="M 50 44 L 98 44"
+    stroke="url(#ctCyan)"
+    stroke-width="9.5"
     stroke-linecap="round"
+    fill="none"
   />
 
-  <!-- Cedi Diagonal Currency Slash -->
+  <!-- Vertical Stem of T with Telecom Pulse Foot -->
   <path
-    d="M 44 20 L 84 108"
-    stroke="url(#favEmerald)"
-    stroke-width="10.5"
+    d="M 74 44 L 74 88"
+    stroke="url(#ctCyan)"
+    stroke-width="9.5"
     stroke-linecap="round"
+    fill="none"
   />
 
-  <!-- Connectivity Nodes & Data Packets -->
-  <circle cx="95" cy="33" r="6.5" fill="url(#nodeEmerald)" />
-  <circle cx="95" cy="95" r="6.5" fill="url(#nodeEmerald)" />
-  <circle cx="44" cy="20" r="6" fill="url(#nodeCyan)" />
-  <circle cx="84" cy="108" r="6" fill="url(#nodeEmerald)" />
+  <!-- Connectivity Nodes & High-Tech Accents -->
+  <circle cx="96" cy="36" r="6" fill="url(#ctNodeShine)" />
+  <circle cx="96" cy="92" r="6" fill="url(#ctNodeShine)" />
+  <circle cx="50" cy="44" r="5" fill="#38bdf8" />
+  <circle cx="74" cy="88" r="5.5" fill="url(#ctNodeShine)" />
 
-  <!-- Central Luminous Data Beacon -->
-  <circle cx="64" cy="64" r="5" fill="#FFFFFF" />
-  <circle cx="64" cy="64" r="8.5" stroke="#34D399" stroke-width="1.5" stroke-opacity="0.75" />
+  <!-- Central Pulse Beacon at CT Junction -->
+  <circle cx="74" cy="44" r="4.5" fill="#ffffff" />
+  <circle cx="74" cy="44" r="7.5" stroke="#00df82" stroke-width="1.5" stroke-opacity="0.8" />
 </svg>

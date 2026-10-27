@@ -450,7 +450,7 @@ export function AppShell({
           {/* Sidebar Footer Support Card */}
           <div className="pt-6 border-t border-slate-200/70 dark:border-white/5 space-y-2 text-[11px] text-slate-500 dark:text-slate-400">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-slate-700 dark:text-slate-300">Bundle Portal Telecom</span>
+              <span className="font-bold text-slate-700 dark:text-slate-300">CommonTech Telecom</span>
               <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">v2.4</span>
             </div>
             {supportPhone && <p className="truncate">📞 {supportPhone}</p>}
@@ -499,7 +499,7 @@ export function AppShell({
           <footer className="mt-12 border-t border-slate-200/70 dark:border-white/5 pt-5 text-xs text-slate-400">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto">
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
-                <p>{footerText || "Bundle Portal Telecom © 2026 · All Rights Reserved"}</p>
+                <p>{footerText || "CommonTech Telecom © 2026 · All Rights Reserved"}</p>
                 <span>·</span>
                 <Link href="/terms" target="_blank" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
                   Terms

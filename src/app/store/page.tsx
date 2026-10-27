@@ -39,10 +39,11 @@ export default function StorefrontIndexPage() {
         !host ||
         host.includes("localhost") ||
         host.includes("127.0.0.1") ||
+        host.toLowerCase().includes("commontech") ||
         host.toLowerCase().includes("bundleportal") ||
         host.toLowerCase().includes("mycedinet")
       ) {
-        setDisplayHost("bundleportalstore.com");
+        setDisplayHost("commontechstore.com");
       } else {
         setDisplayHost(host);
       }
@@ -78,7 +79,7 @@ export default function StorefrontIndexPage() {
             <BrandMark size="md" />
             <div className="flex flex-col">
               <span className="text-base font-black tracking-tight text-slate-900 dark:text-white group-hover:text-[#00df82] transition-colors">
-                BUNDLE PORTAL
+                COMMONTECH
               </span>
               <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider">
                 STOREFRONTS &amp; MARKETPLACE
@@ -273,7 +274,7 @@ export default function StorefrontIndexPage() {
                 Instant Automated Dispatch Engine
               </h3>
               <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
-                Unlike legacy manual resellers, storefronts on Bundle Portal trigger immediate automated packet dispatches directly upon payment confirmation. Bundles land on recipient SIM cards without delay.
+                Unlike legacy manual resellers, storefronts on CommonTech trigger immediate automated packet dispatches directly upon payment confirmation. Bundles land on recipient SIM cards without delay.
               </p>
             </div>
             <div className="grid grid-cols-3 gap-2 pt-2 text-center text-xs">
@@ -321,7 +322,7 @@ export default function StorefrontIndexPage() {
             <div className="flex h-5 w-5 items-center justify-center rounded-md bg-[#00df82]/20 text-[#00df82]">
               <Store className="h-3 w-3" />
             </div>
-            <span className="font-semibold text-slate-700 dark:text-slate-300">Bundle Portal Storefronts © {new Date().getFullYear()}</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-300">CommonTech Storefronts © {new Date().getFullYear()}</span>
             <span>·</span>
             <span className="text-slate-500 dark:text-slate-400">Stay Connected · Stay Ahead</span>
           </div>

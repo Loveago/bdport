@@ -318,7 +318,7 @@ export function DeveloperPlayground({
     if (typeof window !== "undefined") {
       try {
         const stored =
-          localStorage.getItem("bundleportal_playground_api_key") ||
+          localStorage.getItem("commontech_playground_api_key") ||
           localStorage.getItem("tsk_playground_api_key");
         if (stored) {
           setCustomKey(stored);
@@ -354,9 +354,9 @@ export function DeveloperPlayground({
     if (typeof window !== "undefined") {
       try {
         if (val.trim()) {
-          localStorage.setItem("bundleportal_playground_api_key", val.trim());
+          localStorage.setItem("commontech_playground_api_key", val.trim());
         } else {
-          localStorage.removeItem("bundleportal_playground_api_key");
+          localStorage.removeItem("commontech_playground_api_key");
           localStorage.removeItem("tsk_playground_api_key");
         }
       } catch {}

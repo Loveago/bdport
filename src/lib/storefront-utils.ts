@@ -18,7 +18,8 @@ export function formatGhs(pesewas: number): string {
 export function storefrontOrderCode(seq: number, reference?: string | null): string {
   if (
     reference &&
-    (reference.startsWith("GH-") ||
+    (reference.startsWith("CT-") ||
+      reference.startsWith("GH-") ||
       reference.startsWith("STF-") ||
       reference.startsWith("CDI-") ||
       reference.startsWith("CF-") ||
@@ -26,11 +27,11 @@ export function storefrontOrderCode(seq: number, reference?: string | null): str
   ) {
     return reference;
   }
-  return `CDI-ST-${String(seq).padStart(5, "0")}`;
+  return `CT-ST-${String(seq).padStart(5, "0")}`;
 }
 
 export function withdrawalCode(seq: number): string {
-  return `CDI-WD-${String(seq).padStart(5, "0")}`;
+  return `CT-WD-${String(seq).padStart(5, "0")}`;
 }
 
 /**
@@ -61,7 +62,7 @@ export function cleanDomain(domain?: string | null, fallback: string = "localhos
 /**
  * Builds a clean, safe storefront full URL without duplicate protocols.
  * Automatically adapts between local development (http://localhost:3000/store/:slug)
- * and custom domain deployment (https://bundleportalstore.com/:slug).
+ * and custom domain deployment (https://commontechstore.com/:slug).
  */
 export function buildStorefrontUrl(slug?: string | null, domain?: string | null, subpath: string = ""): string {
   let effectiveDomain = domain;

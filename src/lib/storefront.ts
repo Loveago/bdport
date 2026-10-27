@@ -78,7 +78,8 @@ export function generateStorefrontOrderCode(): string {
 export function storefrontOrderCode(seq: number, reference?: string | null): string {
   if (
     reference &&
-    (reference.startsWith("GH-") ||
+    (reference.startsWith("CT-") ||
+      reference.startsWith("GH-") ||
       reference.startsWith("STF-") ||
       reference.startsWith("CDI-") ||
       reference.startsWith("CF-") ||
@@ -86,16 +87,16 @@ export function storefrontOrderCode(seq: number, reference?: string | null): str
   ) {
     return reference;
   }
-  return `CDI-ST-${String(seq).padStart(5, "0")}`;
+  return `CT-ST-${String(seq).padStart(5, "0")}`;
 }
 
 export function withdrawalCode(seq: number): string {
-  return `CDI-WD-${String(seq).padStart(5, "0")}`;
+  return `CT-WD-${String(seq).padStart(5, "0")}`;
 }
 
 /**
  * Generates a clean guest buyer email for Paystack transactions, e.g.:
- * guest1234@bundleportalstore.com
+ * guest1234@commontechstore.com
  * Prevents exposing store owner or admin personal email on public checkouts.
  */
 export function generateGuestEmail(domain: string): string {
@@ -385,6 +386,7 @@ export async function syncCommissionForOrder(
 
 export function isStorefrontReference(reference: string): boolean {
   return (
+    reference.startsWith("CT-") ||
     reference.startsWith("CDI-") ||
     reference.startsWith("STF-") ||
     reference.startsWith("GH-") ||

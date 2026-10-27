@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (search) {
-      const searchNum = parseInt(search.replace(/^(?:CDI|CF|TSK)-WD-0*/i, ""), 10);
+      const searchNum = parseInt(search.replace(/^(?:CT|CDI|CF|TSK)-WD-0*/i, ""), 10);
       where.OR = [
         { momoNumber: { contains: search } },
         { accountName: { contains: search } },

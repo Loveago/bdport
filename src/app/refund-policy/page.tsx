@@ -16,9 +16,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Refund and Cancellation Policy — Bundle Portal",
+  title: "Refund and Cancellation Policy — CommonTech",
   description:
-    "Refund and Cancellation Policy for data bundle top-ups, unverified recipient numbers, wallet reversals, and MoMo disputes on BundlePortal.com.",
+    "Refund and Cancellation Policy for data bundle top-ups, unverified recipient numbers, wallet reversals, and MoMo disputes on CommonTech.com.",
 };
 
 export default function RefundPolicyPage() {
@@ -34,7 +34,7 @@ export default function RefundPolicyPage() {
         {/* Preamble */}
         <section className="space-y-3">
           <p className="text-base leading-relaxed">
-            At <strong className="text-slate-900 dark:text-white">BundlePortal.com</strong>, we strive to provide reliable and automated data bundle delivery. Because data bundles are digital services consumed immediately upon transfer, this Refund and Cancellation Policy outlines the conditions under which transactions may be cancelled or refunded.
+            At <strong className="text-slate-900 dark:text-white">CommonTech.com</strong>, we strive to provide reliable and automated data bundle delivery. Because data bundles are digital services consumed immediately upon transfer, this Refund and Cancellation Policy outlines the conditions under which transactions may be cancelled or refunded.
           </p>
         </section>
 
@@ -175,7 +175,7 @@ export default function RefundPolicyPage() {
                 Wallet Credit
               </h3>
               <p className="text-slate-600 dark:text-slate-400 text-sm">
-                For registered users, agents, and resellers, refunds are typically credited to your Bundle Portal account wallet <strong className="text-slate-900 dark:text-white">instantly upon approval</strong>, enabling immediate re-orders without delay.
+                For registered users, agents, and resellers, refunds are typically credited to your CommonTech account wallet <strong className="text-slate-900 dark:text-white">instantly upon approval</strong>, enabling immediate re-orders without delay.
               </p>
             </div>
 

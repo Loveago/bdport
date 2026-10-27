@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import { Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface BrandProps {
@@ -14,7 +13,7 @@ export interface BrandProps {
 }
 
 /**
- * Neon Bolt Icon / Mark (Glowing neon emerald rounded badge with stylized lightning bolt)
+ * CommonTech Monogram Mark (Stylized geometric C + T with neon emerald/cyan connectivity arcs)
  */
 export function BrandMark({
   className,
@@ -25,44 +24,107 @@ export function BrandMark({
   variant?: "default" | "dark" | "light";
 }) {
   const sizeMap = {
-    xs: "h-7 w-7 rounded-lg",
-    sm: "h-9 w-9 rounded-xl",
-    md: "h-10 w-10 sm:h-11 sm:w-11 rounded-2xl",
-    lg: "h-12 w-12 sm:h-13 sm:w-13 rounded-2xl",
-    xl: "h-14 w-14 sm:h-16 sm:w-16 rounded-3xl",
-  };
-
-  const iconSizeMap = {
-    xs: "h-4 w-4",
-    sm: "h-5 w-5",
-    md: "h-6 w-6",
-    lg: "h-7 w-7",
-    xl: "h-8 w-8",
+    xs: "h-7 w-7",
+    sm: "h-9 w-9",
+    md: "h-10 w-10 sm:h-11 sm:w-11",
+    lg: "h-12 w-12 sm:h-13 sm:w-13",
+    xl: "h-14 w-14 sm:h-16 sm:w-16",
   };
 
   return (
     <div
       className={cn(
-        "relative flex shrink-0 items-center justify-center overflow-hidden bg-gradient-to-tr from-[#00df82] via-[#00f59b] to-[#22d3ee] shadow-lg shadow-[#00df82]/30 transition-transform active:scale-95",
+        "relative flex shrink-0 items-center justify-center transition-transform active:scale-95",
         sizeMap[size],
         className
       )}
-      aria-label="Bundle Portal"
+      aria-label="CommonTech"
     >
-      {/* Glossy overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/30 to-transparent opacity-80" />
-      <Zap
-        className={cn(
-          "relative z-10 text-slate-950 fill-slate-950 transform -rotate-6 drop-shadow-sm",
-          iconSizeMap[size]
-        )}
-      />
+      <svg
+        viewBox="0 0 128 128"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-full w-full drop-shadow-md transition-all duration-300 hover:drop-shadow-[0_0_14px_rgba(0,223,130,0.5)]"
+      >
+        <defs>
+          <linearGradient id="ctMarkBg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#060c18" />
+            <stop offset="50%" stopColor="#0a1628" />
+            <stop offset="100%" stopColor="#040812" />
+          </linearGradient>
+          <linearGradient id="ctMarkRim" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#00df82" stopOpacity="0.8" />
+            <stop offset="50%" stopColor="#38bdf8" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#10b981" stopOpacity="0.7" />
+          </linearGradient>
+          <linearGradient id="ctMarkEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#00df82" />
+            <stop offset="50%" stopColor="#10b981" />
+            <stop offset="100%" stopColor="#06b6d4" />
+          </linearGradient>
+          <linearGradient id="ctMarkCyan" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#06b6d4" />
+            <stop offset="50%" stopColor="#38bdf8" />
+            <stop offset="100%" stopColor="#00df82" />
+          </linearGradient>
+          <radialGradient id="ctMarkGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#00df82" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#047857" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        {/* Squircle Badge */}
+        <rect width="128" height="128" rx="28" fill="url(#ctMarkBg)" />
+        <rect
+          x="1.5"
+          y="1.5"
+          width="125"
+          height="125"
+          rx="26.5"
+          stroke="url(#ctMarkRim)"
+          strokeWidth="1.75"
+        />
+
+        {/* Ambient Light Core */}
+        <circle cx="64" cy="64" r="42" fill="url(#ctMarkGlow)" />
+
+        {/* C Arc */}
+        <path
+          d="M 96 36 L 68 20 C 44 20 24 38 24 64 C 24 90 44 108 68 108 L 96 92"
+          stroke="url(#ctMarkEmerald)"
+          strokeWidth="11"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+
+        {/* T Elements */}
+        <path
+          d="M 50 44 L 98 44"
+          stroke="url(#ctMarkCyan)"
+          strokeWidth="10"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 74 44 L 74 88"
+          stroke="url(#ctMarkCyan)"
+          strokeWidth="10"
+          strokeLinecap="round"
+        />
+
+        {/* Connectivity Nodes */}
+        <circle cx="96" cy="36" r="6" fill="#00df82" />
+        <circle cx="96" cy="92" r="6" fill="#00df82" />
+        <circle cx="50" cy="44" r="5" fill="#38bdf8" />
+        <circle cx="74" cy="88" r="5.5" fill="#00df82" />
+        <circle cx="74" cy="44" r="4.5" fill="#ffffff" />
+        <circle cx="74" cy="44" r="7.5" stroke="#00df82" strokeWidth="1.5" strokeOpacity="0.8" />
+      </svg>
     </div>
   );
 }
 
 /**
- * Full Horizontal Brand Logo (Neon Mark + "Bundle Portal" + "STAY CONNECTED · STAY AHEAD")
+ * Full Horizontal Brand Logo (Neon Mark + "CommonTech" + "STAY CONNECTED · STAY AHEAD")
  */
 export function BrandLogo({
   className,
@@ -103,15 +165,15 @@ export function BrandLogo({
       <div className="flex flex-col justify-center">
         <div className="flex items-baseline leading-none">
           <span className={cn("font-black tracking-tight text-slate-900 dark:text-white", textSize)}>
-            Bundle
+            Common
           </span>
           <span
             className={cn(
-              "ml-1 font-black tracking-tight text-[#00df82] drop-shadow-[0_0_12px_rgba(0,223,130,0.4)]",
+              "ml-0.5 font-black tracking-tight text-[#00df82] drop-shadow-[0_0_12px_rgba(0,223,130,0.4)]",
               textSize
             )}
           >
-            Portal
+            Tech
           </span>
         </div>
         {showTagline && (

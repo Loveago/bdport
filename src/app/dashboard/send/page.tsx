@@ -1264,7 +1264,7 @@ export default function SendOrderPage() {
             </ul>
 
             <div className="pt-2 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-[10px] text-slate-400">
-              <span>Bundle Portal Gateway v2.0</span>
+              <span>CommonTech Gateway v2.0</span>
               <Link
                 href="/dashboard/buy-now"
                 className="font-bold text-emerald-600 hover:underline dark:text-emerald-400 inline-flex items-center gap-0.5"

@@ -75,8 +75,8 @@ async function handleTracking(
           { underlyingOrder: { is: { phoneNumber: localPhone } } },
         ],
       };
-    } else if (/^(?:CDI|CF|TSK)-ST-\d{1,6}$/i.test(q) || (/^\d{1,6}$/.test(q) && digits.length <= 6)) {
-      const seq = Number(q.replace(/^(?:CDI|CF|TSK)-ST-/i, "").replace(/^0+(?=\d)/, ""));
+    } else if (/^(?:CT|CDI|CF|TSK)-ST-\d{1,6}$/i.test(q) || (/^\d{1,6}$/.test(q) && digits.length <= 6)) {
+      const seq = Number(q.replace(/^(?:CT|CDI|CF|TSK)-ST-/i, "").replace(/^0+(?=\d)/, ""));
       where = {
         storefrontId: storefront.id,
         ...(dateFilter ? { createdAt: dateFilter } : {}),
