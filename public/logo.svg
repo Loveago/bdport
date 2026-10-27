@@ -1,78 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 520" width="600" height="520" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="600" height="500" fill="none">
   <defs>
-    <linearGradient id="logoBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#00DF82" />
-      <stop offset="45%" stop-color="#00F59B" />
-      <stop offset="100%" stop-color="#06B6D4" />
+    <linearGradient id="lEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00FF9D" />
+      <stop offset="60%" stop-color="#00DF82" />
+      <stop offset="100%" stop-color="#059669" />
     </linearGradient>
-
-    <linearGradient id="logoGlossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.38" />
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02" />
+    <linearGradient id="lCyan" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00C4FF" />
+      <stop offset="50%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#00DF82" />
     </linearGradient>
-
-    <linearGradient id="logoRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.75" />
-      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.15" />
-      <stop offset="100%" stop-color="#00DF82" stop-opacity="0.4" />
-    </linearGradient>
-
-    <filter id="logoDropShadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#040810" flood-opacity="0.35" />
+    <filter id="lGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="b" />
+      <feComposite in="SourceGraphic" in2="b" operator="over" />
     </filter>
   </defs>
 
-  <!-- Central Brand Icon Mark (Squircle) -->
-  <g transform="translate(190, 30)">
-    <rect width="220" height="220" rx="58" fill="url(#logoBgGrad)" />
-    <rect x="2" y="2" width="216" height="216" rx="56" stroke="url(#logoRimGrad)" stroke-width="3" />
-    <path
-      d="M 0 58 C 0 26 26 0 58 0 L 162 0 C 194 0 220 26 220 58 L 220 96 C 140 66 72 92 0 128 Z"
-      fill="url(#logoGlossGrad)"
-    />
-
-    <!-- Scaled Monogram (center at 110, 110) -->
-    <g transform="translate(110, 110) scale(1.4) translate(-64, -64)" filter="url(#logoDropShadow)">
-      <path
-        d="M 94 36 A 34 34 0 1 0 94 92"
-        fill="none"
-        stroke="#060d19"
-        stroke-width="15"
-        stroke-linecap="round"
-      />
-      <path
-        d="M 52 48 L 96 48"
-        fill="none"
-        stroke="#060d19"
-        stroke-width="13.5"
-        stroke-linecap="round"
-      />
-      <path
-        d="M 74 48 L 74 84"
-        fill="none"
-        stroke="#060d19"
-        stroke-width="13.5"
-        stroke-linecap="round"
-      />
-      <circle cx="74" cy="48" r="4" fill="#00DF82" />
-    </g>
+  <!-- Central Freestanding Mark (scale 2.2 at x=190, y=40) -->
+  <g transform="translate(190, 40) scale(2.2)">
+    <circle cx="50" cy="50" r="32" fill="#00DF82" opacity="0.3" filter="url(#lGlow)" />
+    <path d="M 76 25 A 35 35 0 1 0 76 75" fill="none" stroke="url(#lEmerald)" stroke-width="13" stroke-linecap="round" />
+    <path d="M 42 38 L 84 38" fill="none" stroke="url(#lCyan)" stroke-width="11" stroke-linecap="round" />
+    <path d="M 63 38 L 63 68" fill="none" stroke="url(#lCyan)" stroke-width="11" stroke-linecap="round" />
+    <circle cx="63" cy="38" r="4" fill="#ffffff" />
   </g>
 
   <!-- Brand Typography -->
-  <g transform="translate(300, 345)">
-    <!-- Wordmark -->
-    <text text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="64" font-weight="900" letter-spacing="-1">
+  <g transform="translate(300, 340)">
+    <text text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="64" font-weight="900" letter-spacing="-1.5">
       <tspan fill="#0f172a">Common</tspan><tspan fill="#00df82">Tech</tspan>
     </text>
-
-    <!-- Tagline -->
-    <text y="55" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="800" letter-spacing="6" fill="#00df82">
+    <text y="50" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="16" font-weight="800" letter-spacing="6" fill="#00df82">
       DATA TELECOM NETWORK
     </text>
-
-    <!-- Secondary Tagline -->
-    <text y="100" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" letter-spacing="2.5" fill="#64748b">
+    <text y="90" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="13" font-weight="700" letter-spacing="2.5" fill="#64748b">
       EMPOWERING DIGITAL CONNECTIVITY
     </text>
   </g>
