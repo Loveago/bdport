@@ -113,33 +113,64 @@ export async function DELETE(
       }
     }
 
-    await prisma.$transaction(async (tx) => {
-      // Clean up raw chat table if present
-      try {
-        await tx.$executeRawUnsafe(`DELETE FROM support_chat_messages WHERE user_id = $1`, id);
-      } catch {
-        // silent
-      }
+    // Clean up raw chat table BEFORE the transaction — a raw SQL failure inside
+    // a Prisma transaction puts Postgres into an aborted state (code 25P02) that
+    // kills every subsequent query in that transaction, even after try/catch.
+    try {
+      await prisma.$executeRawUnsafe(`DELETE FROM support_chat_messages WHERE user_id = $1`, id);
+    } catch {
+      // Table may not exist — safe to ignore
+    }
 
-      // API request logs via user's API keys
+    await prisma.$transaction(async (tx) => {
+      // 1. API keys → request logs
       const userKeys = await tx.apiKey.findMany({ where: { userId: id }, select: { id: true } });
       if (userKeys.length > 0) {
         await tx.apiRequestLog.deleteMany({ where: { apiKeyId: { in: userKeys.map((k) => k.id) } } });
         await tx.apiKey.deleteMany({ where: { userId: id } });
       }
 
-      // Delivery reports and events
+      // 2. API applications & credentials & webhooks
+      await tx.apiWebhook.deleteMany({ where: { userId: id } });
+      await tx.apiCredential.deleteMany({ where: { userId: id } });
+      await tx.apiApplication.deleteMany({ where: { userId: id } });
+
+      // 3. Delivery reports and events
       const reports = await tx.deliveryReport.findMany({ where: { userId: id }, select: { id: true } });
       if (reports.length > 0) {
         await tx.deliveryReportEvent.deleteMany({ where: { reportId: { in: reports.map((r) => r.id) } } });
         await tx.deliveryReport.deleteMany({ where: { userId: id } });
       }
 
-      // Orders and batches
-      await tx.order.deleteMany({ where: { userId: id } });
+      // 4. Orders → status history → batch
+      const orders = await tx.order.findMany({ where: { userId: id }, select: { id: true } });
+      if (orders.length > 0) {
+        await tx.orderStatusHistory.deleteMany({ where: { orderId: { in: orders.map((o) => o.id) } } });
+        await tx.order.deleteMany({ where: { userId: id } });
+      }
       await tx.orderBatch.deleteMany({ where: { userId: id } });
 
-      // Delete user
+      // 5. Storefront ecosystem
+      const storefront = await tx.storefront.findUnique({ where: { userId: id }, select: { id: true } });
+      if (storefront) {
+        await tx.storefrontProduct.deleteMany({ where: { storefrontId: storefront.id } });
+        await tx.storefrontOrder.deleteMany({ where: { storefrontId: storefront.id } });
+        await tx.storefront.delete({ where: { id: storefront.id } });
+      }
+      await tx.storefrontWallet.deleteMany({ where: { userId: id } });
+      await tx.storefrontWithdrawal.deleteMany({ where: { userId: id } });
+
+      // 6. Wallet transactions, send claims, notifications, misc
+      await tx.walletTransaction.deleteMany({ where: { userId: id } });
+      await tx.sendClaim.deleteMany({ where: { userId: id } });
+      await tx.notification.deleteMany({ where: { userId: id } });
+      await tx.mtnVerificationRequest.deleteMany({ where: { userId: id } });
+      await tx.signupCodeUsage.deleteMany({ where: { userId: id } });
+      await tx.passwordResetToken.deleteMany({ where: { userId: id } });
+      await tx.idempotencyKey.deleteMany({ where: { userId: id } });
+      await tx.auditLog.deleteMany({ where: { userId: id } });
+
+      // 7. Finally delete the user
       await tx.user.delete({ where: { id } });
     });
 
