@@ -333,7 +333,7 @@ async function main() {
 
   // 7. Storefront for Reseller
   const storefront = await prisma.storefront.upsert({
-    where: { userId: reseller.id },
+    where: { slug: "loveagostore" },
     update: {},
     create: {
       userId: reseller.id,
