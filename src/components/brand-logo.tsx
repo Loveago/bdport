@@ -13,9 +13,9 @@ export interface BrandProps {
 }
 
 /**
- * CommonTech Freestanding Monogram Mark
- * Luminous cyber-emerald "C" arc interlocking with an electric-cyan "T" crossbar & stem.
- * Pure vector glyph — no background box or square.
+ * CommonTech Minimalist Freestanding Monogram Mark
+ * Clean monochrome "C" and "T" with a refined emerald accent node.
+ * Zero neon glow, crisp precision geometry.
  */
 export function BrandMark({
   className,
@@ -46,55 +46,38 @@ export function BrandMark({
         viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="h-full w-full drop-shadow-[0_0_10px_rgba(0,223,130,0.45)]"
+        className="h-full w-full"
       >
-        <defs>
-          <linearGradient id="ctBrandEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#00FF9D" />
-            <stop offset="60%" stopColor="#00DF82" />
-            <stop offset="100%" stopColor="#059669" />
-          </linearGradient>
-          <linearGradient id="ctBrandCyan" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#00C4FF" />
-            <stop offset="50%" stopColor="#38BDF8" />
-            <stop offset="100%" stopColor="#00DF82" />
-          </linearGradient>
-          <filter id="ctBrandGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3" result="b" />
-            <feComposite in="SourceGraphic" in2="b" operator="over" />
-          </filter>
-        </defs>
-
-        {/* Ambient Core Glow */}
-        <circle cx="50" cy="50" r="30" fill="#00DF82" opacity="0.3" filter="url(#ctBrandGlow)" />
-
-        {/* "C" Arc: Bold 13px continuous 270-degree curve */}
+        {/* "C" Arc: Deep slate in light mode, pure white in dark mode */}
         <path
           d="M 76 25 A 35 35 0 1 0 76 75"
           fill="none"
-          stroke="url(#ctBrandEmerald)"
-          strokeWidth="13"
+          stroke="currentColor"
+          strokeWidth="12"
           strokeLinecap="round"
+          className="text-slate-900 dark:text-white"
         />
 
-        {/* "T" Element: Crossbar & Stem */}
+        {/* "T" Element: Sophisticated silver-slate */}
         <path
           d="M 42 38 L 84 38"
           fill="none"
-          stroke="url(#ctBrandCyan)"
-          strokeWidth="11"
+          stroke="currentColor"
+          strokeWidth="10"
           strokeLinecap="round"
+          className="text-slate-500 dark:text-slate-400"
         />
         <path
           d="M 63 38 L 63 68"
           fill="none"
-          stroke="url(#ctBrandCyan)"
-          strokeWidth="11"
+          stroke="currentColor"
+          strokeWidth="10"
           strokeLinecap="round"
+          className="text-slate-500 dark:text-slate-400"
         />
 
-        {/* Luminous Apex Node */}
-        <circle cx="63" cy="38" r="4" fill="#ffffff" />
+        {/* Subtle Emerald Accent Node */}
+        <circle cx="63" cy="38" r="4" className="fill-emerald-600 dark:fill-emerald-400" />
       </svg>
     </div>
   );
@@ -141,12 +124,12 @@ export function BrandLogo({
       <BrandMark size={size} />
       <div className="flex flex-col justify-center">
         <div className="flex items-center leading-none">
-          <span className={cn("font-black tracking-[-0.04em] text-slate-900 dark:text-white", textSize)}>
+          <span className={cn("font-black tracking-[-0.035em] text-slate-900 dark:text-white", textSize)}>
             Common
           </span>
           <span
             className={cn(
-              "ml-0.5 font-black tracking-[-0.04em] text-[#00df82] drop-shadow-[0_0_12px_rgba(0,223,130,0.4)]",
+              "ml-0.5 font-black tracking-[-0.035em] text-emerald-600 dark:text-emerald-400",
               textSize
             )}
           >
