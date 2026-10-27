@@ -96,7 +96,7 @@ export function withdrawalCode(seq: number): string {
 
 /**
  * Generates a clean guest buyer email for Paystack transactions, e.g.:
- * guest1234@commontechstore.com
+ * guest1234@cmtshop.net
  * Prevents exposing store owner or admin personal email on public checkouts.
  */
 export function generateGuestEmail(domain: string): string {

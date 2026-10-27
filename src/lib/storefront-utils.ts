@@ -62,7 +62,7 @@ export function cleanDomain(domain?: string | null, fallback: string = "localhos
 /**
  * Builds a clean, safe storefront full URL without duplicate protocols.
  * Automatically adapts between local development (http://localhost:3000/store/:slug)
- * and custom domain deployment (https://commontechstore.com/:slug).
+ * and custom domain deployment (https://cmtshop.net/:slug).
  */
 export function buildStorefrontUrl(slug?: string | null, domain?: string | null, subpath: string = ""): string {
   let effectiveDomain = domain;

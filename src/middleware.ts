@@ -19,11 +19,11 @@ import { cleanDomain } from "@/lib/storefront-utils";
 
 const STOREFRONT_DOMAIN = cleanDomain(
   process.env.STOREFRONT_DOMAIN || process.env.NEXT_PUBLIC_STOREFRONT_DOMAIN,
-  "commontechstore.com"
+  "cmtshop.net"
 );
 const MAIN_DOMAIN = cleanDomain(
   process.env.MAIN_DOMAIN || process.env.NEXT_PUBLIC_MAIN_DOMAIN,
-  "commontech.com"
+  "commontech.net"
 );
 
 export async function middleware(request: NextRequest) {

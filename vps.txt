@@ -1,0 +1,384 @@
+================================================================================
+     COMPLETE VPS DEPLOYMENT GUIDE: DUAL-DOMAIN ARCHITECTURE
+     • commontech.net -> Management Portal, Admin, User Dashboards
+     • cmtshop.net    -> Customer Storefronts, Orders & Tracking
+================================================================================
+OS: Ubuntu 22.04 / 24.04 LTS or Debian 12
+VPS Setup: Single Next.js App (Port 3000) + PM2 + Local PostgreSQL + Nginx + Certbot
+Architecture: Both domains point to the SAME VPS IP address and share the same database.
+================================================================================
+
+--------------------------------------------------------------------------------
+TABLE OF CONTENTS
+--------------------------------------------------------------------------------
+1. DNS Configuration (Both Domains Point to Same IP)
+2. Step 1: Connect to VPS & Configure Firewall
+3. Step 2: Install Node.js 22 LTS & PM2
+4. Step 3: Install & Configure PostgreSQL
+5. Step 4: Clone Repository & Install Dependencies
+6. Step 5: Configure Production Environment (.env)
+7. Step 6: Database Setup & Next.js Production Build
+8. Step 7: Configure PM2 Process Manager
+9. Step 8: Configure Nginx for Both Domains (commontech.net & cmtshop.net)
+10. Step 9: Issue Free SSL Certificates (Certbot HTTPS)
+11. Step 10: Configure Paystack Webhooks & Callbacks
+12. Step 11: Verification & Live Testing
+13. Step 12: 1-Click Update Script & Maintenance Commands
+
+
+================================================================================
+1. DNS CONFIGURATION (BOTH DOMAINS POINT TO SAME VPS IP)
+================================================================================
+A VPS has one public IP address. Both domains will point to that SAME IP.
+When a visitor visits cmtshop.net, Nginx proxies to Next.js with Host: cmtshop.net,
+serving customer storefronts. When a user visits commontech.net, they access the portal.
+
+In your DNS manager (Namecheap, Cloudflare, GoDaddy, Hostinger, etc.):
+
+For commontech.net:
+| Type | Host / Name | Value / Destination | TTL |
+| :--- | :--- | :--- | :--- |
+| A    | @           | <YOUR_VPS_IP>       | Auto / 1 min |
+| A    | www         | <YOUR_VPS_IP>       | Auto / 1 min |
+
+For cmtshop.net:
+| Type | Host / Name | Value / Destination | TTL |
+| :--- | :--- | :--- | :--- |
+| A    | @           | <YOUR_VPS_IP>       | Auto / 1 min |
+| A    | www         | <YOUR_VPS_IP>       | Auto / 1 min |
+
+(Both domains live together on the same server and database!)
+
+
+================================================================================
+2. STEP 1: CONNECT TO VPS & CONFIGURE FIREWALL
+================================================================================
+# SSH into your VPS (replace your_vps_ip with your actual VPS IP address)
+ssh root@your_vps_ip
+
+# Update system packages and install prerequisites
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl git ufw build-essential libpq-dev nginx certbot python3-certbot-nginx
+
+# Configure UFW Firewall (allows SSH, HTTP port 80, HTTPS port 443)
+sudo ufw allow OpenSSH
+sudo ufw allow 'Nginx Full'
+sudo ufw --force enable
+sudo ufw status
+
+
+================================================================================
+3. STEP 2: INSTALL NODE.JS 22 LTS & PM2
+================================================================================
+# Install Node.js 22 LTS via NodeSource
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Verify versions
+node -v
+npm -v
+
+# Install PM2 globally
+sudo npm install -g pm2
+
+# Configure PM2 to automatically launch on system reboot
+sudo pm2 startup systemd -u root --hp /root
+
+
+================================================================================
+4. STEP 3: INSTALL & CONFIGURE POSTGRESQL
+================================================================================
+# Install PostgreSQL and contrib tools
+sudo apt install -y postgresql postgresql-contrib
+
+# Start and enable PostgreSQL service
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+
+# Create database user and database
+# (Replace 'YourSecurePassword123!' with your chosen secure database password)
+sudo -u postgres psql << 'EOF'
+CREATE USER commontech_user WITH PASSWORD 'YourSecurePassword123!';
+CREATE DATABASE commontech_db OWNER commontech_user;
+GRANT ALL PRIVILEGES ON DATABASE commontech_db TO commontech_user;
+ALTER USER commontech_user CREATEDB;
+\q
+EOF
+
+# Grant schema privileges (PostgreSQL 15+)
+sudo -u postgres psql -d commontech_db -c "GRANT ALL ON SCHEMA public TO commontech_user;"
+
+# Test connecting to the local database
+PGPASSWORD='YourSecurePassword123!' psql -U commontech_user -d commontech_db -h 127.0.0.1 -c "\conninfo"
+
+
+================================================================================
+5. STEP 4: CLONE REPOSITORY & INSTALL DEPENDENCIES
+================================================================================
+# Create web directory
+sudo mkdir -p /var/www
+cd /var/www
+
+# Clone repository
+git clone https://github.com/Loveago/bdport.git commontech
+cd /var/www/commontech
+
+# Install dependencies
+npm install
+
+
+================================================================================
+6. STEP 5: CONFIGURE PRODUCTION ENVIRONMENT (.ENV)
+================================================================================
+# Create production .env file
+cat << 'EOF' > /var/www/commontech/.env
+# Database Connection (Local PostgreSQL)
+DATABASE_URL="postgresql://commontech_user:YourSecurePassword123!@localhost:5432/commontech_db?schema=public"
+
+# Auth Session Secret (Generate with: openssl rand -base64 32)
+AUTH_SECRET="CHANGE_THIS_TO_A_VERY_SECURE_LONG_RANDOM_SECRET_KEY_123456"
+
+# Multi-Domain Platform Architecture
+MAIN_DOMAIN="commontech.net"
+NEXT_PUBLIC_MAIN_DOMAIN="commontech.net"
+STOREFRONT_DOMAIN="cmtshop.net"
+NEXT_PUBLIC_STOREFRONT_DOMAIN="cmtshop.net"
+
+# Paystack (Ghana MoMo Top-ups & Storefront Checkout)
+# Get keys at: https://dashboard.paystack.com/#/settings/developers
+PAYSTACK_SECRET_KEY="your_paystack_secret_key_here"
+NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY="your_paystack_public_key_here"
+
+# Initial Admin Credentials (used during seed)
+ADMIN_EMAIL="admin@commontech.net"
+ADMIN_PASSWORD="ChooseAStrongPassword123!"
+ADMIN_NAME="Super Admin"
+
+# Node Environment
+NODE_ENV="production"
+PORT=3000
+EOF
+
+# Restrict permissions so only root/node can read secrets
+chmod 600 /var/www/commontech/.env
+
+
+================================================================================
+7. STEP 6: DATABASE SETUP & NEXT.JS PRODUCTION BUILD
+================================================================================
+cd /var/www/commontech
+
+# Generate Prisma Client
+npx prisma generate
+
+# Push database schema to PostgreSQL
+npx prisma db push
+
+# (Optional) Seed initial admin user and default settings/packages
+npx tsx prisma/seed.ts
+
+# Build Next.js application for production
+NODE_OPTIONS="--max-old-space-size=2048" npm run build
+
+
+================================================================================
+8. STEP 7: CONFIGURE PM2 PROCESS MANAGER
+================================================================================
+# Create PM2 ecosystem file
+cat << 'EOF' > /var/www/commontech/ecosystem.config.js
+module.exports = {
+  apps: [
+    {
+      name: "commontech",
+      cwd: "/var/www/commontech",
+      script: "node_modules/next/dist/bin/next",
+      args: "start -p 3000",
+      instances: "max",
+      exec_mode: "cluster",
+      autorestart: true,
+      watch: false,
+      max_memory_restart: "1G",
+      env: {
+        NODE_ENV: "production",
+        PORT: 3000
+      }
+    }
+  ]
+};
+EOF
+
+# Start application with PM2
+pm2 start /var/www/commontech/ecosystem.config.js
+
+# Save PM2 process list to persist across reboots
+pm2 save
+
+# Verify application responds locally
+curl -I http://127.0.0.1:3000
+
+
+================================================================================
+9. STEP 8: CONFIGURE NGINX FOR BOTH DOMAINS
+================================================================================
+We create two modular Nginx site configs: one for commontech.net and one for cmtshop.net.
+
+--- [ 8A: NGINX CONFIG FOR COMMONTECH.NET ] ---
+cat << 'EOF' > /etc/nginx/sites-available/commontech.net
+server {
+    listen 80;
+    listen [::]:80;
+    server_name commontech.net www.commontech.net;
+
+    client_max_body_size 250M;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+
+        # WebSocket support
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+
+        # Multi-tenant proxy headers
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 120s;
+        proxy_connect_timeout 60s;
+    }
+
+    # Static file caching
+    location /_next/static/ {
+        alias /var/www/commontech/.next/static/;
+        expires 365d;
+        access_log off;
+    }
+}
+EOF
+
+--- [ 8B: NGINX CONFIG FOR CMTSHOP.NET ] ---
+cat << 'EOF' > /etc/nginx/sites-available/cmtshop.net
+server {
+    listen 80;
+    listen [::]:80;
+    server_name cmtshop.net www.cmtshop.net;
+
+    client_max_body_size 250M;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+
+        # WebSocket support
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+
+        # Multi-tenant proxy headers
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 120s;
+        proxy_connect_timeout 60s;
+    }
+
+    # Static file caching
+    location /_next/static/ {
+        alias /var/www/commontech/.next/static/;
+        expires 365d;
+        access_log off;
+    }
+}
+EOF
+
+--- [ 8C: ENABLE SITES & TEST NGINX ] ---
+sudo ln -sf /etc/nginx/sites-available/commontech.net /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/cmtshop.net /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/default
+
+# Test Nginx syntax
+sudo nginx -t
+
+# Reload Nginx
+sudo systemctl reload nginx
+
+
+================================================================================
+10. STEP 9: ISSUE FREE SSL CERTIFICATES (CERTBOT HTTPS)
+================================================================================
+Run Certbot to secure both domains and their www subdomains in one command:
+
+sudo certbot --nginx -d commontech.net -d www.commontech.net -d cmtshop.net -d www.cmtshop.net --non-interactive --agree-tos -m admin@commontech.net --redirect
+
+# Test automatic SSL certificate renewal
+sudo certbot renew --dry-run
+
+
+================================================================================
+11. STEP 10: CONFIGURE PAYSTACK WEBHOOKS & CALLBACKS
+================================================================================
+In Paystack Dashboard -> Settings -> API Keys & Webhooks
+(https://dashboard.paystack.com/#/settings/developers):
+
+1. Webhook URL:
+   https://commontech.net/api/billing/paystack/webhook
+   (Handles user wallet top-up confirmations)
+
+2. Storefront Webhook URL (if using second webhook or primary):
+   https://cmtshop.net/api/store/paystack/callback
+   (Handles customer reseller order payments)
+
+3. Default Callback URL:
+   https://commontech.net/dashboard/billing
+
+
+================================================================================
+12. STEP 11: VERIFICATION & LIVE TESTING
+================================================================================
+Run these curl checks directly on the VPS to verify routing:
+
+# 1. Test storefront root (Storefront discovery homepage)
+curl -I -H "Host: cmtshop.net" http://127.0.0.1:3000/
+# Expected: HTTP 200
+
+# 2. Test security redirect (blocks admin/management on storefront domain)
+curl -I -H "Host: cmtshop.net" http://127.0.0.1:3000/admin
+# Expected: HTTP 307/308 Redirect to https://commontech.net/login
+
+# 3. Test clean store routing
+curl -I -H "Host: cmtshop.net" http://127.0.0.1:3000/loveagostore
+# Expected: HTTP 200
+
+# 4. Test main platform
+curl -I -H "Host: commontech.net" http://127.0.0.1:3000/dashboard
+# Expected: HTTP 200 / 307 (auth redirect)
+
+
+================================================================================
+13. STEP 12: 1-CLICK UPDATE SCRIPT & MAINTENANCE
+================================================================================
+Whenever you push updates to GitHub, run this single command on the VPS:
+
+cd /var/www/commontech && \
+git pull origin main && \
+npm install && \
+npx prisma generate && \
+npx prisma db push && \
+NODE_OPTIONS="--max-old-space-size=2048" npm run build && \
+pm2 reload all
+
+Helpful maintenance commands:
+• Check PM2 status:     pm2 status
+• View live app logs:   pm2 logs commontech
+• Restart application:  pm2 reload commontech
+• Check Nginx error:    sudo tail -f /var/log/nginx/error.log
+• PostgreSQL console:   sudo -u postgres psql -d commontech_db
+• Database backup:      pg_dump -U commontech_user -h 127.0.0.1 commontech_db > ~/commontech_backup_$(date +%F).sql
+================================================================================

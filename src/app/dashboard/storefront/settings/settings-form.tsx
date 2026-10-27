@@ -24,7 +24,7 @@ interface Initial {
 
 export function StorefrontSettingsForm({
   initial,
-  storefrontDomain = "commontechstore.com",
+  storefrontDomain = "cmtshop.net",
 }: {
   initial: Initial;
   storefrontDomain?: string;

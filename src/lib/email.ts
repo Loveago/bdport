@@ -292,7 +292,7 @@ export async function sendApiApprovalEmail(userEmail: string, userName: string, 
   const appUrl = (
     process.env.APP_URL ||
     process.env.NEXTAUTH_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://commontech.com")
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://commontech.net")
   ).replace(/\/$/, "");
 
   await sendEmail({

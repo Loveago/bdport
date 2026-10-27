@@ -39,11 +39,12 @@ export default function StorefrontIndexPage() {
         !host ||
         host.includes("localhost") ||
         host.includes("127.0.0.1") ||
+        host.toLowerCase().includes("cmtshop") ||
         host.toLowerCase().includes("commontech") ||
         host.toLowerCase().includes("bundleportal") ||
         host.toLowerCase().includes("mycedinet")
       ) {
-        setDisplayHost("commontechstore.com");
+        setDisplayHost("cmtshop.net");
       } else {
         setDisplayHost(host);
       }
