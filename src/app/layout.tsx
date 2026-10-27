@@ -5,7 +5,7 @@ import { ToastProvider } from "@/components/toast";
 import { NavigationProgress } from "@/components/navigation-progress";
 
 export const metadata: Metadata = {
-  title: "CommonTech — Stay Connected · Stay Ahead",
+  title: "CommonTech — Empowering Digital Connectivity",
   description:
     "Ghana's high-performance data bundle distribution platform for MTN, Telecel, and AirtelTigo.",
   icons: {

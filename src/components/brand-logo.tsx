@@ -84,7 +84,7 @@ export function BrandMark({
 }
 
 /**
- * Full Horizontal Brand Logo (Neon Mark + "CommonTech" + "STAY CONNECTED · STAY AHEAD")
+ * Full Horizontal Brand Logo (Neon Mark + "CommonTech" + "EMPOWERING DIGITAL CONNECTIVITY")
  */
 export function BrandLogo({
   className,
@@ -143,7 +143,7 @@ export function BrandLogo({
               taglineSize
             )}
           >
-            Stay Connected · Stay Ahead
+            Empowering Digital Connectivity
           </span>
         )}
       </div>

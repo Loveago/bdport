@@ -324,7 +324,7 @@ export default function StorefrontIndexPage() {
             </div>
             <span className="font-semibold text-slate-700 dark:text-slate-300">CommonTech Storefronts © {new Date().getFullYear()}</span>
             <span>·</span>
-            <span className="text-slate-500 dark:text-slate-400">Stay Connected · Stay Ahead</span>
+            <span className="text-slate-500 dark:text-slate-400">Empowering Digital Connectivity</span>
           </div>
           <div className="flex flex-wrap items-center gap-3 text-slate-500 dark:text-slate-400">
             <Link href="/terms" className="hover:text-[#00df82] transition-colors">
