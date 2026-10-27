@@ -207,7 +207,7 @@ export function LegalPageShell({
               href="/store"
               className="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-[0.98]"
             >
-              <BrandLogo size="sm" showTagline={false} />
+              <BrandLogo size="sm" showTagline={true} />
             </Link>
             <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500">
               <ChevronRight className="h-3.5 w-3.5" />

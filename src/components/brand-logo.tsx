@@ -105,14 +105,14 @@ export function BrandLogo({
 
   const taglineSize =
     size === "xl"
-      ? "text-[10px]"
+      ? "text-[10.5px]"
       : size === "lg"
-      ? "text-[9px]"
+      ? "text-[9.5px]"
       : size === "md"
-      ? "text-[8px]"
+      ? "text-[8.5px]"
       : size === "xs"
-      ? "text-[6px]"
-      : "text-[7.5px]";
+      ? "text-[6.5px]"
+      : "text-[7.5px] sm:text-[8px]";
 
   const content = (
     <div
@@ -139,7 +139,7 @@ export function BrandLogo({
         {showTagline && (
           <span
             className={cn(
-              "mt-1 font-bold tracking-[0.2em] text-slate-400 dark:text-slate-400 uppercase hidden sm:block",
+              "mt-1 font-semibold tracking-[0.14em] text-slate-400 dark:text-slate-400 uppercase block whitespace-nowrap",
               taglineSize
             )}
           >

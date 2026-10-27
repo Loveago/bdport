@@ -33,7 +33,7 @@ export function AuthShell({
       <div className="relative z-10 border-b border-white/[0.06] bg-slate-950/40 px-6 py-3.5 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <Link href="/store" className="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-[0.98]">
-            <BrandLogo size="sm" variant="dark" showTagline={false} />
+            <BrandLogo size="sm" variant="dark" showTagline={true} />
           </Link>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">

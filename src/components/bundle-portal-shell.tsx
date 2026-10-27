@@ -136,7 +136,7 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
           >
             <Menu className="h-5 w-5" />
           </button>
-          <BrandLogo size="sm" showTagline={false} href="/dashboard" />
+          <BrandLogo size="sm" showTagline={true} href="/dashboard" />
         </div>
 
         {/* Center: Search Bar */}

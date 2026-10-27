@@ -236,7 +236,7 @@ export function AdminShell({ user, children, allowedNavHrefs, supportWhatsapp }:
             <Menu className="h-5 w-5" />
           </button>
           <div className="flex items-center gap-2">
-            <BrandLogo size="sm" showTagline={false} />
+            <BrandLogo size="sm" showTagline={true} />
             <span className="rounded-md bg-[#00df82]/15 text-[#00df82] px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border border-[#00df82]/40 shadow-xs shadow-[#00df82]/20">
               ADMIN CENTER
             </span>
@@ -525,7 +525,7 @@ export function AdminShell({ user, children, allowedNavHrefs, supportWhatsapp }:
           <div className="relative flex flex-col w-4/5 max-w-xs bg-white dark:bg-[#070d18] border-r border-slate-200 dark:border-[#14233a] p-4 space-y-4 z-10 overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#14233a]">
               <div className="flex items-center gap-2">
-                <BrandLogo size="sm" showTagline={false} />
+                <BrandLogo size="sm" showTagline={true} />
                 <span className="text-[10px] font-black uppercase text-[#00df82] tracking-wider px-1.5 py-0.5 rounded bg-[#00df82]/10 border border-[#00df82]/20">
                   ADMIN
                 </span>
