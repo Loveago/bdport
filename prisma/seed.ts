@@ -210,21 +210,25 @@ async function main() {
     },
   });
 
-  // Also update old admin@mycedinet.com if it exists (migration cleanup)
-  await prisma.user.updateMany({
-    where: { email: "admin@mycedinet.com" },
-    data: {
-      email: adminEmail,
-      name: adminName,
-      passwordHash: adminPasswordHash,
-    },
-  });
+  // Migrate legacy admin@mycedinet.com → new email if no conflict exists
+  const legacyAdmin = await prisma.user.findUnique({ where: { email: "admin@mycedinet.com" } });
+  if (legacyAdmin) {
+    // If the new email doesn't already exist as a separate row, rename. Otherwise just delete.
+    const conflict = await prisma.user.findUnique({ where: { email: adminEmail } });
+    if (!conflict) {
+      await prisma.user.update({
+        where: { email: "admin@mycedinet.com" },
+        data: { email: adminEmail, name: adminName, passwordHash: adminPasswordHash, role: "ADMIN", status: "ACTIVE" },
+      });
+    }
+    // If conflict exists (already created above via upsert), leave the old row — it has FK-linked data
+  }
 
   const reseller = await prisma.user.upsert({
-    where: { email: "reseller@mycedinet.com" },
+    where: { email: "reseller@commontech.net" },
     update: {},
     create: {
-      email: "reseller@mycedinet.com",
+      email: "reseller@commontech.net",
       name: "Kwame Reseller",
       passwordHash: resellerPasswordHash,
       role: "RESELLER",
@@ -236,10 +240,10 @@ async function main() {
   });
 
   const secretary = await prisma.user.upsert({
-    where: { email: "secretary@mycedinet.com" },
+    where: { email: "secretary@commontech.net" },
     update: {},
     create: {
-      email: "secretary@mycedinet.com",
+      email: "secretary@commontech.net",
       name: "Ama Secretary",
       passwordHash: userPasswordHash,
       role: "SECRETARY",
@@ -250,10 +254,10 @@ async function main() {
   });
 
   const normalUser = await prisma.user.upsert({
-    where: { email: "user@mycedinet.com" },
+    where: { email: "user@commontech.net" },
     update: {},
     create: {
-      email: "user@mycedinet.com",
+      email: "user@commontech.net",
       name: "Kofi Mensah",
       passwordHash: userPasswordHash,
       role: "USER",
