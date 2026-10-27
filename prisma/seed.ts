@@ -210,18 +210,42 @@ async function main() {
     },
   });
 
+  // ── Cleanup: remove legacy @mycedinet.com demo accounts ──────────────────────
+  // These are seed-only demo accounts with no real user data.
+  // We do safe deletes — skip any that have FK-linked records (orders, etc.)
+  const legacyDemoEmails = [
+    "reseller@mycedinet.com",
+    "secretary@mycedinet.com",
+    "user@mycedinet.com",
+  ];
+  for (const legacyEmail of legacyDemoEmails) {
+    try {
+      await prisma.user.delete({ where: { email: legacyEmail } });
+      console.log(`  Deleted legacy account: ${legacyEmail}`);
+    } catch {
+      // Has linked FK data or doesn't exist — skip silently
+    }
+  }
+
   // Migrate legacy admin@mycedinet.com → new email if no conflict exists
   const legacyAdmin = await prisma.user.findUnique({ where: { email: "admin@mycedinet.com" } });
   if (legacyAdmin) {
-    // If the new email doesn't already exist as a separate row, rename. Otherwise just delete.
     const conflict = await prisma.user.findUnique({ where: { email: adminEmail } });
     if (!conflict) {
+      // No conflict — just rename the old admin row
       await prisma.user.update({
         where: { email: "admin@mycedinet.com" },
         data: { email: adminEmail, name: adminName, passwordHash: adminPasswordHash, role: "ADMIN", status: "ACTIVE" },
       });
+      console.log(`  Migrated admin: admin@mycedinet.com → ${adminEmail}`);
+    } else {
+      // New admin already exists — update its password and leave old row (has FK-linked orders)
+      await prisma.user.update({
+        where: { email: adminEmail },
+        data: { passwordHash: adminPasswordHash, name: adminName, status: "ACTIVE" },
+      });
+      console.log(`  Updated existing admin: ${adminEmail}`);
     }
-    // If conflict exists (already created above via upsert), leave the old row — it has FK-linked data
   }
 
   const reseller = await prisma.user.upsert({
