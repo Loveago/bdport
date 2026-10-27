@@ -7,7 +7,10 @@ async function main() {
   console.log("Seeding database...");
 
   // Password hashes
-  const adminPasswordHash = await bcrypt.hash("ChooseAStrongPassword123!", 10);
+  const adminPassword = process.env.ADMIN_PASSWORD || "ChooseAStrongPassword123!";
+  const adminEmail = process.env.ADMIN_EMAIL || "admin@commontech.net";
+  const adminName = process.env.ADMIN_NAME || "Super Admin";
+  const adminPasswordHash = await bcrypt.hash(adminPassword, 10);
   const userPasswordHash = await bcrypt.hash("UserPass123!", 10);
   const resellerPasswordHash = await bcrypt.hash("ResellerPass123!", 10);
 
@@ -188,20 +191,32 @@ async function main() {
   // 4. Users (Admin, Reseller, Retail User, Secretary)
   // Super Admin: balance 9,331.20 as in the reference screenshot!
   const admin = await prisma.user.upsert({
-    where: { email: "admin@mycedinet.com" },
+    where: { email: adminEmail },
     update: {
+      email: adminEmail,
+      name: adminName,
+      passwordHash: adminPasswordHash,
       balance: 9331.20,
-      name: "Super Admin",
       role: "ADMIN",
     },
     create: {
-      email: "admin@mycedinet.com",
-      name: "Super Admin",
+      email: adminEmail,
+      name: adminName,
       passwordHash: adminPasswordHash,
       role: "ADMIN",
       status: "ACTIVE",
       balance: 9331.20,
       phone: "0240000000",
+    },
+  });
+
+  // Also update old admin@mycedinet.com if it exists (migration cleanup)
+  await prisma.user.updateMany({
+    where: { email: "admin@mycedinet.com" },
+    data: {
+      email: adminEmail,
+      name: adminName,
+      passwordHash: adminPasswordHash,
     },
   });
 

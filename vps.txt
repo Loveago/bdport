@@ -98,7 +98,7 @@ sudo systemctl enable postgresql
 # Create database user and database
 # (Replace 'YourSecurePassword123!' with your chosen secure database password)
 sudo -u postgres psql << 'EOF'
-CREATE USER commontech_user WITH PASSWORD 'YourSecurePassword123!';
+CREATE USER commontech_user WITH PASSWORD 'YourSecurePassword123crazy!';
 CREATE DATABASE commontech_db OWNER commontech_user;
 GRANT ALL PRIVILEGES ON DATABASE commontech_db TO commontech_user;
 ALTER USER commontech_user CREATEDB;
@@ -109,7 +109,7 @@ EOF
 sudo -u postgres psql -d commontech_db -c "GRANT ALL ON SCHEMA public TO commontech_user;"
 
 # Test connecting to the local database
-PGPASSWORD='YourSecurePassword123!' psql -U commontech_user -d commontech_db -h 127.0.0.1 -c "\conninfo"
+PGPASSWORD='YourSecurePassword123crazy!' psql -U commontech_user -d commontech_db -h 127.0.0.1 -c "\conninfo"
 
 
 ================================================================================
@@ -133,10 +133,10 @@ npm install
 # Create production .env file
 cat << 'EOF' > /var/www/commontech/.env
 # Database Connection (Local PostgreSQL)
-DATABASE_URL="postgresql://commontech_user:YourSecurePassword123!@localhost:5432/commontech_db?schema=public"
+DATABASE_URL="postgresql://commontech_user:YourSecurePassword123crazy!@localhost:5432/commontech_db?schema=public"
 
 # Auth Session Secret (Generate with: openssl rand -base64 32)
-AUTH_SECRET="CHANGE_THIS_TO_A_VERY_SECURE_LONG_RANDOM_SECRET_KEY_123456"
+AUTH_SECRET="CHANGEdd_THIS_ddTO_ddA_VddERYe_s22!SECUREfsfsd_LONG_RANDOM_SEdsfsdCRET_KEY_123456"
 
 # Multi-Domain Platform Architecture
 MAIN_DOMAIN="commontech.net"
@@ -151,7 +151,7 @@ NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY="your_paystack_public_key_here"
 
 # Initial Admin Credentials (used during seed)
 ADMIN_EMAIL="admin@commontech.net"
-ADMIN_PASSWORD="ChooseAStrongPassword123!"
+ADMIN_PASSWORD="Laudforu2cmt112233!"
 ADMIN_NAME="Super Admin"
 
 # Node Environment
