@@ -181,6 +181,14 @@ export async function middleware(request: NextRequest) {
 
   const role = typeof payload?.role === "string" ? payload.role : null;
   const isAuthPage = pathname === "/login" || pathname === "/register";
+  const isLegalPage =
+    pathname === "/terms" ||
+    pathname === "/terms-of-service" ||
+    pathname === "/privacy" ||
+    pathname === "/privacy-policy" ||
+    pathname === "/refund-policy" ||
+    pathname === "/refunds" ||
+    pathname === "/cancellation-policy";
 
   if (isAuthPage && role) {
     const url = request.nextUrl.clone();
@@ -198,7 +206,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (!pathname.startsWith("/admin") && !pathname.startsWith("/api/admin")) {
-    if (isAuthPage) return NextResponse.next();
+    if (isAuthPage || isLegalPage) return NextResponse.next();
   }
 
   // Protect admin pages

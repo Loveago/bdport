@@ -509,8 +509,42 @@ export function AdminShell({ user, children, allowedNavHrefs, supportWhatsapp }:
         {/* MAIN BODY AREA */}
         <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
           {/* PAGE CONTENT */}
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
-            {children}
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6 flex flex-col justify-between">
+            <div className="space-y-6">
+              {children}
+            </div>
+
+            {/* Global Bottom Footer */}
+            <footer className="mt-12 border-t border-slate-200/70 dark:border-[#14233a] pt-5 text-xs text-slate-500 dark:text-slate-400">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+                  <span>CommonTech Admin © {new Date().getFullYear()} · All Rights Reserved</span>
+                  <span>·</span>
+                  <Link href="/terms" target="_blank" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                    Terms
+                  </Link>
+                  <span>·</span>
+                  <Link href="/refund-policy" target="_blank" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                    Refunds
+                  </Link>
+                  <span>·</span>
+                  <Link href="/privacy" target="_blank" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                    Privacy
+                  </Link>
+                </div>
+                <a
+                  href="https://wa.me/233507904981"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400 font-medium transition-colors group"
+                >
+                  <span>Powered by</span>
+                  <span className="font-bold text-slate-700 dark:text-slate-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 underline decoration-slate-300 dark:decoration-slate-600 underline-offset-2">
+                    Crazy Tech Enterprise
+                  </span>
+                </a>
+              </div>
+            </footer>
           </main>
         </div>
       </div>

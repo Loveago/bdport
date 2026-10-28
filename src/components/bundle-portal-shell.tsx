@@ -258,7 +258,7 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
           </nav>
 
           {/* Need Help? Contact Support Card */}
-          <div className="mt-auto pt-4">
+          <div className="mt-auto pt-4 space-y-3">
             <Link
               href="/admin/chat"
               className="group flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-[#14233a] bg-slate-50 dark:bg-[#0a1322] hover:border-[#00df82]/40 transition-colors shadow-sm"
@@ -276,6 +276,20 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
                 →
               </span>
             </Link>
+
+            <div className="pt-2 border-t border-slate-200/50 dark:border-white/5 text-center">
+              <a
+                href="https://wa.me/233507904981"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[11px] text-slate-400 hover:text-[#00df82] dark:text-slate-400 dark:hover:text-[#00df82] transition-colors group"
+              >
+                <span>Powered by</span>
+                <span className="font-semibold text-slate-600 dark:text-slate-300 group-hover:text-[#00df82] underline underline-offset-2">
+                  Crazy Tech Enterprise
+                </span>
+              </a>
+            </div>
           </div>
         </aside>
 
@@ -369,16 +383,61 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
                   <LogOut className="h-4 w-4" />
                   <span>Sign Out</span>
                 </button>
+                <div className="pt-2 text-center">
+                  <a
+                    href="https://wa.me/233507904981"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] text-slate-400 hover:text-[#00df82] transition-colors group"
+                  >
+                    <span>Powered by</span>
+                    <span className="font-semibold text-slate-600 dark:text-slate-300 group-hover:text-[#00df82] underline underline-offset-2">
+                      Crazy Tech Enterprise
+                    </span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         )}
 
         {/* MAIN PAGE VIEWPORT (with bottom padding for mobile nav) */}
-        <main className="flex-1 overflow-y-auto p-3.5 sm:p-5 lg:p-6 pb-28 lg:pb-6">
-          <div className="max-w-7xl mx-auto space-y-6">
+        <main className="flex-1 overflow-y-auto p-3.5 sm:p-5 lg:p-6 pb-28 lg:pb-6 flex flex-col justify-between">
+          <div className="max-w-7xl mx-auto space-y-6 w-full">
             {children}
           </div>
+
+          {/* Desktop/Mobile Global Bottom Footer */}
+          <footer className="mt-12 border-t border-slate-200/70 dark:border-white/5 pt-5 text-xs text-slate-500 dark:text-slate-400 w-full max-w-7xl mx-auto">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+                <span>CommonTech © {new Date().getFullYear()} · All Rights Reserved</span>
+                <span>·</span>
+                <Link href="/terms" target="_blank" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                  Terms
+                </Link>
+                <span>·</span>
+                <Link href="/refund-policy" target="_blank" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                  Refunds
+                </Link>
+                <span>·</span>
+                <Link href="/privacy" target="_blank" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                  Privacy
+                </Link>
+              </div>
+              <a
+                href="https://wa.me/233507904981"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400 font-medium transition-colors group"
+              >
+                <span>Powered by</span>
+                <span className="font-bold text-slate-700 dark:text-slate-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 underline decoration-slate-300 dark:decoration-slate-600 underline-offset-2">
+                  Crazy Tech Enterprise
+                </span>
+              </a>
+            </div>
+          </footer>
         </main>
       </div>
 

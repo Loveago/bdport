@@ -30,7 +30,7 @@ export function StatCard({
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             {title}
           </p>
-          <div className="mt-2 truncate text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white tabular-nums">
+          <div className="mt-2 break-all text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white tabular-nums">
             {value}
           </div>
           {hint && (

@@ -1,351 +1,81 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Search,
-  ShieldCheck,
-  Zap,
-  Sparkles,
-  Store,
-  Terminal,
-  Activity,
-  Cpu,
-  Radio,
-  ExternalLink,
-} from "lucide-react";
-import { BrandLogo, BrandMark } from "@/components/brand-logo";
 
-const LIVE_DISPATCHES = [
-  { time: "Just now", network: "MTN", bundle: "5GB Non-Expiry", phone: "024***8921", latency: "1.1s", status: "DELIVERED" },
-  { time: "14s ago", network: "Telecel", bundle: "10GB Non-Expiry", phone: "050***3419", latency: "1.4s", status: "DELIVERED" },
-  { time: "38s ago", network: "AT", bundle: "2.5GB High-Speed", phone: "027***5104", latency: "0.8s", status: "DELIVERED" },
-  { time: "1m ago", network: "MTN", bundle: "20GB Big-Pack", phone: "054***9012", latency: "1.3s", status: "DELIVERED" },
-];
-
-const POPULAR_HANDLES = ["loveagostore", "alpha-data", "ghana-bundles", "swift-telecom"];
+export const metadata: Metadata = {
+  title: "WELL, THIS IS AWKWARD",
+  description:
+    "You came looking for something. There is nothing here. Anyway, here’s a Chihuahua sitting in a chair to compensate for your troubles 😂",
+};
 
 export default function StorefrontIndexPage() {
-  const router = useRouter();
-  const [slugInput, setSlugInput] = useState("");
-  const [displayHost, setDisplayHost] = useState("");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const host = window.location.host.replace(/^www\./, "");
-      if (
-        !host ||
-        host.includes("localhost") ||
-        host.includes("127.0.0.1") ||
-        host.toLowerCase().includes("cmtshop") ||
-        host.toLowerCase().includes("commontech") ||
-        host.toLowerCase().includes("bundleportal") ||
-        host.toLowerCase().includes("mycedinet")
-      ) {
-        setDisplayHost("cmtshop.net");
-      } else {
-        setDisplayHost(host);
-      }
-    }
-  }, []);
-
-  function handleGoToStore(e: React.FormEvent, customSlug?: string) {
-    if (e) e.preventDefault();
-    const targetSlug = customSlug || slugInput;
-    const clean = targetSlug.trim().toLowerCase().replace(/^@/, "");
-    if (clean) {
-      if (typeof window !== "undefined" && window.location.pathname.startsWith("/store")) {
-        router.push(`/store/${clean}`);
-      } else {
-        router.push(`/${clean}`);
-      }
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#060b13] text-slate-900 dark:text-slate-100 flex flex-col justify-between selection:bg-[#00df82] selection:text-[#041d14] overflow-hidden">
-      {/* Ambient Neon Glow Lights */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 left-1/4 w-[750px] h-[550px] bg-gradient-to-tr from-[#00df82]/15 via-emerald-600/10 to-transparent blur-3xl opacity-70" />
-        <div className="absolute top-1/3 -right-40 w-[600px] h-[500px] bg-gradient-to-bl from-cyan-600/10 via-[#00df82]/10 to-transparent blur-3xl opacity-50" />
-        <div className="absolute -bottom-32 left-10 w-[500px] h-[450px] bg-gradient-to-tr from-[#00df82]/15 via-teal-900/15 to-transparent blur-3xl opacity-40" />
+    <main className="min-h-screen bg-slate-50 dark:bg-[#060b13] text-slate-900 dark:text-slate-100 flex flex-col items-center justify-between p-6 selection:bg-[#00df82] selection:text-[#041d14]">
+      <div className="flex-1 flex flex-col items-center justify-center w-full">
+        <div className="w-full max-w-lg mx-auto flex flex-col items-center text-center space-y-6">
+          <div className="space-y-3">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white uppercase">
+              WELL, THIS IS AWKWARD
+            </h1>
+            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 font-medium">
+              You came looking for something
+            </p>
+            <p className="text-base sm:text-lg text-slate-500 dark:text-slate-400 font-normal">
+              There is nothing here
+            </p>
+            <p className="text-base sm:text-lg text-slate-700 dark:text-slate-200 font-medium pt-1">
+              Anyway, here’s a Chihuahua sitting in a chair to compensate for your troubles 😂
+            </p>
+          </div>
+
+          <div className="rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 bg-white p-2">
+            <Image
+              src="/chihuahua.png"
+              alt="Chihuahua sitting in a chair with sunglasses"
+              width={684}
+              height={1024}
+              priority
+              className="w-auto h-auto max-h-[480px] max-w-full rounded-xl object-contain mx-auto"
+            />
+          </div>
+        </div>
       </div>
 
-      {/* Top Navigation Bar */}
-      <header className="relative z-20 border-b border-slate-200 dark:border-[#162740] px-4 sm:px-8 py-4 backdrop-blur-xl bg-white/85 dark:bg-[#060b13]/85 sticky top-0">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
-            <BrandMark size="md" />
-            <div className="flex flex-col">
-              <span className="text-base font-black tracking-tight text-slate-900 dark:text-white group-hover:text-[#00df82] transition-colors">
-                COMMONTECH
-              </span>
-              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider">
-                STOREFRONTS &amp; MARKETPLACE
-              </span>
-            </div>
-          </Link>
-
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:inline-flex items-center gap-2 text-xs font-semibold text-[#00df82] bg-[#00df82]/10 border border-[#00df82]/20 px-3.5 py-1.5 rounded-full">
-              <span className="h-2 w-2 rounded-full bg-[#00df82] animate-pulse" />
-              Telecom Switching Live
-            </div>
-            <Link
-              href="/dashboard/storefront"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#00df82]/30 bg-[#00df82]/10 px-3.5 py-1.5 text-xs font-bold text-[#00df82] hover:bg-[#00df82] hover:text-[#041d14] transition-all"
-            >
-              <Store className="h-3.5 w-3.5" />
-              <span>Reseller Login</span>
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero Showcase Section */}
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 py-12 lg:py-16 my-auto w-full">
-        <div className="grid lg:grid-cols-12 gap-10 items-center">
-          {/* Left Column: Direct Access & Headline */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#00df82]/30 bg-[#00df82]/10 px-4 py-1.5 text-xs font-semibold text-[#00df82] shadow-[0_0_15px_rgba(0,223,130,0.15)]">
-              <Sparkles className="h-3.5 w-3.5 text-[#00df82]" />
-              Ghana&apos;s High-Speed Reseller Telecom Network
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white leading-[1.08]">
-              Connect to Any <br className="hidden sm:block" />
-              <span className="bg-gradient-to-r from-[#00df82] via-emerald-400 to-cyan-500 bg-clip-text text-transparent">
-                Merchant Storefront
-              </span>{" "}
-              Instantly.
-            </h1>
-
-            <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base max-w-xl leading-relaxed">
-              Every verified merchant operates an automated digital shop with direct telecom switch integration.
-              Select packages, pay with Mobile Money, and receive non-expiry SIM data in under 2 seconds.
-            </p>
-
-            {/* Quick Search Command Form */}
-            <div className="pt-2 max-w-xl">
-              <form
-                onSubmit={(e) => handleGoToStore(e)}
-                className="flex flex-col sm:flex-row items-stretch gap-2.5 bg-white dark:bg-[#0b1322] border border-slate-200 dark:border-[#162740] rounded-2xl p-2.5 shadow-2xl backdrop-blur-xl focus-within:border-[#00df82] focus-within:ring-1 focus-within:ring-[#00df82]/40 transition-all"
-              >
-                <div className="flex items-center flex-1 px-3 text-slate-500 dark:text-slate-400 text-sm">
-                  <span className="font-semibold text-[#00df82] select-none mr-2 flex items-center gap-1.5 shrink-0">
-                    <Store className="h-4 w-4" />
-                    {displayHost ? `${displayHost}/` : "store/"}
-                  </span>
-                  <input
-                    type="text"
-                    value={slugInput}
-                    onChange={(e) => setSlugInput(e.target.value)}
-                    placeholder="reseller-handle"
-                    className="w-full bg-transparent text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none text-sm font-semibold"
-                    required
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#00df82] hover:bg-[#00c572] active:scale-[0.98] transition px-6 py-3 font-black text-sm text-[#041d14] shadow-[0_0_20px_rgba(0,223,130,0.3)] cursor-pointer"
-                >
-                  Visit Store
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </form>
-
-              {/* Sample / Quick handles */}
-              <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-                <span className="text-slate-400 dark:text-slate-500">Popular Stores:</span>
-                {POPULAR_HANDLES.map((handle) => (
-                  <button
-                    key={handle}
-                    type="button"
-                    onClick={(e) => {
-                      setSlugInput(handle);
-                      handleGoToStore(e, handle);
-                    }}
-                    className="rounded-lg bg-slate-100 hover:bg-[#00df82]/10 hover:text-[#00df82] hover:border-[#00df82]/30 border border-slate-200 dark:bg-white/5 dark:border-[#162740] px-2.5 py-1 text-slate-700 dark:text-slate-300 transition cursor-pointer font-mono text-[11px]"
-                  >
-                    @{handle}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Carrier Status Bar */}
-            <div className="pt-2 flex flex-wrap items-center gap-3">
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Carrier Nodes:</span>
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-xs font-bold text-amber-500 dark:text-amber-400">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-                MTN Ghana (Active)
-              </div>
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-rose-500/25 bg-rose-500/10 px-3 py-1 text-xs font-bold text-rose-500 dark:text-rose-400">
-                <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
-                Telecel (Active)
-              </div>
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/25 bg-sky-500/10 px-3 py-1 text-xs font-bold text-sky-500 dark:text-sky-400">
-                <span className="h-1.5 w-1.5 rounded-full bg-sky-500" />
-                AirtelTigo (Active)
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Live Simulated Dispatch Terminal */}
-          <div className="lg:col-span-5">
-            <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-5 sm:p-6 shadow-2xl backdrop-blur-2xl relative overflow-hidden">
-              <div className="pointer-events-none absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[#00df82]/15 blur-2xl" />
-
-              {/* Terminal Title Bar */}
-              <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-[#162740]">
-                <div className="flex items-center gap-2">
-                  <div className="flex gap-1.5">
-                    <span className="h-2.5 w-2.5 rounded-full bg-red-500/80" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-amber-500/80" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-[#00df82]" />
-                  </div>
-                  <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 ml-2 flex items-center gap-1.5">
-                    <Terminal className="h-3.5 w-3.5 text-[#00df82]" />
-                    telecom-dispatch.live
-                  </span>
-                </div>
-                <span className="inline-flex items-center gap-1 rounded-full bg-[#00df82]/15 border border-[#00df82]/30 px-2 py-0.5 text-[10px] font-bold text-[#00df82]">
-                  <Activity className="h-3 w-3 animate-spin" />
-                  99.98% Latency ~1.2s
-                </span>
-              </div>
-
-              {/* Terminal Content: Live Feed */}
-              <div className="mt-4 space-y-3">
-                <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 flex items-center justify-between pb-1">
-                  <span>REAL-TIME SIM FULFILLMENT STREAM</span>
-                  <span className="text-[#00df82]">PULSE: OK</span>
-                </div>
-
-                {LIVE_DISPATCHES.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] p-3 space-y-1.5 hover:border-[#00df82]/40 transition-colors"
-                  >
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2">
-                        <span className="font-extrabold text-slate-900 dark:text-white">{item.network}</span>
-                        <span className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">{item.bundle}</span>
-                      </div>
-                      <span className="text-[10px] font-semibold text-[#00df82] bg-[#00df82]/10 border border-[#00df82]/20 px-2 py-0.5 rounded-md">
-                        {item.status} ({item.latency})
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
-                      <span>Dest: {item.phone}</span>
-                      <span>{item.time}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Terminal Summary Card */}
-              <div className="mt-4 pt-3 border-t border-slate-200 dark:border-[#162740] flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                <span className="flex items-center gap-1.5">
-                  <Cpu className="h-3.5 w-3.5 text-[#00df82]" />
-                  Direct Multi-SIM Daemon
-                </span>
-                <span className="font-mono text-[#00df82] font-semibold">Zero Queue Backlog</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Asymmetrical Bento Platform Grid */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-5">
-          {/* Bento Card 1: Direct Carrier Pipeline */}
-          <div className="md:col-span-2 rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 sm:p-8 backdrop-blur-xl space-y-4 hover:border-[#00df82]/30 transition-all group">
-            <div className="flex items-center justify-between">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#00df82]/10 text-[#00df82] border border-[#00df82]/20 group-hover:scale-105 transition-transform">
-                <Zap className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-mono font-bold text-[#00df82] bg-[#00df82]/10 border border-[#00df82]/20 px-3 py-1 rounded-full">
-                Carrier USSD Switched
-              </span>
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-[#00df82] transition-colors">
-                Instant Automated Dispatch Engine
-              </h3>
-              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
-                Unlike legacy manual resellers, storefronts on CommonTech trigger immediate automated packet dispatches directly upon payment confirmation. Bundles land on recipient SIM cards without delay.
-              </p>
-            </div>
-            <div className="grid grid-cols-3 gap-2 pt-2 text-center text-xs">
-              <div className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] p-2.5">
-                <div className="font-extrabold text-amber-500 dark:text-amber-400 text-base">MTN</div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">4G/5G Non-Expiry</div>
-              </div>
-              <div className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] p-2.5">
-                <div className="font-extrabold text-rose-500 dark:text-rose-400 text-base">Telecel</div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">Official Bundles</div>
-              </div>
-              <div className="rounded-xl border border-slate-200 dark:border-[#162740] bg-slate-50 dark:bg-[#070d18] p-2.5">
-                <div className="font-extrabold text-sky-500 dark:text-sky-400 text-base">AirtelTigo</div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">Fast Data Delivery</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Bento Card 2: Track Orders Directly */}
-          <div className="rounded-3xl border border-slate-200 dark:border-[#162740] bg-white dark:bg-[#0b1322] p-6 sm:p-8 backdrop-blur-xl space-y-4 hover:border-[#00df82]/30 transition-all group flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#00df82]/10 text-[#00df82] border border-[#00df82]/20 group-hover:scale-105 transition-transform">
-                <Search className="h-5 w-5" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-[#00df82] transition-colors">
-                Track Existing Purchases
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                Have an ongoing order? Track carrier delivery status anytime with your phone number or Paystack payment reference.
-              </p>
-            </div>
-            <div className="pt-4">
-              <div className="text-xs text-[#00df82] font-mono bg-[#00df82]/10 border border-[#00df82]/20 p-2.5 rounded-xl text-center">
-                Format: /[store-name]/track
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      {/* Global Footer */}
-      <footer className="relative z-10 border-t border-slate-200 dark:border-[#162740] px-4 sm:px-8 py-6 backdrop-blur-md bg-white/85 dark:bg-[#060b13]/85 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-2 text-slate-500 dark:text-slate-400">
-            <div className="flex h-5 w-5 items-center justify-center rounded-md bg-[#00df82]/20 text-[#00df82]">
-              <Store className="h-3 w-3" />
-            </div>
-            <span className="font-semibold text-slate-700 dark:text-slate-300">CommonTech Storefronts © {new Date().getFullYear()}</span>
+      <footer className="mt-12 pt-6 border-t border-slate-200/80 dark:border-white/10 w-full max-w-2xl text-xs text-slate-500 dark:text-slate-400">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <span className="font-semibold text-slate-700 dark:text-slate-300">
+              CommonTech Storefronts © {new Date().getFullYear()}
+            </span>
             <span>·</span>
-            <span className="text-slate-500 dark:text-slate-400">Empowering Digital Connectivity</span>
+            <a
+              href="https://wa.me/233507904981"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-slate-600 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400 transition-colors group"
+            >
+              <span>Powered by</span>
+              <span className="font-bold text-slate-800 dark:text-slate-200 group-hover:underline">
+                Crazy Tech Enterprise
+              </span>
+            </a>
           </div>
-          <div className="flex flex-wrap items-center gap-3 text-slate-500 dark:text-slate-400">
-            <Link href="/terms" className="hover:text-[#00df82] transition-colors">
+
+          <div className="flex flex-wrap items-center justify-center gap-3 text-xs">
+            <Link href="/terms" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
               Terms
             </Link>
             <span>·</span>
-            <Link href="/refund-policy" className="hover:text-[#00df82] transition-colors">
+            <Link href="/refund-policy" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
               Refunds
             </Link>
             <span>·</span>
-            <Link href="/privacy" className="hover:text-[#00df82] transition-colors">
+            <Link href="/privacy" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
               Privacy
             </Link>
-            <span>·</span>
-            <span className="flex items-center gap-1 text-[#00df82]">
-              <ShieldCheck className="h-3.5 w-3.5" /> Direct Carrier Switched
-            </span>
           </div>
         </div>
       </footer>
-    </div>
+    </main>
   );
 }

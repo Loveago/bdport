@@ -329,13 +329,13 @@ export function LegalPageShell({
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-wrap items-center justify-center gap-2">
             <span className="font-semibold text-slate-700 dark:text-slate-300">
-              CommonTech.com © 2026
+              commontech.net © 2026
             </span>
             <span>·</span>
             <span>All Rights Reserved</span>
             <span>·</span>
             <a
-              href="https://wa.me/233242319697"
+              href="https://wa.me/233507904981"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-slate-600 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400 transition-colors group"

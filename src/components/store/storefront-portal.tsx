@@ -900,7 +900,53 @@ export function StorefrontPortal({
         </section>
       )}
 
-      {/* ── 6. INSTANT CHECKOUT POPUP MODAL ──────────────────────────────────── */}
+      {/* ── 6. STOREFRONT GLOBAL FOOTER ────────────────────────────────────────── */}
+      <footer className="mt-14 border-t border-slate-200/80 bg-white/70 px-4 py-8 text-xs text-slate-500 backdrop-blur-sm">
+        <div className="mx-auto max-w-xl flex flex-col items-center justify-between gap-3 text-center sm:text-left sm:flex-row">
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <span className="font-semibold text-slate-700">
+              {storefront.name} © {new Date().getFullYear()}
+            </span>
+            <span>·</span>
+            <a
+              href="https://wa.me/233507904981"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-slate-600 hover:text-emerald-600 transition-colors group"
+            >
+              <span>Powered by</span>
+              <span className="font-bold text-slate-800 group-hover:underline">
+                Crazy Tech Enterprise
+              </span>
+            </a>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 text-xs">
+            <Link
+              href={`/terms?from=${storefront.slug}&name=${encodeURIComponent(storefront.name)}`}
+              className="hover:text-emerald-600 transition-colors"
+            >
+              Terms
+            </Link>
+            <span>·</span>
+            <Link
+              href={`/refund-policy?from=${storefront.slug}&name=${encodeURIComponent(storefront.name)}`}
+              className="hover:text-emerald-600 transition-colors"
+            >
+              Refunds
+            </Link>
+            <span>·</span>
+            <Link
+              href={`/privacy?from=${storefront.slug}&name=${encodeURIComponent(storefront.name)}`}
+              className="hover:text-emerald-600 transition-colors"
+            >
+              Privacy
+            </Link>
+          </div>
+        </div>
+      </footer>
+
+      {/* ── 7. INSTANT CHECKOUT POPUP MODAL ──────────────────────────────────── */}
       {selectedProduct && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
