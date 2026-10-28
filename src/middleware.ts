@@ -43,9 +43,23 @@ export async function middleware(request: NextRequest) {
     }
 
     // Serve dedicated storefront favicon and app icons
-    if (pathname === "/favicon.ico" || pathname === "/icon.svg" || pathname === "/apple-icon.png") {
+    if (
+      pathname === "/favicon.ico" ||
+      pathname === "/favicon.svg" ||
+      pathname === "/icon.svg" ||
+      pathname === "/icon.png" ||
+      pathname === "/apple-icon.png"
+    ) {
       const url = request.nextUrl.clone();
-      url.pathname = "/store/icon.svg";
+      if (pathname === "/favicon.ico") {
+        url.pathname = "/store/favicon.ico";
+      } else if (pathname === "/apple-icon.png") {
+        url.pathname = "/store/apple-icon.png";
+      } else if (pathname === "/icon.png") {
+        url.pathname = "/store/icon.png";
+      } else {
+        url.pathname = "/store/icon.svg";
+      }
       return NextResponse.rewrite(url);
     }
 

@@ -6,6 +6,17 @@ export const metadata: Metadata = {
   title: "WELL, THIS IS AWKWARD",
   description:
     "You came looking for something. There is nothing here. Anyway, here’s a Chihuahua sitting in a chair to compensate for your troubles 😂",
+  icons: {
+    icon: [
+      { url: "/store/icon.svg", type: "image/svg+xml" },
+      { url: "/store/favicon.ico", sizes: "any" },
+      { url: "/store/icon.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/store/apple-icon.svg", type: "image/svg+xml" },
+      { url: "/store/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
 };
 
 export default function StorefrontIndexPage() {

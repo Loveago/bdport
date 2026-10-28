@@ -1,9 +1,41 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { StoreChrome } from "@/components/store/store-chrome";
 import { NETWORK_ORDER } from "@/components/store/brands";
 import type { NetworkProvider } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const storefront = await prisma.storefront.findUnique({
+    where: { slug },
+    select: { name: true, description: true },
+  });
+
+  const title = storefront?.name ? `${storefront.name} · Instant Bundles` : "CommonTech Storefront";
+  const description = storefront?.description || "Instant automated telecom data bundles delivered directly to your SIM.";
+
+  return {
+    title,
+    description,
+    icons: {
+      icon: [
+        { url: "/store/icon.svg", type: "image/svg+xml" },
+        { url: "/store/favicon.ico", sizes: "any" },
+        { url: "/store/icon.png", sizes: "512x512", type: "image/png" },
+      ],
+      apple: [
+        { url: "/store/apple-icon.svg", type: "image/svg+xml" },
+        { url: "/store/apple-icon.png", sizes: "180x180", type: "image/png" },
+      ],
+    },
+  };
+}
 
 export default async function StoreLayout({
   children,
