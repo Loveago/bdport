@@ -241,9 +241,23 @@ export function StoreChrome(props: StoreChromeProps) {
           </p>
 
           <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
-            <p>
-              {name} © {new Date().getFullYear()} · All Rights Reserved
-            </p>
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              <p>
+                {name} © {new Date().getFullYear()} · All Rights Reserved
+              </p>
+              <span>·</span>
+              <a
+                href="https://wa.me/233507904981"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-slate-500 hover:text-emerald-600 transition-colors group"
+              >
+                <span>Powered by</span>
+                <span className="font-semibold text-slate-700 group-hover:underline">
+                  Crazy Tech Enterprise
+                </span>
+              </a>
+            </div>
             <div className="flex items-center gap-3">
               <Link
                 href={`/terms?from=${encodeURIComponent(slug)}&name=${encodeURIComponent(name)}`}
