@@ -225,19 +225,20 @@ export function AdminShell({ user, children, allowedNavHrefs, supportWhatsapp }:
       )}
 
       {/* ── TOP BAR (NEON DASHBOARD THEME) ─────────────────────────────────── */}
-      <header className="h-16 border-b border-slate-200 dark:border-[#14233a] bg-white/90 dark:bg-[#070d18]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-4 lg:px-6">
+      <header className="h-16 border-b border-slate-200 dark:border-[#14233a] bg-white/90 dark:bg-[#070d18]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-2.5 sm:px-4 lg:px-6 w-full max-w-full">
         {/* Left: Mobile trigger & Brand */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#0e192c]"
+            className="lg:hidden p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#0e192c] shrink-0"
+            aria-label="Toggle navigation menu"
           >
             <Menu className="h-5 w-5" />
           </button>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
             <BrandLogo size="sm" showTagline={true} />
-            <span className="rounded-md bg-[#00df82]/15 text-[#00df82] px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border border-[#00df82]/40 shadow-xs shadow-[#00df82]/20">
+            <span className="hidden sm:inline-flex rounded-md bg-[#00df82]/15 text-[#00df82] px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border border-[#00df82]/40 shadow-xs shadow-[#00df82]/20 shrink-0">
               ADMIN CENTER
             </span>
           </div>
@@ -258,7 +259,7 @@ export function AdminShell({ user, children, allowedNavHrefs, supportWhatsapp }:
         </div>
 
         {/* Right: Actions, Live Clock, Notifications, Theme Toggle, User Profile */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
           {/* Live GMT Clock */}
           {gmtTime && (
             <div className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-[#0a1220] border border-slate-200 dark:border-[#162740] text-slate-700 dark:text-slate-300 text-[11px] font-mono">
@@ -341,12 +342,12 @@ export function AdminShell({ user, children, allowedNavHrefs, supportWhatsapp }:
             )}
           </div>
 
-          {/* Theme Toggle Button */}
+          {/* Theme Toggle Button - hidden on mobile, available in mobile drawer */}
           {mounted && (
             <button
               type="button"
               onClick={() => setTheme(isDarkMode ? "light" : "dark")}
-              className="p-2 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#0a1220] border border-slate-200 dark:border-[#162740] transition-colors"
+              className="hidden sm:flex p-2 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#0a1220] border border-slate-200 dark:border-[#162740] transition-colors"
               title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
               {isDarkMode ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-600" />}
@@ -364,12 +365,19 @@ export function AdminShell({ user, children, allowedNavHrefs, supportWhatsapp }:
           </Link>
 
           {/* User Profile Card */}
-          <div className="flex items-center gap-2 pl-2 border-l border-slate-200 dark:border-[#14233a]">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-[#00df82] to-[#0070f3] p-[1.5px] shrink-0">
-              <div className="h-full w-full rounded-[10px] bg-slate-900 flex items-center justify-center text-white text-xs font-black">
-                {getUserInitials(user.name, user.email)}
+          <div className="flex items-center gap-1.5 sm:gap-2 pl-1 sm:pl-2 border-l border-slate-200 dark:border-[#14233a]">
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              className="lg:pointer-events-none shrink-0"
+              title="Open Admin Navigation"
+            >
+              <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-lg sm:rounded-xl bg-gradient-to-br from-[#00df82] to-[#0070f3] p-[1.5px] shrink-0">
+                <div className="h-full w-full rounded-[6px] sm:rounded-[10px] bg-slate-900 flex items-center justify-center text-white text-[10px] sm:text-xs font-black">
+                  {getUserInitials(user.name, user.email)}
+                </div>
               </div>
-            </div>
+            </button>
             <div className="hidden lg:flex flex-col">
               <span className="text-xs font-bold text-slate-900 dark:text-white leading-tight truncate max-w-[120px]">
                 {user.name || "Super Admin"}
@@ -381,7 +389,7 @@ export function AdminShell({ user, children, allowedNavHrefs, supportWhatsapp }:
             <button
               type="button"
               onClick={handleSignOut}
-              className="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors ml-1"
+              className="hidden sm:flex p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors ml-1"
               title="Sign Out"
             >
               <LogOut className="h-4 w-4" />
@@ -507,9 +515,9 @@ export function AdminShell({ user, children, allowedNavHrefs, supportWhatsapp }:
         </aside>
 
         {/* MAIN BODY AREA */}
-        <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <div className="flex-1 flex flex-col min-w-0 overflow-y-auto overflow-x-hidden w-full max-w-full">
           {/* PAGE CONTENT */}
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6 flex flex-col justify-between">
+          <main className="flex-1 p-3.5 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6 flex flex-col justify-between overflow-x-hidden">
             <div className="space-y-6">
               {children}
             </div>

@@ -10,6 +10,7 @@ export interface BrandProps {
   showTagline?: boolean;
   href?: string;
   variant?: "default" | "dark" | "light";
+  taglineClassName?: string;
 }
 
 /**
@@ -91,6 +92,7 @@ export function BrandLogo({
   size = "md",
   showTagline = true,
   href,
+  taglineClassName,
 }: BrandProps) {
   const textSize =
     size === "xl"
@@ -112,17 +114,17 @@ export function BrandLogo({
       ? "text-[8.5px]"
       : size === "xs"
       ? "text-[6.5px]"
-      : "text-[7.5px] sm:text-[8px]";
+      : "text-[6.5px] sm:text-[8px]";
 
   const content = (
     <div
       className={cn(
-        "inline-flex shrink-0 items-center gap-2.5 sm:gap-3 select-none",
+        "inline-flex shrink-0 items-center gap-2 sm:gap-3 select-none",
         className
       )}
     >
       <BrandMark size={size} />
-      <div className="flex flex-col justify-center">
+      <div className="flex flex-col justify-center min-w-0">
         <div className="flex items-center leading-none">
           <span className={cn("font-black tracking-[-0.035em] text-slate-900 dark:text-white", textSize)}>
             Common
@@ -139,8 +141,9 @@ export function BrandLogo({
         {showTagline && (
           <span
             className={cn(
-              "mt-1 font-semibold tracking-[0.14em] text-slate-400 dark:text-slate-400 uppercase block whitespace-nowrap",
-              taglineSize
+              "mt-0.5 font-semibold uppercase tracking-[0.03em] sm:tracking-[0.14em] text-slate-400 dark:text-slate-400 block truncate max-w-[130px] xs:max-w-[160px] sm:max-w-none leading-none",
+              taglineSize,
+              taglineClassName
             )}
           >
             Empowering Digital Connectivity

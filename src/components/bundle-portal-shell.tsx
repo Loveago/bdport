@@ -125,13 +125,13 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
   return (
     <div className="min-h-screen bg-[#f3f6fa] dark:bg-[#060b13] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 antialiased selection:bg-[#00df82] selection:text-slate-950">
       {/* ── TOP BAR (MATCHING SCREENSHOT) ─────────────────────────────────── */}
-      <header className="h-16 border-b border-slate-200 dark:border-[#14233a] bg-white/90 dark:bg-[#070d18]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-3 sm:px-4 lg:px-6">
+      <header className="h-16 border-b border-slate-200 dark:border-[#14233a] bg-white/90 dark:bg-[#070d18]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-2.5 sm:px-4 lg:px-6 w-full max-w-full">
         {/* Left: Mobile trigger & Brand */}
-        <div className="flex items-center gap-2 sm:gap-3 min-w-0 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 -ml-1 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#0e192c] shrink-0"
+            className="lg:hidden p-1.5 sm:p-2 -ml-1 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#0e192c] shrink-0"
             aria-label="Toggle navigation menu"
           >
             <Menu className="h-5 w-5" />
@@ -157,11 +157,11 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
         </div>
 
         {/* Right: Actions, Theme, Mobile Balance, User Pill */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
           {/* Quick Mobile Balance Pill */}
           <Link
             href="/dashboard/billing"
-            className="flex sm:hidden items-center gap-1 rounded-lg border border-[#00df82]/30 bg-[#00df82]/10 px-2 py-1 text-[11px] font-mono font-black text-[#00df82] whitespace-nowrap"
+            className="flex items-center gap-1 rounded-lg border border-[#00df82]/30 bg-[#00df82]/10 px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-[11px] font-mono font-black text-[#00df82] whitespace-nowrap shrink-0"
             title="Wallet Balance"
           >
             <Wallet className="h-3 w-3 shrink-0" />
@@ -184,14 +184,14 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
           )}
 
           {/* User Profile Pill */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5 pl-1 sm:pl-2 border-l border-slate-200 dark:border-[#14233a]">
+          <div className="flex items-center gap-1 sm:gap-2.5 pl-1 sm:pl-2 border-l border-slate-200 dark:border-[#14233a]">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="lg:pointer-events-none"
+              className="lg:pointer-events-none shrink-0"
               title="View account"
             >
-              <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-[#00df82] to-[#22d3ee] text-slate-950 font-black text-xs shadow-md shadow-[#00df82]/20">
+              <div className="flex h-7 w-7 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-gradient-to-tr from-[#00df82] to-[#22d3ee] text-slate-950 font-black text-[10px] sm:text-xs shadow-md shadow-[#00df82]/20">
                 {getUserInitials(user.name, user.email)}
               </div>
             </button>
@@ -402,7 +402,7 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
         )}
 
         {/* MAIN PAGE VIEWPORT (with bottom padding for mobile nav) */}
-        <main className="flex-1 overflow-y-auto p-3.5 sm:p-5 lg:p-6 pb-28 lg:pb-6 flex flex-col justify-between">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-3.5 sm:p-5 lg:p-6 pb-28 lg:pb-6 flex flex-col justify-between w-full max-w-full">
           <div className="max-w-7xl mx-auto space-y-6 w-full">
             {children}
           </div>

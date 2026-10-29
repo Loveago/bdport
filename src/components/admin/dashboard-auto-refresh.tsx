@@ -143,11 +143,11 @@ export function DashboardAutoRefresh() {
         variant="outline"
         onClick={() => triggerRefresh()}
         disabled={isSpinning}
-        className="gap-1.5"
+        className="gap-1.5 px-2.5 sm:px-3"
         title={lastRefreshedAt ? `Last updated: ${lastRefreshedAt.toLocaleTimeString()}` : "Refresh now"}
       >
         <RefreshCw className={cn("h-3.5 w-3.5", isSpinning && "animate-spin text-brand-600 dark:text-brand-400")} />
-        <span>Refresh</span>
+        <span className="hidden sm:inline">Refresh</span>
       </Button>
     </div>
   );

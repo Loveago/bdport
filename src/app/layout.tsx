@@ -1,8 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ToastProvider } from "@/components/toast";
 import { NavigationProgress } from "@/components/navigation-progress";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "CommonTech — Empowering Digital Connectivity",
@@ -25,8 +32,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="scroll-smooth">
-      <body className="min-h-screen">
+    <html lang="en" suppressHydrationWarning className="scroll-smooth overflow-x-hidden">
+      <body className="min-h-screen overflow-x-hidden antialiased">
         <NavigationProgress />
         <ThemeProvider>
           <ToastProvider>{children}</ToastProvider>
