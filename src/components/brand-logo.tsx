@@ -34,6 +34,16 @@ export function BrandMark({
     xl: "h-14 w-14 sm:h-16 sm:w-16",
   };
 
+  const sizePixels = {
+    xs: 24,
+    sm: 34,
+    md: 38,
+    lg: 46,
+    xl: 60,
+  };
+
+  const px = sizePixels[size];
+
   return (
     <div
       className={cn(
@@ -41,6 +51,7 @@ export function BrandMark({
         sizeMap[size],
         className
       )}
+      style={{ width: px, height: px, maxWidth: "100%" }}
       aria-label="CommonTech"
     >
       <svg
@@ -48,6 +59,9 @@ export function BrandMark({
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="h-full w-full"
+        width={px}
+        height={px}
+        style={{ width: px, height: px, maxWidth: "100%" }}
       >
         {/* "C" Arc: Deep slate in light mode, pure white in dark mode */}
         <path
