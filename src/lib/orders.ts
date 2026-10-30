@@ -145,15 +145,45 @@ export async function resolveUserWholesalePrice(
     referredById = u?.referredById ?? null;
   }
 
+  // Ensure package network, gbAmount and retailPriceGHS are resolved
+  let retailPriceGHS = pkg.retailPriceGHS;
+  let packageNetwork = pkg.network ? pkg.network.toUpperCase() : undefined;
+  let packageGb = pkg.gbAmount;
+
+  if ((retailPriceGHS == null || !packageNetwork || !packageGb) && pkg.id) {
+    const dbPkg = await client.dataPackage.findUnique({
+      where: { id: pkg.id },
+      select: { retailPriceGHS: true, network: true, gbAmount: true },
+    });
+    if (dbPkg) {
+      if (retailPriceGHS == null) retailPriceGHS = dbPkg.retailPriceGHS;
+      if (!packageNetwork) packageNetwork = dbPkg.network?.toUpperCase();
+      if (!packageGb) packageGb = dbPkg.gbAmount;
+    }
+  } else if (retailPriceGHS == null && packageNetwork && packageGb) {
+    const dbPkg = await client.dataPackage.findUnique({
+      where: {
+        network_gbAmount: {
+          network: packageNetwork,
+          gbAmount: packageGb,
+        },
+      },
+      select: { retailPriceGHS: true },
+    });
+    if (dbPkg) {
+      retailPriceGHS = dbPkg.retailPriceGHS;
+    }
+  }
+
   // If user is registered under an affiliate parent agent:
   if (referredById) {
     let packageId = pkg.id;
-    if (!packageId) {
+    if (!packageId && packageNetwork && packageGb) {
       const pRecord = await client.dataPackage.findUnique({
         where: {
           network_gbAmount: {
-            network: pkg.network.toUpperCase(),
-            gbAmount: pkg.gbAmount,
+            network: packageNetwork,
+            gbAmount: packageGb,
           },
         },
         select: { id: true },
@@ -176,22 +206,76 @@ export async function resolveUserWholesalePrice(
     }
 
     // If parent agent hasn't set a custom wholesale price, fallback to what parent agent pays
-    return resolveUserWholesalePrice(referredById, pkg, depth + 1, client);
+    return resolveUserWholesalePrice(
+      referredById,
+      { ...pkg, id: packageId, retailPriceGHS, network: packageNetwork ?? pkg.network, gbAmount: packageGb },
+      depth + 1,
+      client
+    );
   }
 
   // Direct / Root User: Standard pricing profile resolution
   const profile = await getEffectivePricingProfileForUser(userIdOrUser);
-  if (profile) {
-    const price = await getPricingForProfile(profile.id, pkg.gbAmount, pkg.network);
-    if (price != null && price > 0) return price;
+  const isCustomProfile = Boolean(profile && !profile.isDefault);
+
+  // If the user is on a custom pricing profile (non-default):
+  // Check custom per-network rates first, then custom price tiers.
+  if (profile && isCustomProfile) {
+    if (packageNetwork) {
+      try {
+        const setting = await client.systemSetting.findUnique({
+          where: { key: `pricing_profile_network_rates:${profile.id}` },
+        });
+        if (setting?.value) {
+          const netRates = JSON.parse(setting.value);
+          if (Array.isArray(netRates[packageNetwork])) {
+            const match = netRates[packageNetwork].find(
+              (t: { gbAmount: number; priceGHS: number }) => t.gbAmount === packageGb
+            );
+            if (match && typeof match.priceGHS === "number" && match.priceGHS > 0) {
+              return match.priceGHS;
+            }
+          }
+        }
+      } catch {}
+    }
+
+    const tier = await client.priceTier.findUnique({
+      where: { profileId_gbAmount: { profileId: profile.id, gbAmount: packageGb } },
+    });
+    if (tier && typeof tier.priceGHS === "number" && tier.priceGHS > 0) {
+      return tier.priceGHS;
+    }
   }
-  // Check default profile fallback if user's profile didn't specify this tier
+
+  // Primary base catalog price: the data package's own configured retailPriceGHS
+  // (matches what is shown on /dashboard/packages and /api/packages)
+  if (retailPriceGHS != null && retailPriceGHS > 0) {
+    return retailPriceGHS;
+  }
+
+  // Fallback to profile tiers if package retailPriceGHS was not set
+  if (profile) {
+    const tier = await client.priceTier.findUnique({
+      where: { profileId_gbAmount: { profileId: profile.id, gbAmount: packageGb } },
+    });
+    if (tier && typeof tier.priceGHS === "number" && tier.priceGHS > 0) {
+      return tier.priceGHS;
+    }
+  }
+
+  // Fallback to default profile tiers
   const defaultProfileId = await getDefaultProfileId();
   if (defaultProfileId && profile?.id !== defaultProfileId) {
-    const defPrice = await getPricingForProfile(defaultProfileId, pkg.gbAmount, pkg.network);
-    if (defPrice != null && defPrice > 0) return defPrice;
+    const defTier = await client.priceTier.findUnique({
+      where: { profileId_gbAmount: { profileId: defaultProfileId, gbAmount: packageGb } },
+    });
+    if (defTier && typeof defTier.priceGHS === "number" && defTier.priceGHS > 0) {
+      return defTier.priceGHS;
+    }
   }
-  return pkg.retailPriceGHS ?? 0;
+
+  return retailPriceGHS ?? 0;
 }
 
 export interface CreateOrderInput {
@@ -229,24 +313,11 @@ export async function createOrder(input: CreateOrderInput) {
 
   let price: number | null | undefined = input.amount;
   if (price == null) {
-    if (profileId) {
-      const customPrice = await getPricingForProfile(profileId, input.gbAmount, input.network);
-      if (customPrice != null) price = customPrice;
-    }
-    if (price == null && input.packageId) {
-      const pkg = await prisma.dataPackage.findUnique({ where: { id: input.packageId } });
-      if (pkg?.retailPriceGHS != null) price = pkg.retailPriceGHS;
-    }
-    if (price == null && input.network && input.gbAmount) {
-      const pkg = await prisma.dataPackage.findUnique({
-        where: { network_gbAmount: { network: input.network, gbAmount: input.gbAmount } },
-      });
-      if (pkg?.retailPriceGHS != null) price = pkg.retailPriceGHS;
-    }
-    if (price == null) {
-      const effectiveProfileId = profileId ?? (await getDefaultProfileId());
-      price = await getPricingForProfile(effectiveProfileId, input.gbAmount, input.network);
-    }
+    price = await resolveUserWholesalePrice(userRecord ?? input.userId, {
+      id: input.packageId ?? undefined,
+      network: input.network,
+      gbAmount: input.gbAmount,
+    });
   }
 
   if (price == null || price <= 0) {

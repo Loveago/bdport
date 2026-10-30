@@ -61,7 +61,20 @@ export function PricingEditor({
 
   React.useEffect(() => {
     setProductList(products);
-  }, [products]);
+    const map = new Map(products.map((p) => [p.packageId, p]));
+    setPrices((prev) => {
+      const next: Record<string, string> = { ...prev };
+      for (const pkg of packages) {
+        const prod = map.get(pkg.id);
+        if (prod) {
+          next[pkg.id] = prod.sellingPrice.toFixed(2);
+        } else if (!next[pkg.id]) {
+          next[pkg.id] = pkg.cost.toFixed(2);
+        }
+      }
+      return next;
+    });
+  }, [products, packages]);
 
   // Non-blocking auto-sync on mount
   const refreshData = React.useCallback(async () => {
@@ -79,11 +92,16 @@ export function PricingEditor({
           isActive: p.isActive,
         }));
         setProductList(prods);
+        const pkgs = (data.packages as Pkg[]) || packageList;
+        const pMap = new Map(prods.map((p) => [p.packageId, p]));
         setPrices((prev) => {
-          const next = { ...prev };
-          for (const prod of prods) {
-            if (!next[prod.packageId]) {
-              next[prod.packageId] = prod.sellingPrice.toFixed(2);
+          const next: Record<string, string> = { ...prev };
+          for (const pkg of pkgs) {
+            const match = pMap.get(pkg.id);
+            if (match) {
+              next[pkg.id] = match.sellingPrice.toFixed(2);
+            } else if (!next[pkg.id]) {
+              next[pkg.id] = pkg.cost.toFixed(2);
             }
           }
           return next;
@@ -92,7 +110,7 @@ export function PricingEditor({
     } catch {
       // non-blocking
     }
-  }, []);
+  }, [packageList]);
 
   React.useEffect(() => {
     refreshData();

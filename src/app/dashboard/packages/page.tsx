@@ -4,16 +4,12 @@ import { PriceMask } from "@/components/price-mask";
 import { NetworkPackageGrid, type PackageGroup } from "@/components/packages/network-package-grid";
 import { BadgeCheck, Layers, Package, ShieldCheck } from "lucide-react";
 import { formatGHS } from "@/lib/types";
-import { getEffectivePricingProfileForUser } from "@/lib/orders";
+import { getEffectivePricingProfileForUser, resolveUserWholesalePrice, getSetting } from "@/lib/orders";
 
 export default async function PackagesPage() {
   const user = await getCurrentUser();
 
   const profile = user ? await getEffectivePricingProfileForUser(user) : null;
-  const profileId = profile?.id ?? null;
-  const tiers = profileId
-    ? await prisma.priceTier.findMany({ where: { profileId }, orderBy: { gbAmount: "asc" } })
-    : [];
   const profileName = profile?.name ?? "Standard";
 
   // Available packages grouped by network, with the user's profile price attached
@@ -21,55 +17,24 @@ export default async function PackagesPage() {
     where: { active: true },
     orderBy: [{ network: "asc" }, { gbAmount: "asc" }],
   });
-  const priceMap = new Map(tiers.map((t) => [t.gbAmount, t.priceGHS]));
-  const { getSetting } = await import("@/lib/orders");
+
   const showPricesSetting = await getSetting("show_package_prices_to_users", "true");
   const showPrices = showPricesSetting !== "false";
 
-  const isCustomProfile = profile && !profile.isDefault;
-
-  // Check if custom profile has distinct per-network rates
-  let profileNetworkRates: Record<string, Array<{ gbAmount: number; priceGHS: number }>> | null = null;
-  if (isCustomProfile && profileId) {
-    const setting = await prisma.systemSetting.findUnique({
-      where: { key: `pricing_profile_network_rates:${profileId}` },
-    });
-    if (setting?.value) {
-      try {
-        profileNetworkRates = JSON.parse(setting.value);
-      } catch {
-        // ignore
-      }
-    }
-  }
+  const packagePriceList = await Promise.all(
+    packages.map(async (p) => ({
+      id: p.id,
+      name: p.name,
+      network: p.network,
+      gbAmount: p.gbAmount,
+      price: showPrices ? (user ? await resolveUserWholesalePrice(user, p) : p.retailPriceGHS) : null,
+    }))
+  );
 
   const groups: PackageGroup[] = (["MTN", "TELECEL", "AIRTELTIGO", "AIRTELTIGO_BIGTIME"] as const)
     .map((network) => ({
       network,
-      packages: packages
-        .filter((p) => p.network === network)
-        .map((p) => {
-          let distinctPrice: number | null = null;
-          if (profileNetworkRates && Array.isArray(profileNetworkRates[network])) {
-            const match = profileNetworkRates[network].find((t) => t.gbAmount === p.gbAmount);
-            if (match && typeof match.priceGHS === "number" && match.priceGHS > 0) {
-              distinctPrice = match.priceGHS;
-            }
-          }
-          if (distinctPrice == null && isCustomProfile && priceMap.has(p.gbAmount)) {
-            distinctPrice = priceMap.get(p.gbAmount)!;
-          }
-          if (distinctPrice == null) {
-            distinctPrice = p.retailPriceGHS ?? (priceMap.has(p.gbAmount) ? priceMap.get(p.gbAmount)! : null);
-          }
-
-          return {
-            id: p.id,
-            name: p.name,
-            gbAmount: p.gbAmount,
-            price: showPrices ? distinctPrice : null,
-          };
-        }),
+      packages: packagePriceList.filter((p) => p.network === network),
     }))
     .filter((g) => g.packages.length > 0);
 
