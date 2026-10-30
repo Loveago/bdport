@@ -730,3 +730,256 @@ export async function rejectWithdrawal(withdrawalId: string, adminNote?: string,
   });
 }
 
+/**
+ * Synchronizes a storefront's products with the store owner's active pricing profile.
+ * - Guarantees that every active DataPackage is present in StorefrontProduct.
+ * - When force = true: resets selling prices to the agent's current pricing profile prices.
+ * - When force = false: creates missing products at the pricing profile price, and heals
+ *   any existing sellingPrice that is 0 or below the current wholesale cost.
+ */
+/**
+ * Resolves wholesale prices for a list of packages in bulk with minimal DB roundtrips.
+ * Supports cascading affiliate pricing, per-network rates, profile tiers, and default profile fallback.
+ */
+export async function resolveStorefrontWholesalePrices(
+  owner: { id: string; role?: string; pricingProfileId?: string | null; referredById?: string | null },
+  packages: Array<{ id: string; network: string; gbAmount: number; retailPriceGHS?: number | null }>
+): Promise<Map<string, number>> {
+  const priceMap = new Map<string, number>();
+
+  // 1. If owner has an affiliate parent agent, check affiliate prices in 1 query
+  const affiliatePriceMap = new Map<string, number>();
+  let effectiveUserId = owner.id;
+  let effectiveRole = owner.role;
+  let effectiveProfileId = owner.pricingProfileId;
+
+  if (owner.referredById) {
+    const [affPrices, parentUser] = await Promise.all([
+      prisma.affiliatePackagePrice.findMany({
+        where: { agentId: owner.referredById, packageId: { in: packages.map((p) => p.id) } },
+      }),
+      prisma.user.findUnique({
+        where: { id: owner.referredById },
+        select: { id: true, role: true, pricingProfileId: true },
+      }),
+    ]);
+    for (const ap of affPrices) {
+      if (ap.priceGHS > 0) affiliatePriceMap.set(ap.packageId, ap.priceGHS);
+    }
+    if (parentUser) {
+      effectiveUserId = parentUser.id;
+      effectiveRole = parentUser.role;
+      effectiveProfileId = parentUser.pricingProfileId;
+    }
+  }
+
+  // 2. Resolve effective pricing profile
+  const { getEffectivePricingProfileForUser, getDefaultProfileId } = await import("./orders");
+  const [profile, defaultProfileId] = await Promise.all([
+    getEffectivePricingProfileForUser({ id: effectiveUserId, role: effectiveRole, pricingProfileId: effectiveProfileId }),
+    getDefaultProfileId(),
+  ]);
+
+  const targetProfileId = profile?.id ?? defaultProfileId;
+
+  // 3. Load price tiers and network rates for the target profile in parallel
+  const [tiers, networkRatesSetting, defaultTiers] = await Promise.all([
+    targetProfileId
+      ? prisma.priceTier.findMany({ where: { profileId: targetProfileId } })
+      : Promise.resolve([]),
+    targetProfileId
+      ? prisma.systemSetting.findUnique({ where: { key: `pricing_profile_network_rates:${targetProfileId}` } })
+      : Promise.resolve(null),
+    defaultProfileId && defaultProfileId !== targetProfileId
+      ? prisma.priceTier.findMany({ where: { profileId: defaultProfileId } })
+      : Promise.resolve([]),
+  ]);
+
+  let networkRates: Record<string, Array<{ gbAmount: number; priceGHS: number }>> | null = null;
+  if (networkRatesSetting?.value) {
+    try {
+      networkRates = JSON.parse(networkRatesSetting.value);
+    } catch {
+      // ignore
+    }
+  }
+
+  const tierMap = new Map(tiers.map((t) => [t.gbAmount, t.priceGHS]));
+  const defaultTierMap = new Map(defaultTiers.map((t) => [t.gbAmount, t.priceGHS]));
+
+  for (const pkg of packages) {
+    if (affiliatePriceMap.has(pkg.id)) {
+      priceMap.set(pkg.id, affiliatePriceMap.get(pkg.id)!);
+      continue;
+    }
+
+    let price: number | null = null;
+    const netUpper = pkg.network.toUpperCase();
+    if (networkRates && Array.isArray(networkRates[netUpper])) {
+      const match = networkRates[netUpper].find((t) => t.gbAmount === pkg.gbAmount);
+      if (match && typeof match.priceGHS === "number" && match.priceGHS > 0) {
+        price = match.priceGHS;
+      }
+    }
+
+    if (price == null && tierMap.has(pkg.gbAmount)) {
+      const tierPrice = tierMap.get(pkg.gbAmount)!;
+      if (tierPrice > 0) price = tierPrice;
+    }
+
+    if (price == null && defaultTierMap.has(pkg.gbAmount)) {
+      const defPrice = defaultTierMap.get(pkg.gbAmount)!;
+      if (defPrice > 0) price = defPrice;
+    }
+
+    priceMap.set(pkg.id, price ?? pkg.retailPriceGHS ?? 0);
+  }
+
+  return priceMap;
+}
+
+/**
+ * Synchronizes a storefront's products with the store owner's active pricing profile.
+ * - Guarantees that every active DataPackage is present in StorefrontProduct.
+ * - When force = true: resets selling prices to the agent's current pricing profile prices.
+ * - When force = false: creates missing products at the pricing profile price, and heals
+ *   any existing sellingPrice that is 0 or below the current wholesale cost.
+ */
+export async function syncStorefrontProducts(
+  storefrontId: string,
+  options?: { force?: boolean }
+): Promise<{ count: number; updated: number }> {
+  const storefront = await prisma.storefront.findUnique({
+    where: { id: storefrontId },
+    select: { id: true, userId: true },
+  });
+  if (!storefront) return { count: 0, updated: 0 };
+
+  const owner = await prisma.user.findUnique({
+    where: { id: storefront.userId },
+    select: { id: true, role: true, pricingProfileId: true, referredById: true },
+  });
+  if (!owner) return { count: 0, updated: 0 };
+
+  const [activePackages, existingProducts] = await Promise.all([
+    prisma.dataPackage.findMany({
+      where: { active: true },
+      orderBy: [{ network: "asc" }, { gbAmount: "asc" }, { sortOrder: "asc" }],
+    }),
+    prisma.storefrontProduct.findMany({
+      where: { storefrontId: storefront.id },
+    }),
+  ]);
+
+  const existingMap = new Map(existingProducts.map((p) => [p.packageId, p]));
+
+  // If not forcing and all active packages already exist with positive prices, no sync needed
+  if (
+    !options?.force &&
+    existingProducts.length >= activePackages.length &&
+    existingProducts.every((p) => p.sellingPrice > 0)
+  ) {
+    return { count: activePackages.length, updated: 0 };
+  }
+
+  const pricesByPkgId = await resolveStorefrontWholesalePrices(owner, activePackages);
+
+  const operations: Prisma.PrismaPromise<any>[] = [];
+  let updated = 0;
+
+  for (const pkg of activePackages) {
+    const wholesalePriceGHS = pricesByPkgId.get(pkg.id) ?? pkg.retailPriceGHS ?? 0;
+    const wholesalePriceP = toPesewas(wholesalePriceGHS);
+    const existing = existingMap.get(pkg.id);
+
+    if (!existing) {
+      operations.push(
+        prisma.storefrontProduct.create({
+          data: {
+            storefrontId: storefront.id,
+            packageId: pkg.id,
+            sellingPrice: wholesalePriceP,
+            isActive: true,
+          },
+        })
+      );
+      updated++;
+    } else if (options?.force) {
+      if (existing.sellingPrice !== wholesalePriceP || !existing.isActive) {
+        operations.push(
+          prisma.storefrontProduct.update({
+            where: { id: existing.id },
+            data: {
+              sellingPrice: wholesalePriceP,
+              isActive: true,
+            },
+          })
+        );
+        updated++;
+      }
+    } else {
+      if (existing.sellingPrice < wholesalePriceP || existing.sellingPrice <= 0) {
+        operations.push(
+          prisma.storefrontProduct.update({
+            where: { id: existing.id },
+            data: {
+              sellingPrice: wholesalePriceP,
+            },
+          })
+        );
+        updated++;
+      }
+    }
+  }
+
+  if (operations.length > 0) {
+    await prisma.$transaction(operations);
+  }
+
+  return { count: activePackages.length, updated };
+}
+
+export async function syncAllStorefrontsForUser(
+  userId: string,
+  options?: { force?: boolean }
+): Promise<void> {
+  const storefronts = await prisma.storefront.findMany({
+    where: { userId },
+    select: { id: true },
+  });
+  for (const sf of storefronts) {
+    await syncStorefrontProducts(sf.id, options);
+  }
+}
+
+export async function syncAllStorefrontsForProfile(
+  profileId: string
+): Promise<void> {
+  const users = await prisma.user.findMany({
+    where: { pricingProfileId: profileId },
+    select: { id: true },
+  });
+  for (const u of users) {
+    await syncAllStorefrontsForUser(u.id, { force: true });
+  }
+
+  // Also check if this profile is the active RESELLER profile
+  const profile = await prisma.pricingProfile.findUnique({
+    where: { id: profileId },
+    select: { type: true, active: true },
+  });
+  if (profile?.active && (profile.type === "RESELLER" || profile.type === "WHOLESALE")) {
+    const inheritedUsers = await prisma.user.findMany({
+      where: {
+        pricingProfileId: null,
+        role: { in: ["RESELLER", "AGENT"] },
+      },
+      select: { id: true },
+    });
+    for (const u of inheritedUsers) {
+      await syncAllStorefrontsForUser(u.id, { force: true });
+    }
+  }
+}
+
+

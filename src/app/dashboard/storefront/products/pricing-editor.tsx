@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Sliders, CheckCircle2, AlertCircle, Package, ArrowUpRight, ShieldCheck, Zap } from "lucide-react";
+import { Loader2, Sliders, CheckCircle2, AlertCircle, Package, ArrowUpRight, ShieldCheck, Zap, RefreshCw } from "lucide-react";
 
 interface Pkg {
   id: string;
@@ -42,7 +42,7 @@ export function PricingEditor({
   const byId = React.useMemo(() => new Map(productList.map((p) => [p.packageId, p])), [productList]);
 
   const [prices, setPrices] = React.useState<Record<string, string>>(() =>
-    Object.fromEntries(packages.map((p) => [p.id, byId.get(p.id)?.sellingPrice?.toFixed(2) ?? ""]))
+    Object.fromEntries(packages.map((p) => [p.id, byId.get(p.id)?.sellingPrice?.toFixed(2) ?? p.cost.toFixed(2)]))
   );
 
   const [savingId, setSavingId] = React.useState<string | null>(null);
@@ -52,6 +52,7 @@ export function PricingEditor({
   const [filter, setFilter] = React.useState<string>("MTN");
   const [msg, setMsg] = React.useState<{ kind: "ok" | "err"; text: string } | null>(null);
   const [bulkBusy, setBulkBusy] = React.useState(false);
+  const [syncing, setSyncing] = React.useState(false);
 
   // Sync state if props change
   React.useEffect(() => {
@@ -115,6 +116,25 @@ export function PricingEditor({
       else next.add(id);
       return next;
     });
+
+  async function syncPricesWithProfile() {
+    setSyncing(true);
+    setMsg(null);
+    try {
+      const res = await fetch("/api/storefront/products/sync", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed to sync storefront prices");
+      setMsg({ kind: "ok", text: data.message || "Storefront package prices synced with your pricing profile!" });
+      await refreshData();
+      router.refresh();
+    } catch (e) {
+      setMsg({ kind: "err", text: e instanceof Error ? e.message : "Failed to sync storefront prices" });
+    } finally {
+      setSyncing(false);
+    }
+  }
 
   async function savePrice(packageId: string) {
     const val = parseFloat(prices[packageId] || "0");
@@ -248,6 +268,16 @@ export function PricingEditor({
           </div>
 
           <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full sm:w-auto">
+            <button
+              onClick={syncPricesWithProfile}
+              disabled={syncing || disabled}
+              type="button"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 text-xs font-black text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-40 transition cursor-pointer"
+              title="Sync all storefront package prices directly from your active pricing profile"
+            >
+              {syncing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
+              <span>Sync Current Prices</span>
+            </button>
             <div className="relative flex-1 sm:flex-none">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 dark:text-slate-500">GHS</span>
               <input

@@ -58,6 +58,12 @@ export async function POST(request: NextRequest) {
         data: { status: "ENABLED", slug, rejectionNote: null },
       });
       await ensureWallet(input.userId);
+      try {
+        const { syncStorefrontProducts } = await import("@/lib/storefront");
+        await syncStorefrontProducts(storefront.id, { force: true });
+      } catch (syncErr) {
+        console.error("Failed to sync storefront products on enable:", syncErr);
+      }
       return NextResponse.json({ storefront });
     }
 
@@ -92,6 +98,12 @@ export async function POST(request: NextRequest) {
         create: { userId: input.userId, slug, name: target.name, status: "ENABLED" },
       });
       await ensureWallet(input.userId);
+      try {
+        const { syncStorefrontProducts } = await import("@/lib/storefront");
+        await syncStorefrontProducts(storefront.id, { force: true });
+      } catch (syncErr) {
+        console.error("Failed to sync storefront products on enable:", syncErr);
+      }
       return NextResponse.json({ storefront });
     }
 

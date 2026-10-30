@@ -86,15 +86,19 @@ export async function POST(
     // Server-side only commission: sellingPrice - current reseller cost (§48).
     const owner = await prisma.user.findUnique({
       where: { id: storefront.userId },
-      select: { id: true, role: true, pricingProfileId: true },
+      select: { id: true, role: true, pricingProfileId: true, referredById: true },
     });
     const ownerCostGHS = await resolveUserWholesalePrice(owner || storefront.userId, product.dataPackage);
-    const sellingPrice = product.sellingPrice;
+    let sellingPrice = product.sellingPrice;
     const productCost = toPesewas(ownerCostGHS);
-    const commission = sellingPrice - productCost;
-    if (commission < 0) {
-      return apiError(500, "This bundle is mispriced. Please contact support.");
+    if (sellingPrice < productCost) {
+      sellingPrice = productCost;
+      await prisma.storefrontProduct.update({
+        where: { id: product.id },
+        data: { sellingPrice: productCost },
+      });
     }
+    const commission = Math.max(0, sellingPrice - productCost);
 
     const seq = await prisma.$transaction(async (tx) => nextStorefrontSeq(tx, "storefrontOrder"));
     const paymentReference = generateStorefrontOrderCode();

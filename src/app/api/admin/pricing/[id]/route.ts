@@ -69,6 +69,14 @@ export async function PATCH(
       });
     }
 
+    // Automatically sync storefront product prices for agents on this pricing profile
+    try {
+      const { syncAllStorefrontsForProfile } = await import("@/lib/storefront");
+      await syncAllStorefrontsForProfile(id);
+    } catch (syncErr) {
+      console.error(`Failed to auto-sync storefronts for profile ${id}:`, syncErr);
+    }
+
     await recordAudit({
       userId: actor.id,
       actorLabel: actor.email,

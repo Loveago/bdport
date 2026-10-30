@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Clock } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { fromPesewas } from "@/lib/storefront";
+import { fromPesewas, syncStorefrontProducts } from "@/lib/storefront";
 import { NETWORK_ORDER, storeHref } from "@/components/store/brands";
 import { buildWhatsAppLink } from "@/lib/storefront-utils";
 import { StorefrontPortal } from "@/components/store/storefront-portal";
@@ -78,6 +78,8 @@ export default async function PublicStorePage({
       </div>
     );
   }
+
+  await syncStorefrontProducts(storefront.id);
 
   const products = await prisma.storefrontProduct.findMany({
     where: { storefrontId: storefront.id, isActive: true, dataPackage: { active: true } },

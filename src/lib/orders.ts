@@ -107,10 +107,10 @@ export async function getEffectivePricingProfileForUser(
     if (profile && profile.active) return profile;
   }
 
-  // 2. If user's role is RESELLER, inherit the active RESELLER pricing profile
-  if (role === "RESELLER") {
+  // 2. If user's role is RESELLER or AGENT, inherit the active RESELLER/WHOLESALE pricing profile
+  if (role === "RESELLER" || role === "AGENT") {
     const resellerProfile = await prisma.pricingProfile.findFirst({
-      where: { type: "RESELLER", active: true },
+      where: { type: { in: ["RESELLER", "WHOLESALE"] }, active: true },
     });
     if (resellerProfile) return resellerProfile;
   }

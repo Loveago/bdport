@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
-import { requireActiveStorefront, getMarkupBounds } from "@/lib/storefront";
+import { requireActiveStorefront, getMarkupBounds, syncStorefrontProducts, resolveStorefrontWholesalePrices } from "@/lib/storefront";
 import { resolveUserWholesalePrice } from "@/lib/orders";
 import { PricingEditor } from "./pricing-editor";
 import { Package, Sliders, ShieldCheck } from "lucide-react";
@@ -11,6 +11,7 @@ export const revalidate = 0;
 export default async function StorefrontProductsPage() {
   const user = await requireUser();
   const storefront = await requireActiveStorefront(user.id);
+  await syncStorefrontProducts(storefront.id);
   const [packages, products, bounds] = await Promise.all([
     prisma.dataPackage.findMany({
       where: { active: true },
@@ -24,20 +25,20 @@ export default async function StorefrontProductsPage() {
     getMarkupBounds(),
   ]);
 
-  const packagesWithCost = (
-    await Promise.all(
-      packages.map(async (p) => ({
-        id: p.id,
-        network: p.network,
-        gbAmount: p.gbAmount,
-        name: p.name,
-        cost: await resolveUserWholesalePrice(user, p),
-      }))
-    )
-  ).sort((a, b) => {
-    if (a.network !== b.network) return a.network.localeCompare(b.network);
-    return a.gbAmount - b.gbAmount;
-  });
+  const costsMap = await resolveStorefrontWholesalePrices(user, packages);
+
+  const packagesWithCost = packages
+    .map((p) => ({
+      id: p.id,
+      network: p.network,
+      gbAmount: p.gbAmount,
+      name: p.name,
+      cost: costsMap.get(p.id) ?? p.retailPriceGHS ?? 0,
+    }))
+    .sort((a, b) => {
+      if (a.network !== b.network) return a.network.localeCompare(b.network);
+      return a.gbAmount - b.gbAmount;
+    });
 
   return (
     <div className="space-y-6">

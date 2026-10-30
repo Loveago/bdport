@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { fromPesewas } from "@/lib/storefront";
+import { fromPesewas, syncStorefrontProducts } from "@/lib/storefront";
 import { NetworkLogo } from "@/components/store/network-logo";
 import { NETWORK_BRANDS, NETWORK_ORDER, ghs, networkBySlug, networkHref, storeHref } from "@/components/store/brands";
 import { NetworkBuyForm } from "./buy-form";
@@ -61,6 +61,8 @@ export default async function NetworkPage({
       </div>
     );
   }
+
+  await syncStorefrontProducts(storefront.id);
 
   const allActiveProducts = await prisma.storefrontProduct.findMany({
     where: { storefrontId: storefront.id, isActive: true, dataPackage: { active: true } },

@@ -70,6 +70,19 @@ export async function PATCH(
 
     const updated = await prisma.user.update({ where: { id }, data });
 
+    // Sync storefront prices if pricing profile or role changed
+    if (
+      (input.pricingProfileId !== undefined && input.pricingProfileId !== existing.pricingProfileId) ||
+      (input.role !== undefined && input.role !== existing.role)
+    ) {
+      try {
+        const { syncAllStorefrontsForUser } = await import("@/lib/storefront");
+        await syncAllStorefrontsForUser(id, { force: true });
+      } catch (syncErr) {
+        console.error(`Failed to sync storefront for user ${id}:`, syncErr);
+      }
+    }
+
     await recordAudit({
       userId: actor.id,
       actorLabel: actor.email,

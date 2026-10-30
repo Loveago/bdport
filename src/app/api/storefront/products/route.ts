@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 import { handleRouteError, apiError } from "@/lib/api-helpers";
 import { storefrontProductUpsertSchema, storefrontBulkPricingSchema } from "@/lib/validation";
-import { requireStorefront, getMarkupBounds, toPesewas, fromPesewas } from "@/lib/storefront";
+import { requireStorefront, getMarkupBounds, toPesewas, fromPesewas, syncStorefrontProducts, resolveStorefrontWholesalePrices } from "@/lib/storefront";
 import { resolveUserWholesalePrice } from "@/lib/orders";
 
 function validateMarkup(price: number, cost: number, minP: number, maxP: number) {
@@ -16,6 +16,7 @@ export async function GET() {
   try {
     const user = await requireUser();
     const storefront = await requireStorefront(user.id);
+    await syncStorefrontProducts(storefront.id);
     const [products, allPackages] = await Promise.all([
       prisma.storefrontProduct.findMany({
         where: { storefrontId: storefront.id },
@@ -32,20 +33,20 @@ export async function GET() {
       }),
     ]);
 
-    const packageCosts = (
-      await Promise.all(
-        allPackages.map(async (pkg) => ({
-          id: pkg.id,
-          network: pkg.network,
-          gbAmount: pkg.gbAmount,
-          name: pkg.name,
-          cost: await resolveUserWholesalePrice(user, pkg),
-        }))
-      )
-    ).sort((a, b) => {
-      if (a.network !== b.network) return a.network.localeCompare(b.network);
-      return a.gbAmount - b.gbAmount;
-    });
+    const costsMap = await resolveStorefrontWholesalePrices(user, allPackages);
+
+    const packageCosts = allPackages
+      .map((pkg) => ({
+        id: pkg.id,
+        network: pkg.network,
+        gbAmount: pkg.gbAmount,
+        name: pkg.name,
+        cost: costsMap.get(pkg.id) ?? pkg.retailPriceGHS ?? 0,
+      }))
+      .sort((a, b) => {
+        if (a.network !== b.network) return a.network.localeCompare(b.network);
+        return a.gbAmount - b.gbAmount;
+      });
 
     return NextResponse.json({ products, packages: packageCosts });
   } catch (err) {

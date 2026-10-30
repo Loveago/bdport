@@ -235,6 +235,15 @@ export async function POST(request: NextRequest) {
         newValue: JSON.stringify({ profileId, count: res.count }),
       });
 
+      try {
+        const { syncAllStorefrontsForUser } = await import("@/lib/storefront");
+        for (const uId of targetUserIds) {
+          await syncAllStorefrontsForUser(uId, { force: true });
+        }
+      } catch (syncErr) {
+        console.error("Failed to sync storefronts during bulk profile update:", syncErr);
+      }
+
       return NextResponse.json({
         ok: true,
         count: res.count,
