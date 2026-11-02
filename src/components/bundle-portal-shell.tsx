@@ -33,6 +33,7 @@ import {
 import { BrandLogo } from "@/components/brand-logo";
 import { useTheme } from "next-themes";
 import { NotificationCenter } from "@/components/notifications/notification-center";
+import { AnnouncementBar } from "@/components/announcement-bar";
 import { SystemChatWidget } from "@/components/chat/system-chat-widget";
 import { cn } from "@/lib/utils";
 import { formatGHS } from "@/lib/types";
@@ -41,6 +42,7 @@ import type { AuthUser } from "@/lib/types";
 interface BundlePortalShellProps {
   user: AuthUser;
   children: React.ReactNode;
+  announcement?: string | null;
 }
 
 interface NavItem {
@@ -76,7 +78,7 @@ const BOTTOM_NAV_ITEMS = [
   { href: "/dashboard/billing", label: "Wallet", icon: Wallet },
 ];
 
-export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
+export function BundlePortalShell({ user, announcement, children }: BundlePortalShellProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { theme, setTheme, resolvedTheme } = useTheme();
@@ -124,6 +126,9 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
 
   return (
     <div className="min-h-screen bg-[#f3f6fa] dark:bg-[#060b13] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 antialiased selection:bg-[#00df82] selection:text-slate-950">
+      {/* ── GLOBAL ANNOUNCEMENT / NOTIFICATION BAR ─────────────────────────── */}
+      {announcement && <AnnouncementBar text={announcement} />}
+
       {/* ── TOP BAR (MATCHING SCREENSHOT) ─────────────────────────────────── */}
       <header className="h-16 border-b border-slate-200 dark:border-[#14233a] bg-white/90 dark:bg-[#070d18]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-2.5 sm:px-4 lg:px-6 w-full max-w-full">
         {/* Left: Mobile trigger & Brand */}
@@ -169,7 +174,7 @@ export function BundlePortalShell({ user, children }: BundlePortalShellProps) {
           </Link>
 
           {/* Notification Center */}
-          <NotificationCenter user={user} admin={isAdmin} />
+          <NotificationCenter user={user} admin={isAdmin} announcement={announcement} />
 
           {/* Theme Toggle (Sun / Moon) - visible on tablet & desktop */}
           {mounted && (

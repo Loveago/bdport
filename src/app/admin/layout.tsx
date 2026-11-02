@@ -14,9 +14,10 @@ export default async function AdminLayout({
     redirect("/dashboard");
   }
 
-  const [supportWhatsappSetting, secretaryPagesSetting] = await Promise.all([
+  const [supportWhatsappSetting, secretaryPagesSetting, siteAnnouncementSetting] = await Promise.all([
     prisma.systemSetting.findUnique({ where: { key: "support_whatsapp" } }),
     prisma.systemSetting.findUnique({ where: { key: "secretary_allowed_pages" } }),
+    prisma.systemSetting.findUnique({ where: { key: "site_announcement" } }),
   ]);
 
   let allowedNavHrefs: string[] | undefined;
@@ -30,11 +31,14 @@ export default async function AdminLayout({
     }
   }
 
+  const announcement = siteAnnouncementSetting?.value?.trim() || undefined;
+
   return (
     <AdminShell
       user={user}
       supportWhatsapp={supportWhatsappSetting?.value || undefined}
       allowedNavHrefs={allowedNavHrefs}
+      announcement={announcement}
     >
       {children}
     </AdminShell>

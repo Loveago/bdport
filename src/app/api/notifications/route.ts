@@ -19,14 +19,18 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const limit = Math.min(Number(searchParams.get("limit") ?? 30), 100);
 
-    const [notifications, unreadCount] = await Promise.all([
+    const [notifications, unreadCount, siteAnnouncementSetting] = await Promise.all([
       getUserNotifications(user.id, user.role, limit),
       getUnreadNotificationCount(user.id, user.role),
+      import("@/lib/prisma").then(({ prisma }) =>
+        prisma.systemSetting.findUnique({ where: { key: "site_announcement" } })
+      ),
     ]);
 
     return NextResponse.json({
       notifications,
       unreadCount,
+      announcement: siteAnnouncementSetting?.value?.trim() || null,
     });
   } catch (err) {
     return handleRouteError(err);

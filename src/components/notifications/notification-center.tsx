@@ -51,7 +51,12 @@ export function NotificationCenter({
   const [dbNotifications, setDbNotifications] = React.useState<ServerNotification[]>([]);
   const [unreadCount, setUnreadCount] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
+  const [currentAnnouncement, setCurrentAnnouncement] = React.useState<string | null>(announcement ?? null);
   const containerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    setCurrentAnnouncement(announcement ?? null);
+  }, [announcement]);
 
   // Fetch real notifications from API
   const fetchNotifications = React.useCallback(async () => {
@@ -61,6 +66,14 @@ export function NotificationCenter({
         const data = await res.json();
         setDbNotifications(data.notifications || []);
         setUnreadCount(typeof data.unreadCount === "number" ? data.unreadCount : 0);
+        if (data.announcement !== undefined) {
+          setCurrentAnnouncement(data.announcement);
+          window.dispatchEvent(
+            new CustomEvent("site-announcement-update", {
+              detail: { announcement: data.announcement },
+            })
+          );
+        }
       }
     } catch {
       // ignore
@@ -223,14 +236,14 @@ export function NotificationCenter({
           </div>
 
           {/* Platform Announcement Banner if available */}
-          {announcement && announcement.trim() && (
+          {currentAnnouncement && currentAnnouncement.trim() && (
             <div className="mt-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2">
               <Megaphone className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
               <div className="min-w-0 flex-1">
                 <div className="font-bold text-[11px] uppercase tracking-wider text-amber-600 dark:text-amber-400">
                   Platform Broadcast
                 </div>
-                <p className="text-[11px] leading-relaxed mt-0.5">{announcement}</p>
+                <p className="text-[11px] leading-relaxed mt-0.5">{currentAnnouncement}</p>
               </div>
             </div>
           )}

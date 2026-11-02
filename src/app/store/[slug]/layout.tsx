@@ -47,7 +47,7 @@ export default async function StoreLayout({
 }) {
   const { slug } = await params;
 
-  const [storefront, supportSetting] = await Promise.all([
+  const [storefront, supportSetting, siteAnnouncementSetting] = await Promise.all([
     prisma.storefront.findUnique({
       where: { slug },
       select: {
@@ -69,6 +69,7 @@ export default async function StoreLayout({
       },
     }),
     prisma.systemSetting.findUnique({ where: { key: "support_whatsapp" } }),
+    prisma.systemSetting.findUnique({ where: { key: "site_announcement" } }),
   ]);
 
   // Disabled/unknown stores: skip chrome; the page itself renders notFound().
@@ -108,7 +109,7 @@ export default async function StoreLayout({
       location={storefront.location}
       contactText={storefront.contactText}
       whatsappLabel={storefront.whatsappLabel}
-      notice={storefront.notice}
+      notice={storefront.notice?.trim() || siteAnnouncementSetting?.value?.trim() || undefined}
       networks={networks}
     >
       {children}

@@ -13,16 +13,23 @@ export default async function DashboardLayout({
   if (!user) redirect("/login");
   const halted = await isOrderProcessingHalted();
 
-  const maintenanceModeSetting = await prisma.systemSetting.findUnique({
-    where: { key: "maintenance_mode_enabled" },
-  });
+  const [maintenanceModeSetting, siteAnnouncementSetting] = await Promise.all([
+    prisma.systemSetting.findUnique({
+      where: { key: "maintenance_mode_enabled" },
+    }),
+    prisma.systemSetting.findUnique({
+      where: { key: "site_announcement" },
+    }),
+  ]);
 
   if (maintenanceModeSetting?.value === "true" && user.role !== "ADMIN") {
     redirect("/maintenance");
   }
 
+  const announcement = siteAnnouncementSetting?.value?.trim() || null;
+
   return (
-    <BundlePortalShell user={user}>
+    <BundlePortalShell user={user} announcement={announcement}>
       {children}
     </BundlePortalShell>
   );

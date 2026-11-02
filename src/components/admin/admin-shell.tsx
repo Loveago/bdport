@@ -43,6 +43,7 @@ import { useNavBadges } from "@/components/app-nav";
 import { ManualCreditDialog } from "@/components/admin/manual-credit-dialog";
 import { SystemChatWidget } from "@/components/chat/system-chat-widget";
 import { useTheme } from "next-themes";
+import { AnnouncementBar } from "@/components/announcement-bar";
 import { cn } from "@/lib/utils";
 import type { AuthUser } from "@/lib/types";
 
@@ -51,6 +52,7 @@ interface AdminShellProps {
   children: React.ReactNode;
   allowedNavHrefs?: string[];
   supportWhatsapp?: string;
+  announcement?: string;
 }
 
 interface NavLinkItem {
@@ -120,7 +122,7 @@ const NAV_GROUPS: NavGroup[] = [
   },
 ];
 
-export function AdminShell({ user, children, allowedNavHrefs, supportWhatsapp }: AdminShellProps) {
+export function AdminShell({ user, children, allowedNavHrefs, supportWhatsapp, announcement }: AdminShellProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { toast } = useToast();
@@ -223,6 +225,9 @@ export function AdminShell({ user, children, allowedNavHrefs, supportWhatsapp }:
           </Link>
         </div>
       )}
+
+      {/* Global Announcement / Notification Bar */}
+      {announcement && <AnnouncementBar text={announcement} />}
 
       {/* ── TOP BAR (NEON DASHBOARD THEME) ─────────────────────────────────── */}
       <header className="h-16 border-b border-slate-200 dark:border-[#14233a] bg-white/90 dark:bg-[#070d18]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-2.5 sm:px-4 lg:px-6 w-full max-w-full">
