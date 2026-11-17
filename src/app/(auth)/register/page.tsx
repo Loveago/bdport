@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { registerSchema, type RegisterInput } from "@/lib/validation";
 import { BrandMark } from "@/components/brand-logo";
+import { AuthLegalNotice } from "@/components/auth/auth-legal-notice";
 import { useToast } from "@/components/toast";
 import { Spinner } from "@/components/shared";
 import {
@@ -421,22 +422,8 @@ function RegisterForm() {
                 )}
               </button>
 
-              {/* Terms & Conditions Notice */}
-              <p className="text-center text-[10px] text-slate-500 leading-relaxed pt-1">
-                By registering, you agree to our{" "}
-                <Link href="/terms" target="_blank" className="text-[#00df82] hover:underline">
-                  Terms
-                </Link>
-                ,{" "}
-                <Link href="/privacy" target="_blank" className="text-[#00df82] hover:underline">
-                  Privacy
-                </Link>
-                , and{" "}
-                <Link href="/refund-policy" target="_blank" className="text-[#00df82] hover:underline">
-                  Refunds
-                </Link>
-                .
-              </p>
+              {/* Terms & Conditions and Privacy Policy Notice */}
+              <AuthLegalNotice actionText="registering" className="pt-1" />
             </form>
           )}
 

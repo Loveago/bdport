@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { loginSchema, type LoginInput } from "@/lib/validation";
 import { BrandMark } from "@/components/brand-logo";
+import { AuthLegalNotice } from "@/components/auth/auth-legal-notice";
 import { useToast } from "@/components/toast";
 import { Spinner } from "@/components/shared";
 import {
@@ -235,14 +236,17 @@ export default function LoginPage() {
             </div>
           )}
 
+          {/* Terms & Conditions and Privacy Policy Notice */}
+          <AuthLegalNotice actionText="signing in" />
+
           {/* Footer Link */}
-          <div className="text-center pt-2">
-            <span className="text-xs text-slate-500 dark:text-slate-400">Don't have an account? </span>
+          <div className="text-center pt-3 border-t border-slate-200 dark:border-[#14233a]">
+            <span className="text-xs text-slate-500 dark:text-slate-400">Don&apos;t have an account? </span>
             <Link
               href="/register"
               className="text-xs font-bold text-[#00df82] hover:underline"
             >
-              Sign up with invite code
+              Sign up
             </Link>
           </div>
         </div>
