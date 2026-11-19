@@ -819,13 +819,20 @@ export async function syncStorefrontProducts(
 
     if (!existing) {
       operations.push(
-        prisma.storefrontProduct.create({
-          data: {
+        prisma.storefrontProduct.upsert({
+          where: {
+            storefrontId_packageId: {
+              storefrontId: storefront.id,
+              packageId: pkg.id,
+            },
+          },
+          create: {
             storefrontId: storefront.id,
             packageId: pkg.id,
             sellingPrice: wholesalePriceP,
             isActive: true,
           },
+          update: {},
         })
       );
       updated++;

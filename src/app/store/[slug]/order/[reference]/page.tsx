@@ -35,6 +35,15 @@ const STATUS_CONFIG: Record<
     step: number;
   }
 > = {
+  PAYMENT_INCOMPLETE: {
+    icon: AlertCircle,
+    iconCls: "text-amber-400",
+    cardCls: "bg-amber-500/10 border-amber-500/25 text-amber-200",
+    badgeCls: "bg-amber-500/20 text-amber-300 border-amber-500/30",
+    label: "Payment Not Completed",
+    message: "Your payment was cancelled or has not been completed yet. You can return to the store to try again.",
+    step: 0,
+  },
   PENDING: {
     icon: Clock,
     iconCls: "text-amber-400",
@@ -163,6 +172,8 @@ export default async function OrderReferencePage({
   let effectiveStatus = order.status;
   if (order.underlyingOrder) {
     effectiveStatus = order.underlyingOrder.status === "SUCCESS" ? "COMPLETED" : order.underlyingOrder.status;
+  } else if (order.status === "PENDING") {
+    effectiveStatus = "PAYMENT_INCOMPLETE";
   }
 
   const cfg = STATUS_CONFIG[effectiveStatus] ?? STATUS_CONFIG.PENDING;
@@ -174,6 +185,7 @@ export default async function OrderReferencePage({
   const paystackFee = Math.round(amountGhs * 0.02 * 100) / 100;
   const totalPaid = Math.round((amountGhs + paystackFee) * 100) / 100;
 
+  const isPaymentIncomplete = effectiveStatus === "PAYMENT_INCOMPLETE";
   const isDelivered = effectiveStatus === "COMPLETED" || effectiveStatus === "SUCCESS";
   const isFailed = effectiveStatus === "FAILED" || effectiveStatus === "CANCELLED";
 
@@ -221,10 +233,18 @@ export default async function OrderReferencePage({
             <div className="grid grid-cols-3 gap-2 text-center text-[10px] font-bold font-mono">
               {/* Step 1: Payment */}
               <div className="flex flex-col items-center gap-1.5">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#00df82] text-[#041d14]">
-                  <CheckCircle2 className="h-3.5 w-3.5" />
+                {isPaymentIncomplete ? (
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400">
+                    <AlertCircle className="h-3.5 w-3.5" />
+                  </span>
+                ) : (
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#00df82] text-[#041d14]">
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                  </span>
+                )}
+                <span className="text-slate-900 dark:text-white">
+                  {isPaymentIncomplete ? "1. Payment Pending" : "1. MoMo Cleared"}
                 </span>
-                <span className="text-slate-900 dark:text-white">1. MoMo Cleared</span>
               </div>
 
               {/* Step 2: Gateway */}
@@ -235,6 +255,8 @@ export default async function OrderReferencePage({
                       ? "bg-[#00df82] text-[#041d14]"
                       : isFailed
                       ? "bg-rose-500 text-white"
+                      : isPaymentIncomplete
+                      ? "bg-slate-100 dark:bg-[#070d18] border border-slate-300 dark:border-[#162740] text-slate-400 dark:text-slate-500"
                       : "bg-sky-500 text-white animate-pulse"
                   }`}
                 >
@@ -284,7 +306,7 @@ export default async function OrderReferencePage({
 
             <div className="text-right">
               <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 font-mono">
-                Amount Paid
+                {isPaymentIncomplete ? "Amount Due" : "Amount Paid"}
               </span>
               <p className="mt-0.5 text-2xl font-black font-mono text-emerald-600 dark:text-[#00df82]">
                 ₵{totalPaid.toFixed(2)}
