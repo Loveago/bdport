@@ -434,7 +434,9 @@ export const storefrontCheckoutSchema = z.object({
   customerEmail: z
     .string()
     .trim()
-    .email("Enter a valid email address for your payment receipt"),
+    .email("Enter a valid email address for your payment receipt")
+    .optional()
+    .or(z.literal("")),
 });
 
 export const storefrontTrackSchema = z.object({

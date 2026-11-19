@@ -180,8 +180,8 @@ export function StorefrontPortal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           packageId: selectedProduct.packageId,
-          phoneNumber: cleanPhone,
-          customerEmail: email.trim() || undefined,
+          customerPhone: cleanPhone,
+          customerEmail: email.trim().toLowerCase() || undefined,
         }),
       });
 
