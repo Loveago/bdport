@@ -795,14 +795,6 @@ export async function syncStorefrontProducts(
 
   const pricesByPkgId = await resolveStorefrontWholesalePrices(owner, activePackages);
 
-  const STALE_SEEDED_PRICES: Record<number, number> = {
-    1: 1000,
-    2: 2000,
-    3: 3000,
-    5: 5000,
-    10: 9000,
-  };
-
   const operations: Prisma.PrismaPromise<any>[] = [];
   let updated = 0;
 
@@ -810,12 +802,6 @@ export async function syncStorefrontProducts(
     const wholesalePriceGHS = pricesByPkgId.get(pkg.id) ?? pkg.retailPriceGHS ?? 0;
     const wholesalePriceP = toPesewas(wholesalePriceGHS);
     const existing = existingMap.get(pkg.id);
-
-    const isStaleSeedPrice =
-      Boolean(existing) &&
-      STALE_SEEDED_PRICES[pkg.gbAmount] != null &&
-      existing!.sellingPrice === STALE_SEEDED_PRICES[pkg.gbAmount] &&
-      existing!.sellingPrice > wholesalePriceP;
 
     if (!existing) {
       operations.push(
@@ -850,7 +836,7 @@ export async function syncStorefrontProducts(
         updated++;
       }
     } else {
-      if (existing.sellingPrice < wholesalePriceP || existing.sellingPrice <= 0 || isStaleSeedPrice) {
+      if (existing.sellingPrice < wholesalePriceP || existing.sellingPrice <= 0) {
         operations.push(
           prisma.storefrontProduct.update({
             where: { id: existing.id },

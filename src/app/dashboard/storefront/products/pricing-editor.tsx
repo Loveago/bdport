@@ -76,14 +76,15 @@ export function PricingEditor({
     });
   }, [products, packages]);
 
-  // Non-blocking auto-sync on mount
+  // Refresh product & package data on demand (e.g. after bulk update or profile sync)
   const refreshData = React.useCallback(async () => {
     try {
       const res = await fetch("/api/storefront/products");
       if (!res.ok) return;
       const data = await res.json();
-      if (Array.isArray(data.packages)) {
-        setPackageList(data.packages);
+      const pkgs: Pkg[] = Array.isArray(data.packages) ? data.packages : [];
+      if (pkgs.length > 0) {
+        setPackageList(pkgs);
       }
       if (Array.isArray(data.products)) {
         const prods: Prod[] = data.products.map((p: any) => ({
@@ -92,7 +93,6 @@ export function PricingEditor({
           isActive: p.isActive,
         }));
         setProductList(prods);
-        const pkgs = (data.packages as Pkg[]) || packageList;
         const pMap = new Map(prods.map((p) => [p.packageId, p]));
         setPrices((prev) => {
           const next: Record<string, string> = { ...prev };
@@ -110,11 +110,7 @@ export function PricingEditor({
     } catch {
       // non-blocking
     }
-  }, [packageList]);
-
-  React.useEffect(() => {
-    refreshData();
-  }, [refreshData]);
+  }, []);
 
   const visible = React.useMemo(() => {
     return [...packageList]
